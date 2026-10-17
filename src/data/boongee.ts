@@ -38,13 +38,7 @@ export const nav = [
 
 export const hero = {
   intro: "Trà ướp hoa dành dành, bạch lan, hoa trúc. Pha thật nhẹ: thơm dịu, vị thanh.",
-  sceneLabel:
-    "Hai ly giấy Boongee in hoa monogram màu bạc trên nền hồng: ly kem bông rắc cánh hồng khô trên khối đá, ly đậy nắp trắng trên khúc gỗ, cạnh một bông lily trắng",
-  sceneHint: "Kéo để xoay hai ly · chạm vào nắp để bật nút",
-  sceneKeys: "Bàn phím: mũi tên trái, phải để xoay; Home về mặt trước; Enter để bật nút.",
-  // read out (screen readers) when the lid's strap is opened or closed
-  strapOpened: "Đã bật nút uống trên nắp",
-  strapClosed: "Đã đóng nút uống trên nắp",
+  imageAlt: "Hai ly Boongee trên nền hồng: ly kem bông rắc cánh hồng khô và ly giấy đậy nắp, in hoa monogram màu bạc",
 };
 
 /** The visual narrative of docs/01 §6: origin, ritual, feeling. */

@@ -8,8 +8,8 @@
 //   nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg  → src/assets/brand/logo-ngang.svg
 //   nhan-dien/01-logo/bieu-tuong-hoa_den.svg           → src/app/icon.svg, favicon.ico, apple-icon.png
 //   nhan-dien/03-hoa-tiet/monogram_hong.png            → src/assets/images/monogram-hong.png
+//   lookbook/anh-bia/facebook.png                      → src/assets/images/hero.jpg
 //   nhan-dien/04-anh-bia/facebook-slogan-den.png       → src/app/opengraph-image.jpg, twitter-image.jpg (1200 × 628)
-//   3d/boongee-paper-16oz.glb                          → public/models/boongee-paper-16oz.glb   hero 3D scene, compressed
 //
 // The menu and the offers come from the ShanMay brand kit (../../ShanMay/brand-kit, or BOONGEE_SHANMAY), the same
 // files the printed menu and the vouchers are built from, so the site and the print never disagree:
@@ -20,10 +20,6 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { NodeIO } from "@gltf-transform/core";
-import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
-import { dedup, meshopt, prune, textureCompress } from "@gltf-transform/functions";
-import { MeshoptDecoder, MeshoptEncoder } from "meshoptimizer";
 import sharp from "sharp";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -33,9 +29,6 @@ const OG = { width: 1200, height: 628 };
 const OG_ALT = "Boongee — Trà hương thanh vị: hai ly Boongee in hoa monogram màu bạc trên nền hồng";
 const TOUCH_ICON = 180;
 const FAVICON = 32;
-const CUP = "boongee-paper-16oz";
-/** Nodes the hero scene looks up by name (src/lib/hero-scene/index.ts). */
-const CUP_NODES = [CUP, "lid", "lid-strap", "drink"];
 
 const kit = (rel) => {
   const file = path.join(KIT, rel);
@@ -112,7 +105,13 @@ async function icons(hex) {
   write("src/app/favicon.ico", ico(await flowerIcon(FAVICON, hex["pink-500"], 0.08), FAVICON));
 }
 
-async function shareImage() {
+async function photos() {
+  // flatten: the AI photo is opaque, but never let a stray alpha channel turn black in the JPEG
+  await sharp(kit("lookbook/anh-bia/facebook.png"))
+    .flatten({ background: "#ffffff" })
+    .jpeg({ quality: 90, mozjpeg: true })
+    .toFile(out("src/assets/images/hero.jpg"));
+  done("src/assets/images/hero.jpg");
   // Share image: the cover with the slogan, cut to 1.91 : 1 round the slogan and the cups.
   const cover = sharp(kit("nhan-dien/04-anh-bia/facebook-slogan-den.png"));
   const { width, height } = await cover.metadata();
@@ -130,52 +129,11 @@ async function shareImage() {
   }
 }
 
-/**
- * The paper cup for the hero scene, compressed for the web (meshopt geometry, WebP textures; ~1.9 MB → a few hundred
- * kB). Quantization folds a scale and offset into the matrix of each node that holds a mesh, so every mesh first
- * moves into a child node of its own: the named nodes keep their origins, which the scene turns about (`lid-strap`
- * swings on its hinge).
- */
-async function cupModel() {
-  await Promise.all([MeshoptEncoder.ready, MeshoptDecoder.ready]);
-  const io = new NodeIO()
-    .registerExtensions(ALL_EXTENSIONS)
-    .registerDependencies({ "meshopt.encoder": MeshoptEncoder, "meshopt.decoder": MeshoptDecoder });
-  const doc = await io.read(kit(`3d/${CUP}.glb`));
-  for (const node of doc.getRoot().listNodes()) {
-    const mesh = node.getMesh();
-    if (!mesh) continue;
-    if (node.getSkin() || mesh.listPrimitives().some((prim) => prim.listTargets().length)) {
-      throw new Error(`${CUP}.glb: "${node.getName()}" is skinned or morphed; moving its mesh would break it.`);
-    }
-    node.addChild(doc.createNode(`${node.getName()}-mesh`).setMesh(mesh));
-    node.setMesh(null);
-  }
-  await doc.transform(
-    dedup(),
-    prune({ keepLeaves: true }),
-    // colour and metal-roughness lossy, the normal map lossless (lossy WebP shows as dents in the embossed lid)
-    textureCompress({ encoder: sharp, targetFormat: "webp", quality: 90, slots: /^(?!normalTexture$)/ }),
-    textureCompress({ encoder: sharp, targetFormat: "webp", lossless: true, slots: /^normalTexture$/ }),
-    meshopt({ encoder: MeshoptEncoder, level: "medium" }),
-  );
-  const names = new Set(
-    doc
-      .getRoot()
-      .listNodes()
-      .map((node) => node.getName()),
-  );
-  const missing = CUP_NODES.filter((name) => !names.has(name));
-  if (missing.length) throw new Error(`${CUP}.glb has no ${missing.join(", ")} node: the hero scene needs them.`);
-  write(`public/models/${CUP}.glb`, await io.writeBinary(doc));
-}
-
 const hex = tokens();
 copy("nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg", "src/assets/brand/logo-ngang.svg");
 copy("nhan-dien/03-hoa-tiet/monogram_hong.png", "src/assets/images/monogram-hong.png");
 await icons(hex);
-await shareImage();
-await cupModel();
+await photos();
 for (const [from, to] of [
   ["menu-posm/print-ready/menu-data.json", "src/data/shanmay/menu-data.json"],
   ["collateral/collateral.json", "src/data/shanmay/collateral.json"],

@@ -1,0 +1,44 @@
+@import "tailwindcss";
+/* Brand colours as --color-brand-* (bg-brand-pink-500, text-brand-ink…), generated from the brand kit. */
+@import "../styles/brand-tokens.css";
+
+/* Fraunces is the brand's only typeface (next/font in layout.tsx exposes it as --font-fraunces). */
+@theme inline {
+  --font-sans: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+/*
+ * Brand rules for every component: one mark colour on one ground — ink on pink, pink on ink, ink on white. Never
+ * white or pink text on a pink or white ground (contrast ≈ 1.5 : 1); pink-700 is for rules and small details, not
+ * text. Light only: the brand has no dark theme.
+ */
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  background: var(--color-brand-bg);
+  color: var(--color-brand-ink);
+  font-family: var(--font-sans);
+}
+
+/* Anchored sections clear the sticky header. */
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
+::selection {
+  background: var(--color-brand-pink-300);
+  color: var(--color-brand-ink);
+}

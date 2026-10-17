@@ -1,10 +1,14 @@
-import { CupViewers } from "@/components/cup-viewers";
-import { Drinks } from "@/components/drinks";
+import type { Metadata } from "next";
+import { Faq } from "@/components/faq";
 import { Hero } from "@/components/hero";
+import { Menu } from "@/components/menu";
+import { Offers } from "@/components/offers";
+import { Promises } from "@/components/promises";
 import { Story } from "@/components/story";
 import { Visit } from "@/components/visit";
-import type { Metadata } from "next";
-import { brand, socials } from "@/data/boongee";
+import { brand, sections, socials, visit } from "@/data/boongee";
+import { faq } from "@/data/faq";
+import { priceRange, pricesAreIllustrative } from "@/data/menu";
 import { openGraphBase } from "@/lib/metadata";
 import { SITE_URL } from "@/lib/site-url";
 
@@ -14,9 +18,11 @@ export const metadata: Metadata = {
   openGraph: { ...openGraphBase, url: "/" },
 };
 
-// Structured data for the site and its publisher, built only from facts in src/data/boongee.ts (social pages only
-// once they are set). Add a CafeOrCoffeeShop block once the address and hours are known.
+// Structured data, built only from the facts the page shows (src/data/). Unconfirmed facts stay out of it, so
+// search engines never index them: the address until visit.address.confirmed, the prices while menu-data.json marks
+// them illustrative. Social pages appear once they are set; add openingHours / telephone once they are known.
 const sameAs = socials.flatMap((s) => (s.href ? [s.href] : []));
+const vnd = (thousands: number) => `${(thousands * 1000).toLocaleString("vi-VN")} ₫`;
 const structuredData = [
   {
     "@context": "https://schema.org",
@@ -29,13 +35,41 @@ const structuredData = [
   },
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "CafeOrCoffeeShop",
     "@id": `${SITE_URL}/#organization`,
     name: brand.name,
     slogan: brand.slogan,
     url: SITE_URL,
     logo: `${SITE_URL}/apple-icon.png`, // raster, as Google asks for logos
+    image: `${SITE_URL}/opengraph-image.jpg`,
+    ...(visit.address.confirmed
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: visit.address.street,
+            addressLocality: visit.address.district,
+            addressRegion: visit.address.city,
+            addressCountry: "VN",
+          },
+          hasMap: visit.mapUrl,
+        }
+      : {}),
+    servesCuisine: ["Trà sữa", "Trà trái cây", "Cà phê"],
+    ...(pricesAreIllustrative ? {} : { priceRange: `${vnd(priceRange.min)} – ${vnd(priceRange.max)}` }),
+    hasMenu: `${SITE_URL}/#${sections.menu}`,
     ...(sameAs.length ? { sameAs } : {}),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq
+      .filter((item) => !(item.topic === "address" && !visit.address.confirmed))
+      .filter((item) => !(item.topic === "price" && pricesAreIllustrative))
+      .map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+      })),
   },
 ];
 
@@ -49,8 +83,10 @@ export default function Home() {
       />
       <Hero />
       <Story />
-      <Drinks />
-      <CupViewers />
+      <Promises />
+      <Menu />
+      <Offers />
+      <Faq />
       <Visit />
     </>
   );

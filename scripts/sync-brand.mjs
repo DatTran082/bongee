@@ -10,7 +10,12 @@
 //   nhan-dien/03-hoa-tiet/monogram_hong.png            → src/assets/images/monogram-hong.png
 //   lookbook/anh-bia/facebook.png                      → src/assets/images/hero.jpg
 //   nhan-dien/04-anh-bia/facebook-slogan-den.png       → src/app/opengraph-image.jpg, twitter-image.jpg (1200 × 628)
-//   3d/boongee-*.glb, 3d/preview/boongee-*.png         → public/models/ (3D cups + their posters)
+//
+// The menu and the offers come from the ShanMay brand kit (../../ShanMay/brand-kit, or BOONGEE_SHANMAY), the same
+// files the printed menu and the vouchers are built from, so the site and the print never disagree:
+//
+//   menu-posm/print-ready/menu-data.json               → src/data/shanmay/menu-data.json    categories, items, prices
+//   collateral/collateral.json                         → src/data/shanmay/collateral.json   weekly offer, loyalty card
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -19,16 +24,20 @@ import sharp from "sharp";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const KIT = path.resolve(process.env.BOONGEE_BRANDKIT ?? path.join(ROOT, "..", "brandkit"));
+const SHANMAY = path.resolve(process.env.BOONGEE_SHANMAY ?? path.join(ROOT, "..", "..", "ShanMay", "brand-kit"));
 const OG = { width: 1200, height: 628 };
 const OG_ALT = "Boongee — Trà hương thanh vị: hai ly Boongee in hoa monogram màu bạc trên nền hồng";
 const TOUCH_ICON = 180;
 const FAVICON = 32;
-const POSTER_WIDTH = 900;
-const CUPS = ["boongee-paper-16oz", "boongee-pp-700ml"];
 
 const kit = (rel) => {
   const file = path.join(KIT, rel);
   if (!existsSync(file)) throw new Error(`Thiếu ${file}: dựng lại brand kit trước (xem brandkit/CLAUDE.md).`);
+  return file;
+};
+const shanmay = (rel) => {
+  const file = path.join(SHANMAY, rel);
+  if (!existsSync(file)) throw new Error(`Thiếu ${file}: đặt BOONGEE_SHANMAY=<đường dẫn ShanMay/brand-kit>.`);
   return file;
 };
 const out = (rel) => {
@@ -120,21 +129,16 @@ async function photos() {
   }
 }
 
-async function models() {
-  for (const cup of CUPS) {
-    copy(`3d/${cup}.glb`, `public/models/${cup}.glb`);
-    await sharp(kit(`3d/preview/${cup}.png`))
-      .resize({ width: POSTER_WIDTH })
-      .webp({ quality: 85 })
-      .toFile(out(`public/models/${cup}.webp`));
-    done(`public/models/${cup}.webp`);
-  }
-}
-
 const hex = tokens();
 copy("nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg", "src/assets/brand/logo-ngang.svg");
 copy("nhan-dien/03-hoa-tiet/monogram_hong.png", "src/assets/images/monogram-hong.png");
 await icons(hex);
 await photos();
-await models();
-console.log(`Đã đồng bộ từ ${KIT}`);
+for (const [from, to] of [
+  ["menu-posm/print-ready/menu-data.json", "src/data/shanmay/menu-data.json"],
+  ["collateral/collateral.json", "src/data/shanmay/collateral.json"],
+]) {
+  copyFileSync(shanmay(from), out(to));
+  done(to);
+}
+console.log(`Đã đồng bộ từ ${KIT} và ${SHANMAY}`);

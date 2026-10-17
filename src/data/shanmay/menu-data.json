@@ -1,0 +1,82 @@
+{
+  "_note": "Sửa tên/giá ở đây rồi chạy: python scripts/build_menu_print.py. Giá đơn vị nghìn đồng (35 = 35K).",
+  "illustrativePrices": true,
+  "sizes": { "M": "500ml", "L": "700ml" },
+  "layout": [
+    ["huong-hoa", "kem-bong", "trai-cay"],
+    ["kem-cheese", "ca-phe", "topping"]
+  ],
+  "categories": {
+    "huong-hoa": {
+      "title": "Trà sữa hương hoa",
+      "sized": true,
+      "items": [
+        { "name": "Trà Sữa Xanh Nhài", "price": [35, 42] },
+        { "name": "Trà Sữa Bạch Lan Hoa", "price": [35, 42] },
+        { "name": "Trà Sữa Dành Dành", "price": [35, 42] },
+        { "name": "Trà Ô Long Trúc", "price": [35, 42] },
+        { "name": "Trà Sữa Quế Hoa", "price": [35, 42] },
+        { "name": "Trà Sữa Bạch Đào", "price": [35, 42] }
+      ]
+    },
+    "kem-bong": {
+      "title": "Trà sữa kem bông",
+      "sized": true,
+      "items": [
+        { "name": "Trà Sữa Bông Lan", "price": [39, 46] },
+        { "name": "Trà Sữa Bông Đào", "price": [39, 46] },
+        { "name": "Trà Sữa Bông Trúc", "price": [39, 46] }
+      ]
+    },
+    "trai-cay": {
+      "title": "Trà trái cây",
+      "sized": true,
+      "items": [
+        { "name": "Trà Xoài Xanh Quất Hồng Bì", "price": [39, 46] },
+        { "name": "Trà Trúc Nho Mẫu Đơn", "price": [39, 46] },
+        { "name": "Nhãn Dừa Bông Tuyết", "price": [39, 46] },
+        { "name": "Xoài Bồng Bềnh", "price": [39, 46] }
+      ]
+    },
+    "kem-cheese": {
+      "title": "Kem cheese",
+      "sized": true,
+      "items": [
+        { "name": "Trà Dâu Tằm Kem Cheese", "price": [42, 49] },
+        { "name": "Trà Xanh Nhài Kem Cheese", "price": [42, 49] },
+        { "name": "Trà Đào Hồng Kem Cheese", "price": [42, 49] },
+        { "name": "Trà Nho Tím Kem Cheese", "price": [42, 49] }
+      ]
+    },
+    "ca-phe": {
+      "title": "Cà phê phin · Coldbrew",
+      "sized": false,
+      "items": [
+        { "name": "Coldbrew Chanh Vàng", "price": [39] },
+        { "name": "Bạc Xỉu", "price": [29] },
+        { "name": "Phin Hạnh Nhân Kem", "price": [39] },
+        { "name": "Cà Phê Muối", "price": [32] },
+        { "name": "Coldbrew Bưởi Đá Xay", "price": [45] },
+        { "name": "Coldbrew Khế", "price": [39] }
+      ]
+    },
+    "topping": {
+      "title": "Topping",
+      "sized": false,
+      "items": [
+        { "name": "Kem Cheese", "price": [10] },
+        { "name": "Kem Bông", "price": [10] },
+        { "name": "Thạch Trà", "price": [8] },
+        { "name": "Trân Châu Phô Mai", "price": [10] }
+      ]
+    }
+  },
+  "custom": {
+    "title": "Tuỳ chỉnh",
+    "lines": ["Đường  0 · 30 · 50 · 70 · 100%", "Đá  0 · 50 · 100%"]
+  },
+  "footer": {
+    "tagline": "Trà hương thanh vị",
+    "address": "14B ngách 7/72 phố Hoa Bằng"
+  }
+}

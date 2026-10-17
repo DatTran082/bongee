@@ -25,8 +25,8 @@ export function Hero() {
           </h1>
           <p className="mx-auto mt-6 max-w-md text-lg xl:mx-0 xl:text-xl">{hero.intro}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3 xl:justify-start">
-            <ButtonLink href={`#${sections.drinks}`} variant="primary">
-              Xem đồ uống
+            <ButtonLink href={`#${sections.menu}`} variant="primary">
+              Xem thực đơn
             </ButtonLink>
             <ButtonLink href={`#${sections.visit}`}>Ghé quán</ButtonLink>
           </div>

@@ -1,12 +1,16 @@
-// Boongee: every word and fact the landing page shows, in one place. Facts about the cups come from the brand kit
-// (brandkit/packaging/catalog.json). Anything marked TODO(boongee) is not known yet: fill it in before launch. A
-// `null` renders as "Đang cập nhật" (never as a dead link).
+// Boongee: the words and facts the landing page shows. Sources:
+//   - brand story, tone and promises: ShanMay brand-kit docs/01-brand-foundation.md (USP, visual narrative, tone);
+//   - menu and offers: ShanMay menu-data.json and collateral.json, through src/data/menu.ts and src/data/offers.ts.
+// ShanMay marks some facts as assumptions ([GIẢ ĐỊNH]); they carry a TODO(boongee) here: confirm before launch.
+// Tone (docs/01 §7): short sentences, one idea each, at most two adjectives, no "siêu / đỉnh / mê / tuyệt hảo /
+// tinh hoa". A `null` renders as "Đang cập nhật" (never as a dead link).
 
 // The domain is not here: it comes from the environment, server-side only (src/lib/site-url.ts).
 export const site = {
   title: "Boongee — Trà hương thanh vị",
+  // No address here until visit.address.confirmed (it would be indexed): see ADDRESS below.
   description:
-    "Boongee: trà sữa, trà trái cây và trà kem bông, hương dịu vị thanh, đựng trong ly giấy và ly nhám in hoa monogram.",
+    "Boongee · Trà hương thanh vị: trà sữa hương hoa, kem bông, trà trái cây, kem cheese, cà phê phin và coldbrew, pha nhẹ, vị thanh.",
   locale: "vi_VN",
 };
 
@@ -19,80 +23,100 @@ export const brand = {
 /** Section anchors, shared by the page and the navigation. */
 export const sections = {
   story: "cau-chuyen",
-  drinks: "do-uong",
-  cups: "ly-boongee",
+  menu: "thuc-don",
+  offers: "uu-dai",
+  faq: "hoi-dap",
   visit: "ghe-quan",
 } as const;
 
 export const nav = [
   { label: "Câu chuyện", id: sections.story },
-  { label: "Đồ uống", id: sections.drinks },
-  { label: "Ly Boongee", id: sections.cups },
+  { label: "Thực đơn", id: sections.menu },
+  { label: "Ưu đãi", id: sections.offers },
   { label: "Ghé quán", id: sections.visit },
 ];
 
 export const hero = {
-  // TODO(boongee): câu giới thiệu chính thức.
-  intro: "Trà pha mỗi ngày, hương dịu và vị thanh, trong chiếc ly in hoa monogram của Boongee.",
+  intro: "Trà ướp hoa dành dành, bạch lan, hoa trúc. Pha thật nhẹ: thơm dịu, vị thanh.",
   imageAlt: "Hai ly Boongee trên nền hồng: ly kem bông rắc cánh hồng khô và ly giấy đậy nắp, in hoa monogram màu bạc",
 };
 
+/** The visual narrative of docs/01 §6: origin, ritual, feeling. */
 export const story = {
   tagline: "Câu chuyện",
-  title: "Một bông hoa, bốn dấu monogram",
-  // TODO(boongee): câu chuyện thương hiệu thật.
-  paragraphs: [
-    "Logo Boongee là bông hoa năm cánh. Từ bông hoa ấy có bốn dấu monogram: đĩa hoa, hoa đặc, sao hoa và hoa tròn đặc: xếp thành cụm 2 × 2 trên ly giấy, thành một cột dọc trên ly nhựa.",
-    "Ba màu của Boongee là hồng phấn, đen than và trắng, cùng nét chữ Fraunces mềm mại. Ly giấy in hoa bạc ánh kim, ly nhựa nhám in hoa trắng.",
+  title: "Một chút mây, một chút hoa",
+  beats: [
+    // TODO(boongee): this narrative (docs/01 §6) was written for the old name "Shan Mây" (mây = cloud; ShanMay
+    // assumes a highland Shan tuyết base tea). docs/01 asks for a new name story once "boongee" has a meaning, and
+    // the tea's origin is unconfirmed: rewrite or confirm "Gốc" and the cloud images (title, last beat) together.
+    { label: "Gốc", text: "Trà mọc trên núi cao, nơi mây phủ quanh năm." },
+    { label: "Nghi thức", text: "Ở Boongee, trà được ướp cùng hoa dành dành, bạch lan, hoa trúc, rồi pha thật nhẹ." },
+    { label: "Cảm xúc", text: "Giữa phố đông, một ly trà thơm dịu, vị thanh, như mang theo chút mây trời." },
   ],
-  imageAlt: "Hoạ tiết monogram Boongee: bốn dấu hoa màu đen than trên nền hồng phấn",
+  closing: "Trà hương thanh vị.",
+  marks:
+    "Bông hoa năm cánh của logo đi cùng bốn dấu monogram: đĩa hoa, hoa đặc, sao hoa, hoa tròn đặc. Bạn sẽ gặp chúng trên mỗi chiếc ly.",
 };
 
-export type DrinkIcon = "cup" | "lemon" | "ice-cream" | "mug";
+export type PromiseIcon = "flower" | "droplet" | "feather";
 
-export const drinks = {
-  tagline: "Đồ uống",
+/** What a Boongee drink keeps to: the USP of docs/01 §1 and its proofs. */
+export const promises = {
+  tagline: "Điều Boongee giữ",
+  title: "Thơm dịu, không gắt",
+  items: [
+    {
+      title: "Hoa thật",
+      text: "Trà ướp cùng hoa dành dành, bạch lan, hoa trúc.",
+      icon: "flower",
+    },
+    {
+      // TODO(boongee): 50 % is the default ShanMay proposes (USP proof 3); confirm it at the counter.
+      title: "Ngọt vừa",
+      text: "Mặc định ngọt 50% để giữ vị thanh. Chỉnh từ 0 đến 100%.",
+      icon: "droplet",
+    },
+    {
+      title: "Pha thật nhẹ",
+      text: "Vị thanh, không gắt: một ly trà nhẹ nhàng giữa phố.",
+      icon: "feather",
+    },
+  ] satisfies Array<{ title: string; text: string; icon: PromiseIcon }>,
+};
+
+export const menuIntro = {
+  tagline: "Thực đơn",
   title: "Hương dịu, vị thanh",
-  // TODO(boongee): thay bằng thực đơn và giá thật.
-  subtitle: "Thực đơn đầy đủ đang được cập nhật.",
-  items: [
-    { title: "Trà sữa", description: "Trà đậm hương, sữa béo vừa, ngọt nhẹ.", icon: "cup" },
-    { title: "Trà trái cây", description: "Trà thanh cùng trái cây, uống mát.", icon: "lemon" },
-    { title: "Trà kem bông", description: "Lớp kem bông mịn trên nền trà, rắc cánh hồng khô.", icon: "ice-cream" },
-    { title: "Đồ uống nóng", description: "Đựng trong ly giấy hai lớp, cầm không nóng tay.", icon: "mug" },
-  ] satisfies Array<{ title: string; description: string; icon: DrinkIcon }>,
+  // TODO(boongee): ShanMay menu_data.py → HERO is a *sample* featured drink ("món nổi bật mẫu"); confirm or change.
+  featured: "Trà Sữa Bạch Lan Hoa",
 };
 
-export const cups = {
-  tagline: "Ly Boongee",
-  title: "Xoay thử chiếc ly của bạn",
-  subtitle: "Kéo để xoay, chụm hai ngón để phóng to. Hình in trên thân ly đúng như bản in thật.",
-  items: [
-    {
-      model: "/models/boongee-paper-16oz.glb",
-      poster: "/models/boongee-paper-16oz.webp",
-      title: "Ly giấy hai lớp 500 ml",
-      description:
-        "Cụm bốn hoa monogram in bạc ánh kim. Hai lớp giấy giữ ấm, cầm đồ nóng không cần cover. Nắp bật nút rời.",
-      alt: "Mô hình 3D ly giấy hai lớp Boongee 16 oz, in cụm hoa monogram màu bạc, nắp trắng",
-    },
-    {
-      model: "/models/boongee-pp-700ml.glb",
-      poster: "/models/boongee-pp-700ml.webp",
-      title: "Ly nhựa nhám 700 ml",
-      description: "Nhựa PP nhám trong mờ, bốn hoa xếp dọc in trắng. Dành cho trà sữa và trà trái cây.",
-      alt: "Mô hình 3D ly nhựa nhám Boongee 700 ml, in bốn hoa monogram màu trắng xếp dọc, nắp trong",
-    },
-  ],
+export const offersIntro = {
+  tagline: "Ưu đãi",
+  title: "Ghé thường, có quà",
+};
+
+// TODO(boongee): ShanMay places the shop in phố Hoa Bằng, Cầu Giấy, Hà Nội as an assumption; the street address is
+// the one printed on its menu and vouchers. Confirm all of it, then set confirmed: true. Until then the page shows
+// it, but the meta description and the structured data for search engines leave it out.
+const ADDRESS = {
+  confirmed: false,
+  street: "14B ngách 7/72 phố Hoa Bằng",
+  district: "Cầu Giấy",
+  city: "Hà Nội",
 };
 
 export const visit = {
   tagline: "Ghé quán",
   title: "Hẹn bạn ở Boongee",
-  address: null as string | null, // TODO(boongee): địa chỉ quán
-  mapUrl: null as string | null, // TODO(boongee): link Google Maps
+  address: ADDRESS,
+  addressLine: `${ADDRESS.street}, ${ADDRESS.district}, ${ADDRESS.city}`,
+  mapUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${ADDRESS.street}, ${ADDRESS.district}, ${ADDRESS.city}`,
+  )}`,
   hours: null as string | null, // TODO(boongee): giờ mở cửa, ví dụ "7:00 – 22:00 mỗi ngày"
   phone: null as string | null, // TODO(boongee): số điện thoại / Zalo đặt món
+  services: "Uống tại quán và mang đi.", // collateral.json → promos.sale.detail ("tại quán và mang đi")
 };
 
 export type SocialIcon = "facebook" | "instagram" | "tiktok" | "zalo";
@@ -104,5 +128,10 @@ export const socials: Array<{ name: string; icon: SocialIcon; href: string | nul
   { name: "TikTok", icon: "tiktok", href: null }, // TODO(boongee)
   { name: "Zalo", icon: "zalo", href: null }, // TODO(boongee)
 ];
+
+export const faqIntro = {
+  tagline: "Hỏi đáp",
+  title: "Trước khi ghé",
+};
 
 export const PENDING = "Đang cập nhật";

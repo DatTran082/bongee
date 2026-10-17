@@ -23,15 +23,15 @@ Một trang (`src/app/page.tsx`), giao diện sáng, tiếng Việt. Nội dung 
 (`../../ShanMay/brand-kit`): câu chuyện và giọng văn từ `docs/01-brand-foundation.md`, thực đơn từ
 `menu-posm/print-ready/menu-data.json`, ưu đãi từ `collateral/collateral.json`.
 
-| Phần                     | Mã nguồn                      | Nội dung                                                                      |
-| ------------------------ | ----------------------------- | ----------------------------------------------------------------------------- |
-| Hero                     | `src/components/hero.tsx`     | ảnh hai ly, slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất)             |
-| Câu chuyện `#cau-chuyen` | `src/components/story.tsx`    | Gốc · Nghi thức · Cảm xúc, hoạ tiết monogram                                  |
-| Điều Boongee giữ         | `src/components/promises.tsx` | hoa thật, ngọt vừa (mặc định 50%), pha thật nhẹ                               |
-| Thực đơn `#thuc-don`     | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá      |
-| Ưu đãi `#uu-dai`         | `src/components/offers.tsx`   | giảm 20% thứ 2 – thứ 4 cho đơn từ 2 ly, thẻ tích điểm 10 dấu                  |
-| Hỏi đáp `#hoi-dap`       | `src/components/faq.tsx`      | 7 câu, trả lời ghép từ dữ liệu thực đơn, ưu đãi, địa chỉ                      |
-| Ghé quán `#ghe-quan`     | `src/components/visit.tsx`    | 14B ngách 7/72 phố Hoa Bằng, Cầu Giấy, Hà Nội, bản đồ, giờ mở cửa, điện thoại |
+| Phần                     | Mã nguồn                      | Nội dung                                                                          |
+| ------------------------ | ----------------------------- | --------------------------------------------------------------------------------- |
+| Hero                     | `src/components/hero.tsx`     | slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất), cảnh 3D hai ly kéo để xoay |
+| Câu chuyện `#cau-chuyen` | `src/components/story.tsx`    | Gốc · Nghi thức · Cảm xúc, hoạ tiết monogram                                      |
+| Điều Boongee giữ         | `src/components/promises.tsx` | hoa thật, ngọt vừa (mặc định 50%), pha thật nhẹ                                   |
+| Thực đơn `#thuc-don`     | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá          |
+| Ưu đãi `#uu-dai`         | `src/components/offers.tsx`   | giảm 20% thứ 2 – thứ 4 cho đơn từ 2 ly, thẻ tích điểm 10 dấu                      |
+| Hỏi đáp `#hoi-dap`       | `src/components/faq.tsx`      | 7 câu, trả lời ghép từ dữ liệu thực đơn, ưu đãi, địa chỉ                          |
+| Ghé quán `#ghe-quan`     | `src/components/visit.tsx`    | 14B ngách 7/72 phố Hoa Bằng, Cầu Giấy, Hà Nội, bản đồ, giờ mở cửa, điện thoại     |
 
 Kèm theo: header dính đầu trang có menu cho điện thoại, footer, trang 404 tiếng Việt, `sitemap.xml`, `robots.txt`,
 dữ liệu có cấu trúc (JSON-LD: WebSite, CafeOrCoffeeShop, FAQPage), favicon, icon iOS và ảnh chia sẻ.
@@ -82,8 +82,8 @@ Tài sản thương hiệu được chép vào repo (dựng và deploy không c�
 | `nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg` | `src/assets/brand/logo-ngang.svg`                               |
 | `nhan-dien/01-logo/bieu-tuong-hoa_den.svg`          | `src/app/icon.svg`, `favicon.ico`, `apple-icon.png`             |
 | `nhan-dien/03-hoa-tiet/monogram_hong.png`           | `src/assets/images/monogram-hong.png`                           |
-| `lookbook/anh-bia/facebook.png`                     | `src/assets/images/hero.jpg` (ảnh hero)                         |
 | `nhan-dien/04-anh-bia/facebook-slogan-den.png`      | `src/app/opengraph-image.jpg`, `twitter-image.jpg` (1200 × 628) |
+| `3d/boongee-paper-16oz.glb`                         | `public/models/boongee-paper-16oz.glb` (cảnh 3D ở hero, đã nén) |
 
 ## Deploy
 

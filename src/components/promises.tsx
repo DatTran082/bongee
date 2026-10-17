@@ -11,7 +11,7 @@ const ICONS: Record<PromiseIcon, typeof IconFlower> = {
 /** What every Boongee drink keeps to: real flowers, gentle sweetness, a light brew. */
 export function Promises() {
   return (
-    <section aria-labelledby="promises-title" className="bg-brand-pink-100">
+    <section aria-labelledby="promises-title">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-20">
         <SectionHeading tagline={promises.tagline} title={promises.title} id="promises-title" />
         <ul className="grid gap-6 md:grid-cols-3">

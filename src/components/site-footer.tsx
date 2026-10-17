@@ -8,20 +8,20 @@ export function SiteFooter() {
   const links = socials.flatMap((s) => (s.href ? [{ ...s, href: s.href }] : []));
 
   return (
-    <footer className="border-t border-brand-line">
+    <footer className="border-t border-brand-ink/15">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[2fr_1fr_1fr] md:py-14">
         <div>
           <Link href="/" aria-label="Boongee — trang chủ" className="inline-block">
             <Logo className="h-10 w-auto" />
           </Link>
-          <p className="mt-3 text-sm tracking-[0.2em] text-brand-ink-muted uppercase">{brand.slogan}</p>
+          <p className="mt-3 text-sm tracking-[0.2em] uppercase">{brand.slogan}</p>
         </div>
         <nav aria-label="Liên kết cuối trang">
           <p className="mb-3 text-sm font-semibold">{brand.name}</p>
-          <ul className="space-y-2 text-sm text-brand-ink-muted">
+          <ul className="space-y-2 text-sm">
             {nav.map((item) => (
               <li key={item.id}>
-                <Link href={`/#${item.id}`} className="underline-offset-4 hover:text-brand-ink hover:underline">
+                <Link href={`/#${item.id}`} className="underline-offset-4 hover:underline">
                   {item.label}
                 </Link>
               </li>
@@ -49,7 +49,7 @@ export function SiteFooter() {
           </div>
         )}
       </div>
-      <p className="border-t border-brand-line px-4 py-5 text-center text-xs text-brand-ink-muted">
+      <p className="border-t border-brand-ink/15 px-4 py-5 text-center text-xs">
         © {brand.name} · {brand.slogan}
       </p>
     </footer>

@@ -13,9 +13,7 @@ export default function NotFound() {
         <span className="sr-only">Lỗi </span>404
       </h1>
       <p className="mt-6 text-2xl">Không tìm thấy trang này.</p>
-      <p className="mt-4 mb-8 text-lg text-brand-ink-muted">
-        Trang có thể đã đổi địa chỉ. Mời bạn về trang chủ Boongee.
-      </p>
+      <p className="mt-4 mb-8 text-lg">Trang có thể đã đổi địa chỉ. Mời bạn về trang chủ Boongee.</p>
       <ButtonLink href="/" variant="primary">
         Về trang chủ
       </ButtonLink>

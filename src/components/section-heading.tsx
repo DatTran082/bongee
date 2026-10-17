@@ -17,7 +17,7 @@ export function SectionHeading({
       <h2 id={id} className="mt-2 text-3xl font-bold tracking-tight text-balance text-brand-ink md:text-5xl">
         {title}
       </h2>
-      {subtitle && <p className="mt-4 text-lg text-brand-ink-muted md:text-xl">{subtitle}</p>}
+      {subtitle && <p className="mt-4 text-lg md:text-xl">{subtitle}</p>}
     </div>
   );
 }

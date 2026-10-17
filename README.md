@@ -66,6 +66,8 @@ Thực đơn trên web và thực đơn in luôn trùng nhau vì cùng một fil
 - **Màu** sinh từ `brandkit/color/tokens.json` thành `src/styles/brand-tokens.css` (lớp Tailwind `bg-brand-pink-500`,
   `text-brand-ink`, `border-brand-line`…) và `src/data/brand-tokens.json`. Không gõ mã màu trong component. Chữ luôn là
   Đen Than trên nền hồng hoặc trắng; chữ trắng chỉ trên nền Đen Than.
+- **Nền** cả trang là hồng phấn `pink-500` như hero; các khối (thực đơn, ưu đãi, địa chỉ…) là thẻ trắng. Chữ xám
+  `ink-muted` chỉ dùng trong thẻ trắng (trên nền hồng không đủ tương phản). Mép ảnh hero mờ dần vào nền hồng.
 - **Font** duy nhất là Fraunces (SIL OFL), tự host qua `next/font`, có bộ ký tự tiếng Việt và các trục SOFT, WONK, opsz.
 - **Logo** `src/assets/brand/logo-ngang.svg`; favicon và icon iOS là bông hoa logo trên nền hồng phấn.
 

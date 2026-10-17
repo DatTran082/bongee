@@ -12,6 +12,9 @@
  * Brand rules for every component: one mark colour on one ground — ink on pink, pink on ink, ink on white. Never
  * white or pink text on a pink or white ground (contrast ≈ 1.5 : 1); pink-700 is for rules and small details, not
  * text. Light only: the brand has no dark theme.
+ *
+ * The whole page stands on the hero's pink (pink-500); panels on it are white cards. Text on the pink is ink:
+ * ink-muted reaches only ≈ 3.8 : 1 there, so it is kept for white cards. Rules on the pink are ink at 15 %.
  */
 :root {
   color-scheme: light;
@@ -28,7 +31,7 @@ html {
 }
 
 body {
-  background: var(--color-brand-bg);
+  background: var(--color-brand-pink-500);
   color: var(--color-brand-ink);
   font-family: var(--font-sans);
 }

@@ -19,7 +19,7 @@ export function Visit() {
   return (
     <section id={sections.visit} className="mx-auto max-w-4xl px-4 py-16 sm:px-6 md:py-24">
       <SectionHeading tagline={visit.tagline} title={visit.title} />
-      <div className="rounded-3xl bg-brand-pink-500 px-6 py-8 md:px-12 md:py-12">
+      <div className="rounded-3xl bg-brand-bg-alt px-6 py-8 md:px-12 md:py-12">
         <address className="text-center not-italic">
           <p className="flex items-center justify-center gap-2 text-sm tracking-[0.2em] uppercase">
             <IconMapPin aria-hidden className="size-5" />

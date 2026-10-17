@@ -33,6 +33,9 @@ npm run sync-brand   # copy brand assets from ../brandkit and menu/offers from S
 - **Colours** are Tailwind theme variables `--color-brand-<token>` (`bg-brand-pink-500`, `text-brand-ink`,
   `border-brand-line`, …) generated from the tokens; no hex in components. Text is ink on pink or white; white text
   only on ink; never white or pink text on a pink or white ground; pink-700 is for details, not text. Light only.
+  The whole page stands on the hero's pink-500 (`body` in `globals.css`); panels on it are white cards (`bg-brand-bg-alt`).
+  On the pink, text is `text-brand-ink` (ink-muted is ≈ 3.8 : 1 there, kept for white cards) and rules are
+  `border-brand-ink/15`. The hero photo's edges fade into that pink (its backdrop is a cooler pink).
 - **Type**: Fraunces is the only typeface (`next/font/google` in `src/app/layout.tsx`, `vietnamese` subset).
 - `cacheComponents` is on (scaffold default): keep prerendering static, avoid `new Date()` / request APIs in server
   components unless wrapped as the docs require.

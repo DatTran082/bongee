@@ -45,3 +45,74 @@ section[id] {
   background: var(--color-brand-pink-300);
   color: var(--color-brand-ink);
 }
+
+/*
+ * The 3D stage (src/components/cup-stage.tsx, mounted by the home page inside <main>) is a fixed, transparent
+ * canvas at z-index −10 in main's own stacking context: it paints over the body's pink and under every section, so
+ * the cup shows wherever the pink does, passes behind the white cards and never covers a line of text. The footer
+ * stacks above main's context too (the header already does, at z-50).
+ */
+main {
+  isolation: isolate;
+}
+
+footer {
+  position: relative;
+  z-index: 10;
+}
+
+/*
+ * No cup (no WebGL 2, data saver, or the model failed): the slots collapse, but the hero's, which shows the cover
+ * photo; the two-column grids around them go back to one column (a hidden grid item leaves its track empty).
+ */
+.cup-failed .cup-anchor:not([data-cup-anchor="hero"]),
+.cup-failed .cup-row {
+  display: none;
+}
+
+.cup-failed .cup-grid {
+  display: block;
+}
+
+/*
+ * Parallax for the page's own content, driven by the scroll in CSS alone where the browser can (scroll-driven
+ * animations); elsewhere, and with reduced motion, the page simply stands still. `parallax-rise` lifts a card into
+ * place as it enters the viewport; `parallax-near` carries a heading a little faster than the page, as if nearer.
+ * Neither may sit on an ancestor of a sticky slot or inside an `overflow: hidden` box (that would be the timeline).
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .parallax-rise {
+      animation: parallax-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 80%;
+    }
+
+    .parallax-near {
+      animation: parallax-near linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+/* The rise keeps text readable at every scroll position: opacity never drops under 0.8. */
+@keyframes parallax-rise {
+  from {
+    opacity: 0.8;
+    transform: translateY(2.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes parallax-near {
+  from {
+    transform: translateY(2rem);
+  }
+  to {
+    transform: translateY(-2rem);
+  }
+}

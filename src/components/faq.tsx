@@ -8,7 +8,7 @@ export function Faq() {
   return (
     <section id={sections.faq} className="mx-auto max-w-3xl px-4 py-16 sm:px-6 md:py-24">
       <SectionHeading tagline={faqIntro.tagline} title={faqIntro.title} />
-      <div className="divide-y divide-brand-ink/15 border-y border-brand-ink/15">
+      <div className="parallax-rise divide-y divide-brand-ink/15 border-y border-brand-ink/15">
         {faq.map((item, i) => (
           <details key={item.question} className="group py-4" open={i === 0}>
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg text-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-ink md:text-xl [&::-webkit-details-marker]:hidden">

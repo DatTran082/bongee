@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { CupStage } from "@/components/cup-stage";
 import { Faq } from "@/components/faq";
 import { Hero } from "@/components/hero";
 import { Menu } from "@/components/menu";
@@ -82,6 +83,8 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
       <Hero />
+      {/* the 3D cup: a fixed canvas behind the page (globals.css); after the hero, so its control follows the hero's buttons */}
+      <CupStage />
       <Story />
       <Promises />
       <Menu />

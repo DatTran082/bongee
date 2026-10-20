@@ -5,16 +5,18 @@ TypeScript, Tailwind CSS 4), khởi tạo từ `create-next-app` chính thức. 
 
 ## Chạy
 
-Cần Node.js ≥ 20.9.
+Cần Node.js ≥ 22.18 (`npm test` chạy file `.ts` bằng type stripping có sẵn của Node).
 
 ```bash
 npm install
 npm run dev          # http://localhost:3000
 npm run build        # dựng bản production
 npm run start        # chạy bản đã dựng
-npm run check        # ESLint + TypeScript + Prettier
+npm run check        # ESLint + TypeScript + Prettier + test
+npm run test         # test phần toán của ly 3D (node --test)
 npm run format       # định dạng lại mã (Prettier, có sắp xếp class Tailwind)
 npm run sync-brand   # chép lại tài sản thương hiệu từ ../brandkit (xem dưới)
+node scripts/fetch-textures.mjs   # (một lần) tải texture PBR CC0 từ Poly Haven cho bộ cảnh 3D → public/textures/
 ```
 
 ## Nội dung trang
@@ -25,7 +27,7 @@ Một trang (`src/app/page.tsx`), giao diện sáng, tiếng Việt. Nội dung 
 
 | Phần                     | Mã nguồn                      | Nội dung                                                                      |
 | ------------------------ | ----------------------------- | ----------------------------------------------------------------------------- |
-| Hero                     | `src/components/hero.tsx`     | ảnh hai ly, slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất)             |
+| Hero                     | `src/components/hero.tsx`     | slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất) bên bộ ảnh bìa dựng 3D  |
 | Câu chuyện `#cau-chuyen` | `src/components/story.tsx`    | Gốc · Nghi thức · Cảm xúc, hoạ tiết monogram                                  |
 | Điều Boongee giữ         | `src/components/promises.tsx` | hoa thật, ngọt vừa (mặc định 50%), pha thật nhẹ                               |
 | Thực đơn `#thuc-don`     | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá      |
@@ -35,6 +37,33 @@ Một trang (`src/app/page.tsx`), giao diện sáng, tiếng Việt. Nội dung 
 
 Kèm theo: header dính đầu trang có menu cho điện thoại, footer, trang 404 tiếng Việt, `sitemap.xml`, `robots.txt`,
 dữ liệu có cấu trúc (JSON-LD: WebSite, CafeOrCoffeeShop, FAQPage), favicon, icon iOS và ảnh chia sẻ.
+
+### Cảnh 3D bay theo trang
+
+Hai mô hình ly của brand kit (`brandkit/3d/boongee-paper-16oz.glb` ≈ 510 kB và `boongee-pp-700ml.glb` ≈ 360 kB sau
+nén, tên file theo nội dung trong `public/models/`) được vẽ bằng **three.js** trên một canvas trong suốt cố định phía
+sau nội dung (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`). Có ba "diễn viên", mỗi diễn viên bay theo các ô
+của riêng mình:
+
+- **Bộ ảnh bìa** (`src/lib/cup-scene/set/`) nổi ở hero: dựng lại ảnh bìa trong 3D, chi tiết nhất có thể: hai ly giấy
+  16 oz với hình in bạc ánh kim, ly trước đội chóp kem bông rắc vụn cánh hồng và hoa quế khô, ly sau đậy nắp bật trắng
+  đứng trên khúc gỗ cao, khúc gỗ thấp phía sau, khối đá granite lốm đốm (texture vẽ bằng canvas), bông ly trắng nhuỵ
+  vàng, cành nụ xoăn bên trái, dây leo với lá và hoa nhài kép bên phải; khối đá và khúc gỗ phủ texture PBR CC0 của
+  Poly Haven (`public/textures/`), kem bông có bọt; bóng đổ thật từ đèn chếch trái, cả bộ bồng bềnh như một đảo nhỏ.
+- **Ly nhựa** 700 ml vẽ trong suốt: bên trong là **trà nho** trong mờ màu xanh, thấy nho và đá đứng trong nước; thêm
+  nho (có quả cắt đôi, da nho có texture), đá và giọt nước lơ lửng xoay quanh ly. Không mô phỏng vật lý chất lỏng
+  (đã bỏ vì nặng). Ô ở câu chuyện (nắp nhấc lên, nhìn xuống mặt trà), thực đơn (cột dính bên phải), ưu đãi.
+- **Ly giấy** đậy nắp: ô ở ưu đãi (đứng cạnh ly nhựa: **hai ly** vì giảm giá cho đơn từ 2 ly) và ghé quán.
+
+Mỗi section chừa **ô trống** (`<CupAnchor actor=…>`) kèm tư thế; khi cuộn, diễn viên đậu ở ô gần nhất phía trên giữa
+màn hình rồi **bay** sang ô kế tiếp của nó; ở điện thoại các ô nằm xen giữa chữ. Mọi thứ ở sau các thẻ trắng nên không
+bao giờ che chữ.
+
+- **Tương tác**: kéo để xoay, chạm nắp để bật nút; bàn phím: mũi tên trái / phải xoay, Enter bật / đậy nút, Home về
+  mặt trước; mỗi diễn viên là một vùng chạm riêng.
+- **Parallax**: bông hoa logo trôi phía sau ở nhiều độ sâu (xa thì chạy chậm hơn); tiêu đề và thẻ trôi nhẹ bằng CSS
+  scroll-driven animation ở trình duyệt hỗ trợ. Với `prefers-reduced-motion`, chỉ đổi ô, không bay, không bồng bềnh.
+- Không có WebGL 2, bật tiết kiệm dữ liệu, tắt JavaScript hoặc tải model lỗi: hero hiện lại ảnh bìa, các ô khác thu lại.
 
 ### Sửa nội dung ở đâu
 
@@ -78,14 +107,16 @@ Tài sản thương hiệu được chép vào repo (dựng và deploy không c�
 `brand-kit`). Ngoài các file dưới, script chép `menu-data.json` và `collateral.json` của ShanMay vào
 `src/data/shanmay/`:
 
-| Từ `brandkit/`                                      | Sang                                                            |
-| --------------------------------------------------- | --------------------------------------------------------------- |
-| `color/tokens.json`                                 | `src/styles/brand-tokens.css`, `src/data/brand-tokens.json`     |
-| `nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg` | `src/assets/brand/logo-ngang.svg`                               |
-| `nhan-dien/01-logo/bieu-tuong-hoa_den.svg`          | `src/app/icon.svg`, `favicon.ico`, `apple-icon.png`             |
-| `nhan-dien/03-hoa-tiet/monogram_hong.png`           | `src/assets/images/monogram-hong.png`                           |
-| `lookbook/anh-bia/facebook.png`                     | `src/assets/images/hero.jpg` (ảnh hero)                         |
-| `nhan-dien/04-anh-bia/facebook-slogan-den.png`      | `src/app/opengraph-image.jpg`, `twitter-image.jpg` (1200 × 628) |
+| Từ `brandkit/`                                         | Sang                                                                                                                                          |
+| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `color/tokens.json`                                    | `src/styles/brand-tokens.css`, `src/data/brand-tokens.json`                                                                                   |
+| `nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg`    | `src/assets/brand/logo-ngang.svg`                                                                                                             |
+| `nhan-dien/01-logo/bieu-tuong-hoa_den.svg`             | `src/app/icon.svg`, `favicon.ico`, `apple-icon.png`                                                                                           |
+| `nhan-dien/03-hoa-tiet/monogram_hong.png`              | `src/assets/images/monogram-hong.png`                                                                                                         |
+| `nhan-dien/01-logo/bieu-tuong-hoa_den.svg`             | `src/assets/brand/hoa.svg` (hoa trôi sau ly 3D)                                                                                               |
+| `lookbook/anh-bia/facebook.png`                        | `src/assets/images/hero.jpg` (ảnh hero dự phòng khi không có ly 3D)                                                                           |
+| `3d/boongee-pp-700ml.glb`, `3d/boongee-paper-16oz.glb` | `public/models/<tên>.<hash>.glb` (hai ly 3D, nén meshopt + WebP; tên theo nội dung, cache vĩnh viễn) và `src/data/cup-model.json` (đường dẫn) |
+| `nhan-dien/04-anh-bia/facebook-slogan-den.png`         | `src/app/opengraph-image.jpg`, `twitter-image.jpg` (1200 × 628)                                                                               |
 
 ## Deploy
 

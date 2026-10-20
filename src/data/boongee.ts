@@ -38,7 +38,33 @@ export const nav = [
 
 export const hero = {
   intro: "Trà ướp hoa dành dành, bạch lan, hoa trúc. Pha thật nhẹ: thơm dịu, vị thanh.",
+  /** the cover photo, shown in the hero's slot only when the 3D cup cannot be */
   imageAlt: "Hai ly Boongee trên nền hồng: ly kem bông rắc cánh hồng khô và ly giấy đậy nắp, in hoa monogram màu bạc",
+};
+
+/** The 3D stage's actors, floating through the page (src/components/cup-stage.tsx). */
+export const cup = {
+  actors: {
+    set: {
+      short: "Bộ ảnh bìa",
+      label:
+        "Bộ ảnh bìa Boongee dựng 3D: hai ly giấy 16 oz in bốn dấu monogram màu bạc và chữ Boongee; ly kem bông rắc cánh hồng khô đứng trên khối đá granite, ly đậy nắp bật trắng đứng trên khúc gỗ, bên cạnh một bông ly trắng, một cành nụ xanh và dây leo hoa nhài.",
+    },
+    pp: {
+      short: "Ly nhựa",
+      label:
+        "Ly Boongee 700 ml, mô hình 3D: ly nhựa nhám in bốn dấu monogram và chữ Boongee, bên trong là trà nho xanh, đậy nắp bật nút trong; nho xanh, viên đá và giọt nước lơ lửng xung quanh.",
+    },
+    paper: {
+      short: "Ly giấy",
+      label:
+        "Ly giấy Boongee 16 oz, mô hình 3D: ly giấy hai lớp in bốn dấu monogram màu bạc và chữ Boongee, đậy nắp bật nút trắng.",
+    },
+  },
+  hint: "Kéo để xoay, chạm nắp để bật nút",
+  keys: "Phím mũi tên trái, phải xoay; Enter bật hoặc đậy nút; Home về mặt trước.",
+  strapOpened: "đã bật nút nắp.",
+  strapClosed: "đã đậy nút nắp.",
 };
 
 /** The visual narrative of docs/01 §6: origin, ritual, feeling. */

@@ -6,7 +6,7 @@
 // prices in ShanMay, set it to false, then sync.
 import data from "./shanmay/menu-data.json";
 
-type CategoryId = keyof typeof data.categories;
+export type MenuCategoryId = keyof typeof data.categories;
 
 export interface MenuItem {
   name: string;
@@ -15,7 +15,7 @@ export interface MenuItem {
 }
 
 export interface MenuCategory {
-  id: CategoryId;
+  id: MenuCategoryId;
   title: string;
   sized: boolean;
   items: MenuItem[];
@@ -26,9 +26,9 @@ export const sizes = Object.entries(data.sizes).map(([label, volume]) => ({ labe
 
 /** Categories in the printed menu's reading order (row by row). */
 export const categories: MenuCategory[] = data.layout.flat().map((id) => {
-  const category = data.categories[id as CategoryId];
+  const category = data.categories[id as MenuCategoryId];
   return {
-    id: id as CategoryId,
+    id: id as MenuCategoryId,
     title: category.title,
     sized: category.sized,
     items: category.items.map((item) => ({ name: item.name, prices: item.price })),

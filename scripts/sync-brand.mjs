@@ -6,10 +6,13 @@
 //   color/tokens.json                                  → src/styles/brand-tokens.css   Tailwind colours bg-brand-*…
 //                                                        src/data/brand-tokens.json    the same, for TypeScript
 //   nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg  → src/assets/brand/logo-ngang.svg
-//   nhan-dien/01-logo/bieu-tuong-hoa_den.svg           → src/app/icon.svg, favicon.ico, apple-icon.png
+//   nhan-dien/01-logo/bieu-tuong-hoa_den.svg           → src/assets/brand/hoa.svg (the floating marks of the 3D stage),
+//                                                        src/app/icon.svg, favicon.ico, apple-icon.png
 //   nhan-dien/03-hoa-tiet/monogram_hong.png            → src/assets/images/monogram-hong.png
-//   lookbook/anh-bia/facebook.png                      → src/assets/images/hero.jpg
+//   lookbook/anh-bia/facebook.png                      → src/assets/images/hero.jpg   shown only when the 3D cup cannot
 //   nhan-dien/04-anh-bia/facebook-slogan-den.png       → src/app/opengraph-image.jpg, twitter-image.jpg (1200 × 628)
+//   3d/boongee-pp-700ml.glb, 3d/boongee-paper-16oz.glb → public/models/<name>.<hash>.glb   the 3D cups, compressed
+//                                                        src/data/cup-model.json          their URLs
 //
 // The menu and the offers come from the ShanMay brand kit (../../ShanMay/brand-kit, or BOONGEE_SHANMAY), the same
 // files the printed menu and the vouchers are built from, so the site and the print never disagree:
@@ -17,9 +20,14 @@
 //   menu-posm/print-ready/menu-data.json               → src/data/shanmay/menu-data.json    categories, items, prices
 //   collateral/collateral.json                         → src/data/shanmay/collateral.json   weekly offer, loyalty card
 
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { NodeIO } from "@gltf-transform/core";
+import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
+import { dedup, meshopt, prune, textureCompress } from "@gltf-transform/functions";
+import { MeshoptDecoder, MeshoptEncoder } from "meshoptimizer";
 import sharp from "sharp";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -29,6 +37,17 @@ const OG = { width: 1200, height: 628 };
 const OG_ALT = "Boongee — Trà hương thanh vị: hai ly Boongee in hoa monogram màu bạc trên nền hồng";
 const TOUCH_ICON = 180;
 const FAVICON = 32;
+/** The cup models, with the nodes the 3D stage looks up by name (src/lib/cup-scene/model.ts, set/index.ts). */
+const CUPS = {
+  pp: {
+    name: "boongee-pp-700ml",
+    nodes: ["boongee-pp-700ml", "cup-body", "drink", "lid", "lid-strap", "lid-strap-cap", "print"],
+  },
+  paper: {
+    name: "boongee-paper-16oz",
+    nodes: ["boongee-paper-16oz", "cup-sleeve-print", "drink", "lid", "lid-strap", "lid-strap-cap"],
+  },
+};
 
 const kit = (rel) => {
   const file = path.join(KIT, rel);
@@ -129,11 +148,67 @@ async function photos() {
   }
 }
 
+/**
+ * A cup for the 3D stage, compressed for the web (meshopt geometry, WebP textures; 1.3–2 MB → a few hundred kB). Quantization folds a scale and offset into the matrix of each node that holds a mesh, so every mesh
+ * first moves into a child node of its own: the named nodes keep their origins, which the stage turns and lifts about
+ * (`lid` sits on the rim, `lid-strap` swings on its hinge). The file is named after its content and the name
+ * written to src/data/cup-model.json, so the site can cache it for good and a new model is a new URL.
+ */
+async function cupModel({ name: CUP, nodes: CUP_NODES }, io) {
+  const doc = await io.read(kit(`3d/${CUP}.glb`));
+  for (const node of doc.getRoot().listNodes()) {
+    const mesh = node.getMesh();
+    if (!mesh) continue;
+    if (node.getSkin() || mesh.listPrimitives().some((prim) => prim.listTargets().length)) {
+      throw new Error(`${CUP}.glb: "${node.getName()}" is skinned or morphed; moving its mesh would break it.`);
+    }
+    node.addChild(doc.createNode(`${node.getName()}-mesh`).setMesh(mesh));
+    node.setMesh(null);
+  }
+  await doc.transform(
+    dedup(),
+    prune({ keepLeaves: true }),
+    // the prints, the metal-roughness map and the grain normal maps lossy (grain is noise anyway); the lid's normal
+    // map lossless (lossy WebP dents the embossed marks)
+    textureCompress({ encoder: sharp, targetFormat: "webp", quality: 90, pattern: /^(?!lid_top_normal)/ }),
+    textureCompress({ encoder: sharp, targetFormat: "webp", lossless: true, pattern: /^lid_top_normal/ }),
+    meshopt({ encoder: MeshoptEncoder, level: "medium" }),
+  );
+  const names = new Set(
+    doc
+      .getRoot()
+      .listNodes()
+      .map((node) => node.getName()),
+  );
+  const missing = CUP_NODES.filter((name) => !names.has(name));
+  if (missing.length) throw new Error(`${CUP}.glb has no ${missing.join(", ")} node: the 3D stage needs them.`);
+  const glb = await io.writeBinary(doc);
+  const hash = createHash("sha256").update(glb).digest("hex").slice(0, 8);
+  const dir = out("public/models/.keep") && path.join(ROOT, "public", "models");
+  for (const old of readdirSync(dir).filter((name) => name.startsWith(`${CUP}.`) && name.endsWith(".glb"))) {
+    rmSync(path.join(dir, old));
+  }
+  write(`public/models/${CUP}.${hash}.glb`, glb);
+  return `/models/${CUP}.${hash}.glb`;
+}
+
+async function cupModels() {
+  await Promise.all([MeshoptEncoder.ready, MeshoptDecoder.ready]);
+  const io = new NodeIO()
+    .registerExtensions(ALL_EXTENSIONS)
+    .registerDependencies({ "meshopt.encoder": MeshoptEncoder, "meshopt.decoder": MeshoptDecoder });
+  const urls = {};
+  for (const [key, cup] of Object.entries(CUPS)) urls[key] = await cupModel(cup, io);
+  write("src/data/cup-model.json", JSON.stringify(urls, null, 2) + "\n");
+}
+
 const hex = tokens();
 copy("nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg", "src/assets/brand/logo-ngang.svg");
+copy("nhan-dien/01-logo/bieu-tuong-hoa_den.svg", "src/assets/brand/hoa.svg");
 copy("nhan-dien/03-hoa-tiet/monogram_hong.png", "src/assets/images/monogram-hong.png");
 await icons(hex);
 await photos();
+await cupModels();
 for (const [from, to] of [
   ["menu-posm/print-ready/menu-data.json", "src/data/shanmay/menu-data.json"],
   ["collateral/collateral.json", "src/data/shanmay/collateral.json"],

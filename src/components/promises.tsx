@@ -18,7 +18,7 @@ export function Promises() {
           {promises.items.map((item) => {
             const Icon = ICONS[item.icon];
             return (
-              <li key={item.title} className="rounded-3xl bg-brand-bg-alt p-6 text-center md:p-8">
+              <li key={item.title} className="parallax-rise rounded-3xl bg-brand-bg-alt p-6 text-center md:p-8">
                 <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-brand-ink text-white">
                   <Icon aria-hidden className="size-7" />
                 </span>

@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Reference images dropped into public/models by hand (Meshy renders, photos of the sample cup): not site assets, never deploy them
+public/models/Meshy_AI_image_*
+public/models/real foootage/

@@ -30,24 +30,31 @@ import { CREAM, SPRINKLES } from "./palette";
 // flecks of dried osmanthus. In cup coordinates (the GLB's: base at the origin, the rolled rim round y = 0.1337 m,
 // outer radius 0.0466 m).
 
-/** The dome's profile (radius, height), bottom inside the cup to the top on the axis. */
+/**
+ * The dome's profile (radius, height), from its flat underside to the top on the axis. Nothing of it goes down into
+ * the cup: the paper wall above the outer sleeve (129–132 mm) is a thin shell, and foam below the rim showed through
+ * it. The underside sits just over the inner shoulder of the rolled rim (a torus 132.3–135 mm, outer r 46.6) and the
+ * dome only spreads out once it is above the rim's top, so its overhang rests on the rim and hides the cup's mouth.
+ */
 const PROFILE: ReadonlyArray<readonly [number, number]> = [
-  [0, 0.126],
-  [0.0438, 0.126],
-  [0.0448, 0.1335],
-  [0.0472, 0.1352],
-  [0.0489, 0.1374],
-  [0.0493, 0.1402],
-  [0.0481, 0.1436],
-  [0.0452, 0.1478],
-  [0.0404, 0.152],
-  [0.0335, 0.1556],
-  [0.0247, 0.1583],
+  [0, 0.1348],
+  [0.044, 0.1348],
+  [0.0446, 0.1354],
+  [0.0458, 0.1358],
+  [0.0478, 0.1366],
+  [0.0492, 0.1385],
+  [0.0496, 0.141],
+  [0.0484, 0.1442],
+  [0.0454, 0.1482],
+  [0.0405, 0.1522],
+  [0.0335, 0.1557],
+  [0.0247, 0.1584],
   [0.0155, 0.16],
   [0.0062, 0.1608],
   [0, 0.161],
 ];
-const RIM_Y = 0.1353;
+/** Above this the dome is free to swell and ripple; below it stays a clean revolve inside the cup. */
+const RIM_Y = 0.1358;
 /** The foam's surface: one texture tile covers `tile` metres, seen from above (planar UVs). */
 const FOAM = { tile: 0.034, px: 512, pits: 2200, bigPits: 70 };
 const FLAKES = { petals: 48, crumbs: 36, osmanthus: 110, spread: 0.044 };
@@ -151,7 +158,7 @@ function dome(random: Random): Mesh {
   const flatPosition = unindexed.getAttribute("position");
   const flatNormal = unindexed.getAttribute("normal");
   const uv = new Float32Array(flatPosition.count * 2);
-  const shoulder = PROFILE[4][0]; // the radius the shoulder's bubbles are sized by
+  const shoulder = PROFILE[6][0]; // the radius the shoulder's bubbles are sized by
   for (let f = 0; f < flatPosition.count; f += 3) {
     const up = (flatNormal.getY(f) + flatNormal.getY(f + 1) + flatNormal.getY(f + 2)) / 3 >= 0.72;
     const first = Math.atan2(flatPosition.getZ(f), flatPosition.getX(f));

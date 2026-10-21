@@ -28,7 +28,7 @@ export function Visit() {
           tilt={0.08}
           className="mb-8 h-[40vh] max-h-[24rem] lg:mb-0 lg:h-[60vh] lg:max-h-[40rem]"
         />
-        <div className="parallax-rise rounded-3xl bg-brand-bg-alt px-6 py-8 md:px-12 md:py-12">
+        <div className="parallax-rise rounded-3xl border border-brand-line bg-brand-bg-alt px-6 py-8 md:px-12 md:py-12">
           <address className="text-center not-italic">
             <p className="flex items-center justify-center gap-2 text-sm tracking-[0.2em] uppercase">
               <IconMapPin aria-hidden className="size-5" />

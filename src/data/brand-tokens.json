@@ -11,5 +11,15 @@
   "ink-muted": "#6E6266",
   "line": "#EEDFE4",
   "white": "#FFFFFF",
-  "silver": "#8A8D8F"
+  "silver": "#8A8D8F",
+  "sky-200": "#D7ECF2",
+  "sky-400": "#A8D3E3",
+  "cloud": "#FFFDF7",
+  "cloud-shade": "#E7E1EE",
+  "moss-300": "#C3DAA6",
+  "moss-500": "#86A872",
+  "cream-300": "#F8E8CF",
+  "honey-400": "#EFC27A",
+  "wood-500": "#A9775A",
+  "stone-300": "#CFC7C9"
 }

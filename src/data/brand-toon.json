@@ -1,0 +1,30 @@
+{
+  "_readme": "Phong cách 3D: stylized drink game asset, low-poly. Áp cho mọi mô hình 3D của thương hiệu (web, ảnh dựng, game).",
+  "facets": {
+    "cup": 12,
+    "topping": "icosahedron chi tiết 0–1",
+    "rock": "icosahedron chi tiết 1, nắn méo"
+  },
+  "bands": 3,
+  "shade": {
+    "lightness": 0.84,
+    "hueShiftDeg": -12,
+    "_readme": "mặt khuất: giảm sáng và ngả về tím hồng, không ngả xám"
+  },
+  "outline": {
+    "lightness": 0.55,
+    "saturation": 1.1,
+    "widthPx": 2.5,
+    "_readme": "viền cùng tông, đậm hơn màu thân, không dùng viền đen"
+  },
+  "highlight": {
+    "color": "cloud",
+    "threshold": 0.94,
+    "_readme": "vệt sáng trắng vẽ tay: mảng phẳng, cạnh gọn"
+  },
+  "rim": {
+    "color": "cloud",
+    "strength": 0.35
+  },
+  "transparent": "Nhựa trong vẽ bằng alpha 0.25–0.4, không khúc xạ."
+}

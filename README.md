@@ -15,8 +15,7 @@ npm run start        # chạy bản đã dựng
 npm run check        # ESLint + TypeScript + Prettier + test
 npm run test         # test phần toán của ly 3D (node --test)
 npm run format       # định dạng lại mã (Prettier, có sắp xếp class Tailwind)
-npm run sync-brand   # chép lại tài sản thương hiệu từ ../brandkit (xem dưới)
-node scripts/fetch-textures.mjs   # (một lần) tải texture PBR CC0 từ Poly Haven cho bộ cảnh 3D → public/textures/
+npm run sync-brand   # chép lại tài sản thương hiệu từ ../brandkit và màu phụ, luật toon từ ../brandkit-ghibli (xem dưới)
 ```
 
 ## Nội dung trang
@@ -45,15 +44,29 @@ nén, tên file theo nội dung trong `public/models/`) được vẽ bằng **t
 sau nội dung (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`). Có ba "diễn viên", mỗi diễn viên bay theo các ô
 của riêng mình:
 
-- **Bộ ảnh bìa** (`src/lib/cup-scene/set/`) nổi ở hero: dựng lại ảnh bìa trong 3D, chi tiết nhất có thể: hai ly giấy
-  16 oz với hình in bạc ánh kim, ly trước đội chóp kem bông rắc vụn cánh hồng và hoa quế khô, ly sau đậy nắp bật trắng
-  đứng trên khúc gỗ cao, khúc gỗ thấp phía sau, khối đá granite lốm đốm (texture vẽ bằng canvas), bông ly trắng nhuỵ
-  vàng, cành nụ xoăn bên trái, dây leo với lá và hoa nhài kép bên phải; khối đá và khúc gỗ phủ texture PBR CC0 của
-  Poly Haven (`public/textures/`), kem bông có bọt; bóng đổ thật từ đèn chếch trái, cả bộ bồng bềnh như một đảo nhỏ.
-- **Ly nhựa** 700 ml vẽ trong suốt: bên trong là **trà nho** trong mờ màu xanh, thấy nho và đá đứng trong nước; thêm
-  nho (có quả cắt đôi, da nho có texture), đá và giọt nước lơ lửng xoay quanh ly. Không mô phỏng vật lý chất lỏng
-  (đã bỏ vì nặng). Ô ở câu chuyện (nắp nhấc lên, nhìn xuống mặt trà), thực đơn (cột dính bên phải), ưu đãi.
+- **Bộ ảnh bìa** (`src/lib/cup-scene/set/`) nổi ở hero: hai ly giấy 16 oz, ly trước đội kem bông hai tầng rắc cánh
+  hồng, đứng trên tảng đá; ly sau đậy nắp bật trắng, đứng trên khúc gỗ cao, khúc gỗ thấp phía sau; hai đám mây trôi
+  phía sau; không có cây hay hoa; bóng đổ từ đèn chếch trái, cả bộ bồng bềnh như một đảo nhỏ.
+- **Ly nhựa** 700 ml trong suốt: bên trong là **trà nho** xanh đậm dần xuống đáy; chùm nho và viên đá đứng trong nước
+  và lơ lửng xoay quanh ly, kèm đốm lấp lánh; không có giọt nước, không mô phỏng chất lỏng. Ô ở câu chuyện (nắp nhấc lên, nhìn xuống mặt trà), thực đơn (cột dính bên phải), ưu đãi.
 - **Ly giấy** đậy nắp: ô ở ưu đãi (đứng cạnh ly nhựa: **hai ly** vì giảm giá cho đơn từ 2 ly) và ghé quán.
+
+- **Xoay ly đổi hương vị** (`#huong-vi`, `src/components/flavors.tsx`): section ghim cố định khi cuộn, mỗi nhóm
+  thực đơn một vị (hương hoa, kem bông, trái cây, kem cheese, cà phê). Cuộn tới đâu ly xoay một vòng và đổi sang ly
+  của vị kế tiếp (ly giấy đậy nắp, ly giấy kem bông, ly nhựa trà trái cây, ly giấy kem cheese), topping quanh ly
+  chuyển dần (hoa năm cánh, bọt kem và cánh hồng, nho, xoài và đá, phô mai và mâm xôi, hạt cà phê), nền chuyển trong
+  dải kem và trắng của thương hiệu. Dùng GSAP ScrollTrigger (tải sau khi trang hiện), dừng đúng từng vị; chấm bên dưới để nhảy
+  tới vị bất kỳ. Tên nhóm và tên món lấy từ thực đơn.
+
+**Phong cách 3D: low-poly hoạt hình, kiểu "stylized drink game asset"** (chọn ngày 21/10/2026, thay bản tả thực;
+bản cũ vẫn giữ trong `git stash`). Theo luật toon của bản DNA Làng Mây (`../brandkit-ghibli`):
+
+- Ly của brand kit được nắn còn 12 mặt phẳng; hình in giữ nguyên chỗ.
+- Mỗi mặt một màu, ánh sáng chia vài dải rõ, vệt sáng trắng phẳng.
+- Viền cùng tông và đậm hơn màu thân, không dùng viền đen.
+- Nhựa trong vẽ bằng độ mờ, không khúc xạ.
+- Đá, gỗ, mây và mọi topping (nho, xoài, đá viên, hạt cà phê, phô mai, mâm xôi, hoa năm cánh, bọt kem, cánh hồng)
+  đều dựng bằng code trong `src/lib/cup-scene/toon/`, cùng một bảng màu; không tải model ngoài.
 
 Mỗi section chừa **ô trống** (`<CupAnchor actor=…>`) kèm tư thế; khi cuộn, diễn viên đậu ở ô gần nhất phía trên giữa
 màn hình rồi **bay** sang ô kế tiếp của nó; ở điện thoại các ô nằm xen giữa chữ. Mọi thứ ở sau các thẻ trắng nên không

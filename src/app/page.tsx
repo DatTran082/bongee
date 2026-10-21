@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CupStage } from "@/components/cup-stage";
 import { Faq } from "@/components/faq";
+import { Flavors } from "@/components/flavors";
 import { Hero } from "@/components/hero";
 import { Menu } from "@/components/menu";
 import { Offers } from "@/components/offers";
@@ -86,6 +87,7 @@ export default function Home() {
       {/* the 3D cup: a fixed canvas behind the page (globals.css); after the hero, so its control follows the hero's buttons */}
       <CupStage />
       <Story />
+      <Flavors />
       <Promises />
       <Menu />
       <Offers />

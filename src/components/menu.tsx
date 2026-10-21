@@ -84,7 +84,7 @@ export function Menu() {
               <CategoryTable key={category.id} category={category} />
             ))}
           </div>
-          <div className="parallax-rise mx-auto mt-8 max-w-3xl rounded-3xl bg-brand-bg-alt px-6 py-6 text-center md:px-10">
+          <div className="parallax-rise mx-auto mt-8 max-w-3xl rounded-3xl border border-brand-line bg-brand-bg-alt px-6 py-6 text-center md:px-10">
             <h3 className="text-xl font-semibold">{customisation.title}</h3>
             <dl className="mt-3 flex flex-col justify-center gap-2 text-lg sm:flex-row sm:gap-10">
               {customisation.options.map((option) => (

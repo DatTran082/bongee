@@ -166,8 +166,11 @@ export class Actor {
     return this.strap.toggle(instant);
   }
 
-  /** Lays the actor out for the frame; where it landed on screen, or null when it has no slot. */
-  place(target: CupTarget | null, frame: Frame): CupPlacement | null {
+  /**
+   * Lays the actor out for the frame; where it landed on screen, or null when it has no slot. `fade` (0 … 1)
+   * shrinks it away (another actor has the stage); above half it cannot be touched.
+   */
+  place(target: CupTarget | null, frame: Frame, fade = 0): CupPlacement | null {
     if (!target) {
       this.root.visible = false;
       return null;
@@ -175,7 +178,7 @@ export class Actor {
     const { spec } = this;
     const current = (this.current = follow(this.current, target, frame.dt, frame.reduced));
     const ppm = pxPerMetre(frame.height);
-    const scale = fitScale(this, current, frame.height); // by height or by width, whichever binds
+    const scale = fitScale(this, current, frame.height) * Math.max(0.001, 1 - fade); // by height or width, whichever binds
     const heightPx = this.height * scale * ppm;
     const widthPx = this.width * scale * ppm;
     const lift = target.flight * FLIGHT_LIFT * frame.height; // px, up
@@ -203,10 +206,10 @@ export class Actor {
       y: current.y - lift - bob,
       width: widthPx,
       height: heightPx + liftM * scale * ppm,
-      resting: target.resting,
+      resting: target.resting && fade < 0.5,
     };
-    // nothing to draw while the whole thing is off screen (an actor waiting in a slot far down the page)
-    this.root.visible = isOnScreen(placement.y, placement.height, frame.height);
+    // nothing to draw while the whole thing is off screen (an actor waiting in a slot far down the page) or gone
+    this.root.visible = fade < 0.999 && isOnScreen(placement.y, placement.height, frame.height);
     return placement;
   }
 

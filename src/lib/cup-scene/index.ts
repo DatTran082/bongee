@@ -2,18 +2,14 @@ import {
   Color,
   DirectionalLight,
   HemisphereLight,
-  Mesh,
-  MeshStandardMaterial,
-  NeutralToneMapping,
+  NoToneMapping,
   type Object3D,
   PCFShadowMap,
   PerspectiveCamera,
-  PMREMGenerator,
   Scene,
   Vector3,
   WebGLRenderer,
 } from "three";
-import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { type GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import tokens from "@/data/brand-tokens.json";
@@ -21,20 +17,29 @@ import { Actor, type ActorSpec, type CupPlacement, type Frame } from "./actor";
 import { ACTORS, type ActorName } from "./actors";
 import { disposeScene } from "./dispose";
 import { DISTANCE, FOV } from "./fit";
-import { webMaterials } from "./materials";
 import { MODELS, NODES } from "./model";
 import { needsRedraw } from "./motion";
 import { createPetals } from "./petals";
 import { seeded } from "./random";
-import { createSet, preparePaper } from "./set";
-import { createSplash } from "./splash";
+import { createSet } from "./set";
+import { createSplash, type Splash } from "./splash";
+import { createToppings } from "./toppings";
+import { toonCup } from "./toon/cups";
+import { setOutlineSize } from "./toon/outline";
+import { createSparkles, type Sparkles } from "./toon/sparkles";
+import { flavors } from "@/data/flavors";
+import { createFlavorRig, type FlavorRig } from "./flavor-rig";
+import { flavorScroll } from "./flavor-scroll";
+import { flavorState } from "./flavor-track";
 import { Lean } from "./steppers";
 import type { CupTarget } from "./track";
 
-// The 3D stage: a canvas behind the page with three actors on it, each flying between the sections' slots as the
-// page scrolls (track.ts, actor.ts): the cover photo's set (set/), which floats in the hero; the clear PP cup of
-// grape tea with grapes and ice in it and floating round it (splash.ts); the lidded paper cup. The logo flower
-// drifts behind them at depth (petals.ts). The canvas clears to the page's pink, opaque (the body is the same pink,
+// The 3D stage: a canvas behind the page with its actors on it, each flying between the sections' slots as the
+// page scrolls (track.ts, actor.ts): the cover photo's set (set/), which floats in the hero; the flavour carousel's
+// cup (flavor-rig.ts); the clear PP cup of grape tea with grapes and ice in it and floating round it (splash.ts);
+// the lidded paper cup. Everything is drawn as a stylized low-poly game asset (toon/: the Làng Mây edition's toon
+// rules): flat-shaded facets in hard bands, same-hue outlines, flat white highlights, sparkles. The logo flower
+// drifts behind them at depth (petals.ts). The canvas clears to the page's cream, opaque (the body is the same cream,
 // so nothing shows; it saves blending the whole viewport). A drag turns an actor, a tap on a lid flips its strap,
 // the keyboard does both. With reduced motion nothing moves on its own: everything sits in its slot, follows the
 // scroll, and frames are drawn only when something changed.
@@ -47,15 +52,21 @@ const MAX_STEP = 250;
 const LEAN = { perSpeed: 0.05, max: 0.14, tau: 90 };
 const PETALS = { count: 14, seed: 7 };
 const SPLASH_SEED = 19;
+const TOPPING_SEED = 43;
+const SPARKLES = { seed: 61, count: 7 };
 const DPR_MAX = 2;
-const CLEAR = new Color(tokens["pink-500"]);
+const CLEAR = new Color(tokens["bg"]); // the page's cream ground
 /** Idle motion and flight of the cups and of the set (slower, heavier). */
 const CUP_MOTION = { bob: 0.016, sway: 0.08, roll: 0.02, hz: 0.24, spin: 1.1 };
+/** The carousel's cup: a gentle float, no turn of its own (the scroll turns it). */
+const FLAVOR_MOTION = { bob: 0.01, sway: 0.03, roll: 0.012, hz: 0.2, spin: 0 };
 const SET_MOTION = { bob: 0.008, sway: 0.03, roll: 0.008, hz: 0.14, spin: 0.4 };
 /** The PP cup's lid rises this far (metres) in a slot that asks for it. */
 const PP_LID_LIFT = 0.055;
 /** The key light: from the upper left, as in the photo; it follows the set to throw its shadows. */
 const KEY = { offset: new Vector3(-0.9, 1.3, 1.1), halfSize: 0.34, mapSize: 1024 };
+/** Light levels (no tone mapping): the key's lit band shows a surface at about its own colour, the shade ~ 70 %. */
+const LIGHT = { key: 2.3, ambient: 1.05 };
 
 export type { CupPlacement };
 
@@ -133,9 +144,11 @@ export async function createCupScene(
   const scene = new Scene();
   const listeners = new AbortController();
   const actors: Partial<Record<ActorName, Actor>> = {};
-  let splash: ReturnType<typeof createSplash> | null = null;
+  let splash: Splash | null = null;
+  let toppingsDispose: (() => void) | null = null;
+  let rig: FlavorRig | null = null;
   let renderer: WebGLRenderer | null = null;
-  let pmrem: PMREMGenerator | null = null;
+  const sparkles: Sparkles[] = [];
   let frame = 0;
 
   function dispose(): void {
@@ -144,9 +157,11 @@ export async function createCupScene(
     listeners.abort();
     for (const actor of Object.values(actors)) actor.dispose();
     splash?.dispose();
+    toppingsDispose?.();
+    rig?.dispose();
+    for (const s of sparkles) s.dispose();
     petals.dispose();
     disposeScene(scene);
-    pmrem?.dispose();
     renderer?.dispose();
     renderer?.forceContextLoss(); // free the context now, not when the GC gets to it (dev reloads pile them up)
   }
@@ -157,21 +172,21 @@ export async function createCupScene(
     camera.position.set(0, 0, DISTANCE);
     camera.lookAt(0, 0, 0);
     renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false });
-    renderer.setClearColor(CLEAR, 1); // the page's own pink: the body is this colour too, so nothing shows
-    renderer.toneMapping = NeutralToneMapping;
-    renderer.shadowMap.enabled = true; // the set's cups and logs throw shadows on the block
+    renderer.setClearColor(CLEAR, 1); // the page's own cream: the body is this colour too, so nothing shows
+    renderer.toneMapping = NoToneMapping; // toon colours are the palette's own: nothing should bend them
+    renderer.shadowMap.enabled = true; // the set's cups and logs throw shadows on the boulder
     renderer.shadowMap.type = PCFShadowMap;
-    pmrem = new PMREMGenerator(renderer);
 
-    // the actors
-    webMaterials(pp); // clear wall and lid, the drink as grape tea
-    splash = createSplash(seeded(SPLASH_SEED));
-    pp.add(splash.inside); // what stands in the tea, in the cup's space
-    preparePaper(paper);
-    const set = createSet(paper, () => invalidate()); // a texture landed: draw
+    // the actors, toon from the start (the clones below share the toon geometry and materials)
+    toonCup(pp, "grapeTea");
+    toonCup(paper, "milkTea");
+    const set = createSet(paper);
     const single = paper.clone(true);
+    // the flavour carousel clones the prepared cups before any actor re-centres them
+    const carousel = (rig = createFlavorRig(paper, pp, flavors));
     const specs: Record<ActorName, ActorSpec> = {
       set: { subject: set.group, lid: set.lid, strap: set.strap, lidLift: 0, ...SET_MOTION, phase: 0 },
+      flavor: { subject: carousel.group, lid: null, strap: null, lidLift: 0, ...FLAVOR_MOTION, phase: 2.6 },
       pp: {
         subject: pp,
         lid: required(pp, NODES.lid, MODELS.pp.url),
@@ -201,23 +216,50 @@ export async function createCupScene(
       scene.add(actor.root);
       return actor;
     };
-    const cast: Record<ActorName, Actor> = { set: hire("set"), pp: hire("pp"), paper: hire("paper") };
-    cast.pp.decorate(splash.group);
-    const floating = splash;
+    const cast: Record<ActorName, Actor> = {
+      set: hire("set"),
+      flavor: hire("flavor"),
+      pp: hire("pp"),
+      paper: hire("paper"),
+    };
     scene.add(petals.group);
+    cast.set.decorate(set.clouds);
+    for (const name of ["pp", "flavor"] as const) {
+      const made = createSparkles(seeded(SPARKLES.seed + sparkles.length), SPARKLES.count);
+      sparkles.push(made);
+      cast[name].decorate(made.group);
+    }
 
-    // lights: soft daylight from the upper left; the page's pink bounces up from below
-    scene.add(new HemisphereLight("#ffffff", tokens["pink-500"], 0.6));
-    const key = new DirectionalLight("#fffaf4", 2.2);
+    /**
+     * The toppings and what floats round the PP cup are not seen at first: they are made after the stage shows (their
+     * shaders compile then), and hang on their actors. Without them the page still works, only plainer.
+     */
+    async function loadExtras(): Promise<void> {
+      await new Promise((resolve) => setTimeout(resolve, 0)); // after the first frame
+      options.signal.throwIfAborted();
+      const made = createSplash(seeded(SPLASH_SEED));
+      splash = made;
+      pp.add(made.inside); // what stands in the tea, in the cup's space
+      carousel.pp.add(made.inside.clone(true)); // the carousel's PP cup holds the same tea
+      cast.pp.decorate(made.group);
+      const toppings = createToppings(seeded(TOPPING_SEED));
+      toppingsDispose = () => toppings.dispose();
+      carousel.setToppings(toppings);
+      cast.flavor.decorate(toppings.group);
+      invalidate();
+    }
+
+    // lights: warm daylight from the upper left (the toon bands follow it, and so do the highlights); the shade side
+    // takes a cool lilac from below, as a painted sky shades its clouds
+    scene.add(new HemisphereLight(tokens.cloud, tokens["cloud-shade"], LIGHT.ambient));
+    const key = new DirectionalLight("#fff8ee", LIGHT.key);
     key.castShadow = true;
     key.shadow.mapSize.set(KEY.mapSize, KEY.mapSize);
-    key.shadow.intensity = 0.6;
-    key.shadow.radius = 4;
+    key.shadow.intensity = 0.35;
+    key.shadow.radius = 2;
     key.shadow.bias = -0.0004;
     key.shadow.normalBias = 0.0015;
-    const fill = new DirectionalLight("#fff4f2", 0.5);
-    fill.position.set(1.2, 0.3, 0.8);
-    scene.add(key, key.target, fill);
+    scene.add(key, key.target);
 
     const lean = new Lean(LEAN.perSpeed, LEAN.max, LEAN.tau);
     let width = 1;
@@ -229,6 +271,10 @@ export async function createCupScene(
     let dirty = true; // an input, a resize or a layout change: measure and draw
     let targets: Record<string, CupTarget | null> = {};
     let lastScroll = NaN;
+    let lastFlavor = flavorScroll();
+    const ground = new Color();
+    const toneFrom = new Color();
+    const toneTo = new Color();
 
     function schedule(): void {
       if (sized && !paused && !frame) frame = requestAnimationFrame(tick);
@@ -237,27 +283,6 @@ export async function createCupScene(
     function invalidate(): void {
       dirty = true;
       schedule();
-    }
-
-    /**
-     * A neutral studio to reflect: the clear lid, the silver print and the glossy drink need something to mirror.
-     * A material tuned with its own envMapIntensity (userData.ownEnvMap) gets the map itself: with the scene's
-     * environment alone three.js uses scene.environmentIntensity for every material and ignores the material's.
-     */
-    function environment(): void {
-      if (!pmrem) return;
-      const room = new RoomEnvironment();
-      scene.environment?.dispose();
-      const texture = pmrem.fromScene(room, 0.04).texture;
-      scene.environment = texture;
-      scene.environmentIntensity = 0.55;
-      room.dispose();
-      scene.traverse((object) => {
-        if (!(object instanceof Mesh)) return;
-        for (const material of [object.material].flat()) {
-          if (material instanceof MeshStandardMaterial && material.userData.ownEnvMap) material.envMap = texture;
-        }
-      });
     }
 
     function toggleStrap(name: ActorName): void {
@@ -296,14 +321,31 @@ export async function createCupScene(
       const next = remeasure ? options.measure() : targets;
       const targetChanged = !sameTargets(next, targets);
       targets = next;
-      const moving = [...ACTORS.map((name) => cast[name].step(dt)), lean.moving].some(Boolean);
+      const fl = flavorScroll();
+      const flavorMoved = fl !== lastFlavor;
+      lastFlavor = fl;
+      const moving = [...ACTORS.map((name) => cast[name].step(dt)), lean.moving, flavorMoved].some(Boolean);
       const frameState: Frame = { dt, time, reduced, lean: lean.update(scroll, dt, reduced), width, height };
-      for (const name of ACTORS) options.onPlace(name, cast[name].place(targets[name] ?? null, frameState));
+      // while the flavour section has the viewport, the other cups make way for its carousel
+      for (const name of ACTORS) {
+        const fade = name === "pp" || name === "paper" ? fl.presence : 0;
+        options.onPlace(name, cast[name].place(targets[name] ?? null, frameState, fade));
+      }
+      const state = flavorState(fl.progress, flavors.length, reduced);
+      carousel.update(state, time, !reduced);
+      // the ground takes the flavour's tone (pink and cream only) while the section has the viewport
+      toneFrom.set(flavors[state.from]?.toneHex ?? CLEAR);
+      toneTo.set(flavors[state.to]?.toneHex ?? CLEAR);
+      ground.lerpColors(toneFrom, toneTo, state.blend);
+      renderer?.setClearColor(ground.lerpColors(CLEAR, ground, fl.presence), 1);
       followSet();
       key.castShadow = cast.set.root.visible; // the shadow pass serves the set alone
-      floating.update(time, reduced ? 0 : dt / 1000);
+      splash?.update(time, reduced ? 0 : dt / 1000);
+      for (const s of sparkles) s.update(time, reduced);
       petals.update(scroll, time, reduced ? 0 : dt / 1000, width, height);
-      if (needsRedraw({ reduced, moving, dirty, scrolled, targetChanged })) renderer?.render(scene, camera);
+      if (needsRedraw({ reduced, moving: moving || flavorMoved, dirty, scrolled, targetChanged })) {
+        renderer?.render(scene, camera);
+      }
       dirty = false;
     }
 
@@ -316,17 +358,9 @@ export async function createCupScene(
       }
     }
 
-    environment();
     const { signal } = listeners;
     canvas.addEventListener("webglcontextlost", (event) => event.preventDefault(), { signal }); // allow a restore
-    canvas.addEventListener(
-      "webglcontextrestored",
-      () => {
-        environment(); // the reflections lived in the lost context
-        invalidate();
-      },
-      { signal },
-    );
+    canvas.addEventListener("webglcontextrestored", () => invalidate(), { signal });
     document.addEventListener(
       "visibilitychange",
       () => {
@@ -338,6 +372,9 @@ export async function createCupScene(
     );
     await renderer.compileAsync(scene, camera);
     options.signal.throwIfAborted();
+    loadExtras().catch((error: unknown) => {
+      if (!options.signal.aborted) console.warn("Không tải được topping 3D.", error);
+    });
 
     return {
       resize(w, h) {
@@ -347,6 +384,8 @@ export async function createCupScene(
         sized = true;
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, DPR_MAX)); // the window may have moved to another screen
         renderer.setSize(w, h, false);
+        const ratio = renderer.getPixelRatio();
+        setOutlineSize(w * ratio, h * ratio, ratio);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
         dirty = true;

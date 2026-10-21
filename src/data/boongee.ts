@@ -23,6 +23,7 @@ export const brand = {
 /** Section anchors, shared by the page and the navigation. */
 export const sections = {
   story: "cau-chuyen",
+  flavors: "huong-vi",
   menu: "thuc-don",
   offers: "uu-dai",
   faq: "hoi-dap",
@@ -48,23 +49,38 @@ export const cup = {
     set: {
       short: "Bộ ảnh bìa",
       label:
-        "Bộ ảnh bìa Boongee dựng 3D: hai ly giấy 16 oz in bốn dấu monogram màu bạc và chữ Boongee; ly kem bông rắc cánh hồng khô đứng trên khối đá granite, ly đậy nắp bật trắng đứng trên khúc gỗ, bên cạnh một bông ly trắng, một cành nụ xanh và dây leo hoa nhài.",
+        "Bộ ảnh bìa Boongee dựng 3D kiểu low-poly hoạt hình: hai ly giấy 16 oz in bốn dấu monogram và chữ Boongee; ly kem bông rắc cánh hồng khô đứng trên tảng đá, ly đậy nắp bật trắng đứng trên khúc gỗ, mây trắng trôi phía sau.",
+    },
+    flavor: {
+      short: "Ly theo hương vị",
+      label:
+        "Ly Boongee 3D đổi theo hương vị khi cuộn: ly giấy in monogram bạc cho trà sữa hương hoa, kem bông, kem cheese và cà phê, ly nhựa trong cho trà trái cây; topping của từng vị bay quanh ly.",
     },
     pp: {
       short: "Ly nhựa",
       label:
-        "Ly Boongee 700 ml, mô hình 3D: ly nhựa nhám in bốn dấu monogram và chữ Boongee, bên trong là trà nho xanh, đậy nắp bật nút trong; nho xanh, viên đá và giọt nước lơ lửng xung quanh.",
+        "Ly Boongee 700 ml, mô hình 3D kiểu low-poly hoạt hình: ly nhựa trong in bốn dấu monogram và chữ Boongee, bên trong là trà nho xanh, đậy nắp bật nút trong; nho xanh, viên đá và đốm lấp lánh quanh ly.",
     },
     paper: {
       short: "Ly giấy",
       label:
-        "Ly giấy Boongee 16 oz, mô hình 3D: ly giấy hai lớp in bốn dấu monogram màu bạc và chữ Boongee, đậy nắp bật nút trắng.",
+        "Ly giấy Boongee 16 oz, mô hình 3D kiểu low-poly hoạt hình: ly giấy hai lớp in bốn dấu monogram và chữ Boongee, đậy nắp bật nút trắng.",
     },
   },
   hint: "Kéo để xoay, chạm nắp để bật nút",
   keys: "Phím mũi tên trái, phải xoay; Enter bật hoặc đậy nút; Home về mặt trước.",
   strapOpened: "đã bật nút nắp.",
   strapClosed: "đã đậy nút nắp.",
+};
+
+/** The flavour carousel (src/components/flavors.tsx); the flavours' names come from the menu (src/data/flavors.ts). */
+export const flavorsIntro = {
+  tagline: "Hương vị",
+  title: "Mỗi nhóm một hương",
+  nav: "Chọn hương vị",
+  counter: (index: number, count: number) =>
+    `${String(index + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}`,
+  more: "Xem thực đơn",
 };
 
 /** The visual narrative of docs/01 §6: origin, ritual, feeling. */

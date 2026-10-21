@@ -27,7 +27,7 @@ export function Offers() {
           />
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          <article className="parallax-rise flex flex-col justify-center rounded-3xl bg-brand-bg-alt p-8 text-center md:p-10">
+          <article className="parallax-rise flex flex-col justify-center rounded-3xl border border-brand-line bg-brand-bg-alt p-8 text-center md:p-10">
             <h3 className="text-sm tracking-[0.2em] uppercase">{weeklyOffer.eyebrow.toLowerCase()}</h3>
             <p className="mt-3 text-7xl leading-none md:text-8xl">
               <span aria-hidden>{weeklyOffer.value}</span>

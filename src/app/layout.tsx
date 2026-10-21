@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: tokens["pink-500"], // the hero's ground
+  themeColor: tokens["bg"], // the page's cream ground
   colorScheme: "light",
 };
 

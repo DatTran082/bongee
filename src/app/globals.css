@@ -13,7 +13,7 @@
  * white or pink text on a pink or white ground (contrast ≈ 1.5 : 1); pink-700 is for rules and small details, not
  * text. Light only: the brand has no dark theme.
  *
- * The whole page stands on the hero's pink (pink-500); panels on it are white cards. Text on the pink is ink:
+ * The whole page stands on cream white (bg); panels on it are white cards with a hairline border. Text is ink:
  * ink-muted reaches only ≈ 3.8 : 1 there, so it is kept for white cards. Rules on the pink are ink at 15 %.
  */
 :root {
@@ -31,7 +31,7 @@ html {
 }
 
 body {
-  background: var(--color-brand-pink-500);
+  background: var(--color-brand-bg);
   color: var(--color-brand-ink);
   font-family: var(--font-sans);
 }
@@ -115,4 +115,54 @@ footer {
   to {
     transform: translateY(-2rem);
   }
+}
+
+/*
+ * The flavour carousel (src/components/flavors.tsx). Without script: a list, no cup. With it (data-live): one
+ * viewport of height per flavour, the inside pinned (sticky) while the scroll runs through the flavours, the panels
+ * stacked in one grid cell for GSAP to cross-fade.
+ */
+.flavors:not([data-live="true"]) .flavors-cup,
+.flavors:not([data-live="true"]) .flavors-dots {
+  display: none;
+}
+
+.flavors:not([data-live="true"]) .flavor-panel + .flavor-panel {
+  margin-top: 3rem;
+}
+
+.flavors[data-live="true"] {
+  height: calc(var(--flavor-count) * 100svh);
+}
+
+.flavors[data-live="true"] .flavors-pin {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+}
+
+.flavors[data-live="true"] .flavors-stage {
+  flex: 1;
+  min-height: 0;
+}
+
+.flavors[data-live="true"] .flavors-cup {
+  height: 33svh;
+}
+
+@media (min-width: 64rem) {
+  .flavors[data-live="true"] .flavors-cup {
+    height: 100%;
+    max-height: 40rem;
+  }
+}
+
+.flavors[data-live="true"] .flavors-panels {
+  display: grid;
+}
+
+.flavors[data-live="true"] .flavor-panel {
+  grid-area: 1 / 1;
 }

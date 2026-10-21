@@ -5,7 +5,7 @@ import { CupAnchor } from "@/components/cup-anchor";
 import { brand, hero, sections } from "@/data/boongee";
 
 /**
- * The slogan as the page's one <h1>, in ink on the page's pink, beside the slot of the cover photo's set: the two
+ * The slogan as the page's one <h1>, in ink on the page's cream, beside the slot of the cover photo's set: the two
  * paper cups on the block and the logs, built in 3D and floating (src/lib/cup-scene/set). From xl (1280 px) up the
  * text takes the left column and the set the right; below that the text comes first and the set follows. The slot
  * is empty: the set itself is drawn by the stage behind the page (src/components/cup-stage.tsx), which puts the

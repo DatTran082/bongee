@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 const VARIANTS = {
-  // white on ink is allowed by the brand rules; ink on the pink / white grounds everywhere else
+  // white on ink is allowed by the brand rules; ink on the cream / white grounds everywhere else
   primary: "bg-brand-ink text-white border-brand-ink hover:bg-brand-pink-800 hover:border-brand-pink-800",
   outline: "border-brand-ink text-brand-ink hover:bg-brand-ink hover:text-white",
 } as const;

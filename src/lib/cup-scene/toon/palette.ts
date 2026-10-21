@@ -5,10 +5,10 @@ import tokens from "@/data/brand-tokens.json";
 // one is a soft, slightly chalky tone, as a stylized game asset paints them; the brand's own colours come from the
 // tokens (the Làng Mây accents: cloud, sky, moss, honey, wood, stone).
 
-/** A drink fades from `bottom` at its foot to `top` at its surface (toon/material.ts, `fade`). */
+/** A drink poured in three layers, foot to surface (toon/material.ts, `layers`). */
 export const DRINKS = {
-  grapeTea: { bottom: "#8DBF4A", top: "#DCEFA2" },
-  milkTea: { bottom: "#B7855C", top: "#E9C9A3" },
+  grapeTea: ["#78A93C", "#A8D05A", "#DDF1A4"],
+  milkTea: ["#9C6B47", "#C99A6E", "#EBCDA6"],
 } as const;
 export type DrinkName = keyof typeof DRINKS;
 
@@ -28,7 +28,9 @@ export const PROPS = {
   fleck: ["#6A3263", "#5B2A55"],
   stone: tokens["stone-300"],
   bark: tokens["wood-500"],
+  barkDark: "#8A5E45",
   cut: "#E9CFA9",
   cutRing: "#D9B88D",
   cloud: tokens.cloud,
+  bubble: tokens.cloud,
 } as const;

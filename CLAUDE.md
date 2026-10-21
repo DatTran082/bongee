@@ -34,10 +34,10 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
 - **The 3D stage** (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`): a fixed three.js canvas at z-index −10
   inside `main` (mounted by `page.tsx`, after the hero), cleared to the page's cream (opaque; the body is the same
   cream, so nothing shows), so its actors show on the cream and pass behind the white cards. Three actors (`ACTORS`, one `Actor` each, `actor.ts`): `set`, the cover photo rebuilt in 3D
-  (`set/`: the brand kit's paper cup twice, one under a two-tier foam with rose petals, one lidded, on a low-poly
+  (`set/`: the brand kit's paper cup twice, one under a soft-serve swirl with rose petals, one lidded, on a smooth
   boulder and two sawn logs, two clouds behind (hung with `decorate`, so they do not count in the set's size); no
   plants or flowers; floating as one piece with shadows from a key light that follows it); `pp`, the 700 ml PP cup,
-  clear plastic by alpha, holding grape tea that fades from deep to pale green up the cup, low-poly grapes and ice
+  clear plastic by alpha, holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
   standing in it and drifting round it (`splash.ts`), sparkles about it; `paper`, the lidded paper cup alone; `flavor`,
   the carousel's cup (below). Both GLBs (`brandkit/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
   meshopt + WebP to `public/models/<name>.<hash>.glb`, URLs in `src/data/cup-model.json`, cached immutable by
@@ -65,19 +65,23 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   only in the drink and the toppings. While the section has the viewport the `pp` and `paper` actors shrink away.
   Without script it is a plain list; dots jump to a flavour; reduced motion keeps the pin but drops the turn,
   the snap and the smoothing.
-- **The 3D look is a stylized low-poly drink game asset** (owner's choice of 21/10/2026, over the earlier realistic
-  scans; that version is in `git stash` "snapshot: 3D tả thực…"), after the Làng Mây edition's toon rules
+- **The 3D look is a smooth stylized drink game asset** (owner's choice of 21/10/2026, over the earlier realistic
+  scans, which are in `git stash` "snapshot: 3D tả thực…", and then over a faceted low-poly pass the owner found too
+  coarse), after the Làng Mây edition's toon rules
   (`../brandkit-ghibli`, `color/tokens.json → toon`, copied to `src/data/brand-toon.json`; its accents sky, cloud,
   moss, cream, honey, wood, stone join the brand tokens, for the 3D and decoration only, never text). All in
-  `src/lib/cup-scene/toon/`: `cups.ts` squeezes the kit's GLB cups to 12 flat sides at load (`facet.ts`, maths in
-  `facet-math.ts`, tested: UVs and print stay put) and swaps each material by its GLB name; `material.ts` is the one
-  material (MeshToonMaterial, flat-shaded through the `FLAT_SHADED` define, light in hard bands, a flat white
-  highlight per facet, a rim, an optional vertical fade for drinks; no tone mapping, no environment map, no
-  transmission); `outline.ts` is the inverted-hull outline, a fixed width in screen px, in a darker tone of the
-  surface (`outlineColour`: near-white surfaces get a rose-lilac line; instanced copies darken their own colour; a
-  material's `userData.outlineColour` / `noOutline` overrides); `shapes.ts` draws every prop (grapes, mango, ice,
-  beans, cheese, berries, the five-petalled flower, foam puffs, petal flakes, boulder, logs, clouds) as indexed
-  low-poly geometry with smooth normals for the hull; `foam.ts` the foam tiers; `sparkles.ts` the twinkling stars;
+  `src/lib/cup-scene/toon/`: `cups.ts` keeps the kit's GLB cups round and swaps each material by its GLB name;
+  `material.ts` is the one material (MeshToonMaterial, smooth, light in three soft-edged bands from a 256 px gradient
+  (`toon.softness`), a white highlight where the surface mirrors the key light (an upright stripe on a cup), a rim,
+  and for drinks `layers`: three colours with waving borders (`toon.drink.wave`); no tone mapping, no environment
+  map, no transmission); `outline.ts` is a sticker outline, two inverted hulls at fixed screen widths: a warm white
+  one (`toon.outline.widthPx`) and a thin darker line of the surface's tone beyond it (`edgePx`, polygon-offset
+  behind the white; `outlineColour`: near-white surfaces get a rose-lilac line; instanced copies darken their own
+  colour; a material's `userData.outlineColour` / `noOutline` overrides; a geometry's `userData.hull` gives a welded
+  skin); `shapes.ts` draws every prop (grapes, mango, ice,
+  beans, cheese, berries, the five-petalled flower, foam puffs, petal flakes, boulder, logs, clouds) smooth and
+  rounded (icospheres of detail 3–4, rounded boxes, bevelled extrusions, lathes; smooth normals); `foam.ts` the
+  soft-serve swirl (a tapering tube wound up a helix over a low dome); `sparkles.ts` the twinkling stars;
   `palette.ts` the drinks' and props' own colours. No downloaded models: shapes drawn here keep one style and cost
   no requests. The toppings and the PP cup's splash are made after the stage shows (`loadExtras` in index.ts).
 - **Colours** are Tailwind theme variables `--color-brand-<token>` (`bg-brand-pink-500`, `text-brand-ink`,

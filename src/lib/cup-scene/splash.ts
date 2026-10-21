@@ -5,10 +5,10 @@ import { between, pick, type Random } from "./random";
 import { outlineColour, toonMaterial } from "./toon/material";
 import { addOutlines } from "./toon/outline";
 import { PROPS } from "./toon/palette";
-import { grapeBunch, ice } from "./toon/shapes";
+import { grapeBunch, ice, puff } from "./toon/shapes";
 
-// What goes with the PP cup of grape tea, as a stylized drink game asset shows it: low-poly grape bunches and ice
-// cubes (toon/shapes.ts) standing in the tea, and more of them hanging in the air about the cup, drifting slowly
+// What goes with the PP cup of grape tea, as a stylized drink game asset shows it: round grape bunches and ice
+// cubes (toon/shapes.ts) standing in the tea with a few bubbles rising in it, and more of them hanging in the air about the cup, drifting slowly
 // round it and bobbing (no water drops: the owner had them taken out on 21/10/2026). `inside` is in the cup's own
 // space (its base at the origin), so it stands in the tea; `group` is about the cup's middle, so it turns and leans
 // with the cup.
@@ -16,6 +16,8 @@ import { grapeBunch, ice } from "./toon/shapes";
 /** Largest side (metres) and how many float outside and stand inside. */
 const GRAPE = { size: [0.026, 0.032] as const, outside: 6, inside: 3 };
 const ICE = { size: [0.016, 0.02] as const, outside: 4, inside: 3 };
+/** Bubbles in the tea: how many, how big (metres). */
+const BUBBLES = { count: 14, size: [0.0022, 0.0045] as const };
 /** Where things hang: distance from the cup's axis and height about its middle. */
 const SHELL = { radius: { min: 0.066, max: 0.098 }, y: { min: -0.085, max: 0.105 } };
 /** Drift: radians per second round the cup, metres of bob, hertz, radians per second of tumble. */
@@ -77,8 +79,8 @@ export function createSplash(random: Random): Splash {
   group.name = "splash";
   const inside = new Group();
   inside.name = "in-the-tea";
-  const geometries = { grapes: grapeBunch(), ice: ice(random) };
-  const materials = {
+  const geometries = { grapes: grapeBunch(), ice: ice(), bubble: puff() };
+  const materials: Record<string, Material[]> = {
     grapes: PROPS.grape.map((colour) => toonMaterial({ color: colour, highlight: 0.8 })),
     ice: [toonMaterial({ color: PROPS.ice, opacity: 0.55 })],
   };
@@ -102,6 +104,15 @@ export function createSplash(random: Random): Splash {
     }
   }
   materials.ice[0].userData.outlineColour = outlineColour(tokens["sky-400"]);
+  const bubbles = toonMaterial({ color: PROPS.bubble, opacity: 0.75, highlight: 0 });
+  bubbles.userData.noOutline = true;
+  materials.bubbles = [bubbles];
+  for (let i = 0; i < BUBBLES.count; i++) {
+    const bubble = new Mesh(geometries.bubble, bubbles);
+    bubble.scale.setScalar(between(random, ...BUBBLES.size));
+    bubble.position.copy(inTea(random, BUBBLES.size[1]));
+    inside.add(bubble);
+  }
   addOutlines(group);
   addOutlines(inside);
 

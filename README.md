@@ -58,12 +58,13 @@ của riêng mình:
   dải kem và trắng của thương hiệu. Dùng GSAP ScrollTrigger (tải sau khi trang hiện), dừng đúng từng vị; chấm bên dưới để nhảy
   tới vị bất kỳ. Tên nhóm và tên món lấy từ thực đơn.
 
-**Phong cách 3D: low-poly hoạt hình, kiểu "stylized drink game asset"** (chọn ngày 21/10/2026, thay bản tả thực;
-bản cũ vẫn giữ trong `git stash`). Theo luật toon của bản DNA Làng Mây (`../brandkit-ghibli`):
+**Phong cách 3D: hoạt hình khối mượt, kiểu "stylized drink game asset"** (chọn ngày 21/10/2026, thay bản tả thực,
+bản cũ vẫn giữ trong `git stash`; sau đó bỏ bản low-poly cắt mặt vì nhìn thô). Theo luật toon của bản DNA Làng Mây (`../brandkit-ghibli`):
 
-- Ly của brand kit được nắn còn 12 mặt phẳng; hình in giữ nguyên chỗ.
-- Mỗi mặt một màu, ánh sáng chia vài dải rõ, vệt sáng trắng phẳng.
-- Viền cùng tông và đậm hơn màu thân, không dùng viền đen.
+- Ly của brand kit giữ nguyên độ tròn và hình in.
+- Ánh sáng chia 3 dải mềm như tô màu, có vệt sáng trắng dọc thân ly.
+- Viền sticker hai lớp: trong màu trắng ấm, ngoài một nét mảnh cùng tông, không dùng viền đen.
+- Nước rót 3 lớp màu, ranh giới lượn sóng, có bọt li ti; kem tươi xoắn ốc.
 - Nhựa trong vẽ bằng độ mờ, không khúc xạ.
 - Đá, gỗ, mây và mọi topping (nho, xoài, đá viên, hạt cà phê, phô mai, mâm xôi, hoa năm cánh, bọt kem, cánh hồng)
   đều dựng bằng code trong `src/lib/cup-scene/toon/`, cùng một bảng màu; không tải model ngoài.

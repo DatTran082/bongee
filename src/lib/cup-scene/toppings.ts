@@ -17,7 +17,7 @@ import { addOutlines } from "./toon/outline";
 import { PROPS } from "./toon/palette";
 import { bean, berry, cheeseWedge, flower, grapeBunch, ice, mango, petalFlake, puff } from "./toon/shapes";
 
-// What floats round the cup in the flavour carousel, one set per flavour, as low-poly toon shapes (toon/shapes.ts):
+// What floats round the cup in the flavour carousel, one set per flavour, as smooth toon shapes (toon/shapes.ts):
 // five-petalled flowers for the flower teas, foam puffs and rose petals for the cream teas, grapes, mango and ice
 // for the fruit teas, cheese and blackberries for the cheese-foam teas, coffee beans for the coffees. Each set hangs
 // on a shell round the cup's middle (metres, in the cup's own space, so it turns and leans with the cup), slowly
@@ -111,14 +111,14 @@ export function createToppings(random: Random): Toppings {
   materials.painted.userData.outlineColour = outlineColour(PROPS.flower); // white petals: a rose outline, not grey
   const geometries = {
     flower: flower(PROPS.flower, PROPS.flowerHeart),
-    puff: puff(random),
+    puff: puff(),
     petal: petalFlake(),
     grapes: grapeBunch(),
-    mango: mango(random),
-    ice: ice(random),
+    mango: mango(),
+    ice: ice(),
     cheese: cheeseWedge(),
     berry: berry(random),
-    bean: bean(random),
+    bean: bean(),
   };
   const part = (
     geometry: BufferGeometry,

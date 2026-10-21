@@ -1,15 +1,13 @@
 import { type Material, Mesh, MeshStandardMaterial, type Object3D } from "three";
-import toon from "@/data/brand-toon.json";
 import tokens from "@/data/brand-tokens.json";
-import { facet } from "./facet";
 import { toonMaterial } from "./material";
 import { addOutlines } from "./outline";
 import { type DrinkName, DRINKS } from "./palette";
 
-// The brand kit's two cups (brandkit/3d) drawn as stylized game assets: squeezed to toon.facets.cup flat sides
-// (facet.ts), every material swapped for a toon one by its name in the GLB, and outlined. The paper keeps its print
-// (the silver marks drawn flat, as the print files have them); the PP cup is clear plastic by alpha, no refraction,
-// its tea a soft green fading lighter to the top, the grapes and ice inside showing through.
+// The brand kit's two cups (brandkit/3d) drawn as stylized game assets: kept round and smooth as modelled, every
+// material swapped for a toon one by its name in the GLB, and outlined like a sticker. The paper keeps its print (the
+// silver marks drawn flat, as the print files have them); the PP cup is clear plastic by alpha, no refraction, its
+// tea poured in three greens with waving borders, the grapes, ice and bubbles inside showing through.
 
 /** Draw order among the see-through parts: the tea first, the body over it, the lid over the body. */
 const ORDER: Readonly<Record<string, number>> = {
@@ -28,7 +26,7 @@ export interface ToonCup {
   readonly drink: Material;
 }
 
-function swap(material: Material, tea: DrinkName, drinkRange: readonly [number, number]): Material {
+function swap(material: Material, tea: DrinkName, drink: DrinkShape): Material {
   const source = material instanceof MeshStandardMaterial ? material : null;
   const name = material.name;
   switch (name) {
@@ -51,7 +49,7 @@ function swap(material: Material, tea: DrinkName, drinkRange: readonly [number, 
         name,
         color: "#ffffff",
         opacity: CLEAR.tea,
-        fade: { ...DRINKS[tea], y0: drinkRange[0], y1: drinkRange[1] },
+        layers: { colours: DRINKS[tea], y0: drink.y0, y1: drink.y1, axis: drink.axis },
         highlight: 0.6,
       });
     default:
@@ -59,22 +57,30 @@ function swap(material: Material, tea: DrinkName, drinkRange: readonly [number, 
   }
 }
 
-/** The drink's foot and top in its mesh's own space (the GLB's are quantized: not metres), for the tea's fade. */
-function drinkRange(root: Object3D): [number, number] {
-  let range: [number, number] = [0, 1];
+/** The drink's foot, top and axis in its mesh's own space (the GLB's are quantized: not metres). */
+interface DrinkShape {
+  readonly y0: number;
+  readonly y1: number;
+  readonly axis: readonly [number, number];
+}
+
+function drinkShape(root: Object3D): DrinkShape {
+  let shape: DrinkShape = { y0: 0, y1: 1, axis: [0, 0] };
   root.traverse((object) => {
     if (!(object instanceof Mesh) || [object.material].flat()[0]?.name !== "milk-tea") return;
     object.geometry.computeBoundingBox();
     const box = object.geometry.boundingBox;
-    if (box) range = [box.min.y, box.max.y];
+    if (box) {
+      const axis = [(box.min.x + box.max.x) / 2, (box.min.z + box.max.z) / 2] as const;
+      shape = { y0: box.min.y, y1: box.max.y, axis };
+    }
   });
-  return range;
+  return shape;
 }
 
 /** Makes a cup model toon, in place (call once, before cloning: the clones share the geometry and the materials). */
 export function toonCup(root: Object3D, tea: DrinkName): ToonCup {
-  facet(root, toon.facets.cup);
-  const range = drinkRange(root);
+  const drinkAt = drinkShape(root);
   const replaced = new Map<Material, Material>();
   let drink: Material | null = null;
   root.traverse((object) => {
@@ -82,7 +88,7 @@ export function toonCup(root: Object3D, tea: DrinkName): ToonCup {
     const materials = [object.material].flat().map((material) => {
       let next = replaced.get(material);
       if (!next) {
-        next = swap(material, tea, range);
+        next = swap(material, tea, drinkAt);
         replaced.set(material, next);
         if (next !== material) material.dispose();
       }

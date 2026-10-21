@@ -3,34 +3,56 @@ import {
   type ColorRepresentation,
   DataTexture,
   DoubleSide,
+  LinearFilter,
   MeshToonMaterial,
-  NearestFilter,
   RGBAFormat,
   type Texture,
+  Vector3,
 } from "three";
 import toon from "@/data/brand-toon.json";
 import tokens from "@/data/brand-tokens.json";
 
 // The stage's one material, after the Làng Mây edition's toon rules (brandkit-ghibli/color/tokens.json → toon,
-// copied to src/data/brand-toon.json by sync-brand): flat-shaded facets (each face one colour), light in a few hard
-// bands, the shade side cooled toward lilac by the hemisphere light (index.ts), a flat white highlight painted on
-// the facets that face the key light's mirror direction, and a thin rim of light on the silhouette. A drink can
-// also fade from one colour at its foot to another at its top, as a game asset's liquid does.
+// copied to src/data/brand-toon.json by sync-brand): smooth shapes lit in three soft-edged bands, as a brush paints
+// them (toon.softness), the shade side cooled toward lilac by the hemisphere light (index.ts), a flat white
+// highlight where the surface mirrors the key light (on a cup, a narrow upright stripe), and a faint rim of light on
+// the silhouette. A drink can be poured in layers instead of one colour: three bands, darkest at the foot, their
+// borders waving round the cup so they run slanted across its face.
 
-/** Brightness of each band, dark to light; the shading picks one by how squarely a face meets the key light. */
-const BANDS = [0.52, 0.52, 0.8, 1, 1];
+/** Brightness of the bands, shade to light, and where they change (on N·L mapped to 0 … 1). */
+const BANDS = { levels: [0.62, 0.84, 1] as const, edges: [0.44, 0.68] as const };
+const GRADIENT_PX = 256;
 
 let gradient: DataTexture | null = null;
 
-/** The bands as a tiny texture, nearest-filtered so the steps stay hard (shared by every toon material). */
+/** The bands as a small texture with soft steps (shared by every toon material). */
 function gradientMap(): DataTexture {
   if (gradient) return gradient;
-  const data = new Uint8Array(BANDS.flatMap((v) => [v * 255, v * 255, v * 255, 255]));
-  gradient = new DataTexture(data, BANDS.length, 1, RGBAFormat);
-  gradient.minFilter = gradient.magFilter = NearestFilter;
+  const half = toon.softness / 2;
+  const smooth = (edge: number, x: number) => {
+    const t = Math.min(1, Math.max(0, (x - (edge - half)) / (2 * half)));
+    return t * t * (3 - 2 * t);
+  };
+  const [shade, mid, lit] = BANDS.levels;
+  const data = new Uint8Array(GRADIENT_PX * 4);
+  for (let i = 0; i < GRADIENT_PX; i++) {
+    const x = i / (GRADIENT_PX - 1);
+    const v = shade + (mid - shade) * smooth(BANDS.edges[0], x) + (lit - mid) * smooth(BANDS.edges[1], x);
+    data.set([v * 255, v * 255, v * 255, 255], i * 4);
+  }
+  gradient = new DataTexture(data, GRADIENT_PX, 1, RGBAFormat);
+  gradient.minFilter = gradient.magFilter = LinearFilter;
   gradient.generateMipmaps = false;
   gradient.needsUpdate = true;
   return gradient;
+}
+
+/** A drink poured in layers, in its mesh's own space: colours foot to top, its height range, its axis (x, z). */
+export interface DrinkLayers {
+  readonly colours: readonly [ColorRepresentation, ColorRepresentation, ColorRepresentation];
+  readonly y0: number;
+  readonly y1: number;
+  readonly axis: readonly [number, number];
 }
 
 export interface ToonOptions {
@@ -42,13 +64,14 @@ export interface ToonOptions {
   readonly vertexColors?: boolean;
   /** 0 … 1: how strongly the white highlight shows (0: none) */
   readonly highlight?: number;
-  /** a vertical fade, in the mesh's own space: `bottom` at y0, `top` at y1, multiplied into the colour */
-  readonly fade?: { readonly bottom: ColorRepresentation; readonly top: ColorRepresentation; y0: number; y1: number };
+  readonly layers?: DrinkLayers;
   readonly doubleSided?: boolean;
   readonly name?: string;
 }
 
-const HIGHLIGHT = toon.highlight.threshold;
+const HIGHLIGHT = { threshold: toon.highlight.threshold, soft: 0.004 };
+/** The layers' borders: share of the height each wave rises and falls, and how soft the border is. */
+const LAYER = { wave: toon.drink.wave, soft: 0.018 };
 /** An outline's most saturation (HSL): its colour stays soft, as the brand kit's outlines are. */
 const OUTLINE_MAX_SATURATION = 0.42;
 /** The outline of anything near white: pink-700 cooled toward the clouds' lilac shade, a step darker. */
@@ -69,43 +92,54 @@ export function toonMaterial(options: ToonOptions = {}): MeshToonMaterial {
     vertexColors: options.vertexColors ?? false,
     ...(options.doubleSided ? { side: DoubleSide } : {}),
   });
-  material.defines = { FLAT_SHADED: "" }; // each face one colour (MeshToonMaterial has no flatShading flag)
   material.name = options.name ?? "";
+  const layers = options.layers;
   const uniforms = {
-    uHighlight: { value: HIGHLIGHT },
+    uHighlight: { value: HIGHLIGHT.threshold },
     uHighlightStrength: { value: options.highlight ?? 1 },
     uHighlightColour: { value: new Color(tokens.cloud) },
     uRimColour: { value: RIM.colour },
     uRimStrength: { value: RIM.strength },
-    uFadeBottom: { value: new Color(options.fade?.bottom ?? "#ffffff") },
-    uFadeTop: { value: new Color(options.fade?.top ?? "#ffffff") },
-    uFadeRange: { value: [options.fade?.y0 ?? 0, options.fade?.y1 ?? 1] },
+    uLayer0: { value: new Color(layers?.colours[0] ?? "#ffffff") },
+    uLayer1: { value: new Color(layers?.colours[1] ?? "#ffffff") },
+    uLayer2: { value: new Color(layers?.colours[2] ?? "#ffffff") },
+    uLayerRange: { value: new Vector3(layers?.y0 ?? 0, layers?.y1 ?? 1, LAYER.wave) },
+    uLayerAxis: { value: [layers?.axis[0] ?? 0, layers?.axis[1] ?? 0] },
   };
-  const fade = options.fade ? 1 : 0;
+  const poured = layers ? 1 : 0;
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.vertexShader = shader.vertexShader
-      .replace("#include <common>", "#include <common>\nvarying float vToonY;")
-      .replace("#include <begin_vertex>", "#include <begin_vertex>\nvToonY = position.y;");
+      .replace("#include <common>", "#include <common>\nvarying vec3 vToonPos;")
+      .replace("#include <begin_vertex>", "#include <begin_vertex>\nvToonPos = position;");
     shader.fragmentShader = shader.fragmentShader
       .replace(
         "#include <common>",
         `#include <common>
-varying float vToonY;
+varying vec3 vToonPos;
 uniform float uHighlight;
 uniform float uHighlightStrength;
 uniform vec3 uHighlightColour;
 uniform vec3 uRimColour;
 uniform float uRimStrength;
-uniform vec3 uFadeBottom;
-uniform vec3 uFadeTop;
-uniform vec2 uFadeRange;`,
+uniform vec3 uLayer0;
+uniform vec3 uLayer1;
+uniform vec3 uLayer2;
+uniform vec3 uLayerRange;
+uniform vec2 uLayerAxis;`,
       )
       .replace(
         "#include <color_fragment>",
         `#include <color_fragment>
-#if ${fade}
-  diffuseColor.rgb *= mix( uFadeBottom, uFadeTop, smoothstep( uFadeRange.x, uFadeRange.y, vToonY ) );
+#if ${poured}
+{
+  float around = atan( vToonPos.z - uLayerAxis.y, vToonPos.x - uLayerAxis.x );
+  float t = ( vToonPos.y - uLayerRange.x ) / ( uLayerRange.y - uLayerRange.x );
+  float wave = uLayerRange.z * ( sin( around + 0.6 ) + 0.35 * sin( 2.0 * around + 1.9 ) );
+  vec3 layer = mix( uLayer0, uLayer1, smoothstep( 0.36 - ${LAYER.soft}, 0.36 + ${LAYER.soft}, t + wave ) );
+  layer = mix( layer, uLayer2, smoothstep( 0.68 - ${LAYER.soft}, 0.68 + ${LAYER.soft}, t - 0.8 * wave ) );
+  diffuseColor.rgb *= layer;
+}
 #endif`,
       )
       .replace(
@@ -114,17 +148,18 @@ uniform vec2 uFadeRange;`,
   float toonLit = 0.0;
   #if NUM_DIR_LIGHTS > 0
     vec3 toonHalf = normalize( directionalLights[ 0 ].direction + geometryViewDir );
-    toonLit = step( uHighlight, dot( normal, toonHalf ) ) * uHighlightStrength;
+    float facing = dot( normal, toonHalf );
+    toonLit = smoothstep( uHighlight - ${HIGHLIGHT.soft}, uHighlight + ${HIGHLIGHT.soft}, facing ) * uHighlightStrength;
   #endif
-  float toonRim = smoothstep( 0.6, 0.64, 1.0 - saturate( dot( normal, geometryViewDir ) ) ) * uRimStrength;
+  float toonRim = smoothstep( 0.62, 0.7, 1.0 - saturate( dot( normal, geometryViewDir ) ) ) * uRimStrength;
   outgoingLight = mix( outgoingLight, uHighlightColour, toonLit );
   outgoingLight += uRimColour * toonRim;
-  diffuseColor.a = max( diffuseColor.a, max( toonLit, toonRim * 0.6 ) );
+  diffuseColor.a = max( diffuseColor.a, max( toonLit, toonRim * 0.5 ) );
 }
 #include <opaque_fragment>`,
       );
   };
-  material.customProgramCacheKey = () => `toon-${fade}`;
+  material.customProgramCacheKey = () => `toon-${poured}`;
   return material;
 }
 

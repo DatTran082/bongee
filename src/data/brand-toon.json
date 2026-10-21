@@ -1,9 +1,8 @@
 {
-  "_readme": "Phong cách 3D: stylized drink game asset, low-poly. Áp cho mọi mô hình 3D của thương hiệu (web, ảnh dựng, game).",
+  "_readme": "Phong cách 3D: stylized drink game asset, khối mượt bo tròn, đổ bóng toon mềm (soft cel), viền sticker. Áp cho mọi mô hình 3D của thương hiệu (web, ảnh dựng, game). Đổi 21/10/2026 từ low-poly cắt mặt sang khối mượt theo ảnh mẫu chủ shop chọn.",
   "facets": {
-    "cup": 12,
-    "topping": "icosahedron chi tiết 0–1",
-    "rock": "icosahedron chi tiết 1, nắn méo"
+    "cup": 0,
+    "_readme": "0 = tròn mượt, không cắt mặt. Topping, đá, mây: khối cầu và hình bo góc mượt, không lộ mặt phẳng."
   },
   "bands": 3,
   "shade": {
@@ -12,19 +11,30 @@
     "_readme": "mặt khuất: giảm sáng và ngả về tím hồng, không ngả xám"
   },
   "outline": {
-    "lightness": 0.55,
+    "lightness": 0.62,
     "saturation": 1.1,
-    "widthPx": 2.5,
-    "_readme": "viền cùng tông, đậm hơn màu thân, không dùng viền đen"
+    "widthPx": 2.6,
+    "edgePx": 1.3,
+    "inner": "cloud",
+    "_readme": "viền sticker hai lớp: lớp trong màu mây (trắng ấm) dày widthPx, lớp ngoài mảnh edgePx cùng tông, đậm hơn màu thân (không dùng viền đen); nền kem vẫn thấy rõ mép"
   },
   "highlight": {
     "color": "cloud",
-    "threshold": 0.94,
-    "_readme": "vệt sáng trắng vẽ tay: mảng phẳng, cạnh gọn"
+    "threshold": 0.965,
+    "_readme": "vệt sáng trắng vẽ tay: dải dọc gọn trên thân ly, chấm sáng trên quả; mép mềm nhẹ"
   },
   "rim": {
     "color": "cloud",
     "strength": 0.35
   },
-  "transparent": "Nhựa trong vẽ bằng alpha 0.25–0.4, không khúc xạ."
+  "transparent": "Nhựa trong vẽ bằng alpha 0.25–0.4, không khúc xạ.",
+  "softness": 0.06,
+  "_softness": "độ rộng vùng chuyển giữa hai bậc sáng (theo dot N·L): mềm như tô màu, không nhoè thành gradient",
+  "drink": {
+    "layers": 3,
+    "wave": 0.16,
+    "bubbles": true,
+    "_readme": "nước chia 2–3 lớp màu, ranh giới lượn sóng xiên; bọt tròn li ti"
+  },
+  "cream": "kem tươi xoắn ốc (soft-serve) 2–3 vòng, rắc topping"
 }

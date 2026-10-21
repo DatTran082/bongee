@@ -7,8 +7,8 @@ import { PROPS } from "../toon/palette";
 import { boulder, cloud, log } from "../toon/shapes";
 import { CLOUDS, FOOT, LIDDED_CUP, LOGS, OPEN_CUP, type Placement } from "./layout";
 
-// The cover photo's set, as a stylized game scene: the brand kit's paper cup twice (one under a two-tier foam
-// sprinkled with rose petals, one lidded) on low-poly props drawn here (toon/shapes.ts): a pale boulder under the
+// The cover photo's set, as a stylized game scene: the brand kit's paper cup twice (one under a soft-serve swirl of
+// cream sprinkled with rose petals, one lidded) on smooth props drawn here (toon/shapes.ts): a pale boulder under the
 // open cup, a sawn log under the lidded cup with a shorter one behind, and two small clouds drifting behind them (the
 // Làng Mây edition's accent: "trà mọc trên núi cao, nơi mây phủ quanh năm"). No plants or flowers. It floats as one
 // piece: the boulder and the logs end at FOOT (layout.ts).
@@ -58,7 +58,7 @@ export function createSet(paper: Object3D): CupSet {
 
   const stone = new Mesh(
     boulder(random, STONE.width, STONE.height, STONE.depth),
-    toonMaterial({ color: PROPS.stone, highlight: 0.5 }),
+    toonMaterial({ color: PROPS.stone, highlight: 0.25 }),
   );
   stone.position.set(STONE.x, -STONE.sink, STONE.z);
   stone.rotation.y = STONE.turn;
@@ -66,7 +66,12 @@ export function createSet(paper: Object3D): CupSet {
   wood.userData.outlineColour = outlineColour(PROPS.bark);
   const logs = LOGS.map((spec, i) => {
     const mesh = new Mesh(
-      log(random, spec.radius, spec.top - FOOT, { bark: PROPS.bark, cut: PROPS.cut, ring: PROPS.cutRing }),
+      log(random, spec.radius, spec.top - FOOT, {
+        bark: PROPS.bark,
+        barkDark: PROPS.barkDark,
+        cut: PROPS.cut,
+        ring: PROPS.cutRing,
+      }),
       wood,
     );
     mesh.position.set(spec.x, FOOT, spec.z);
@@ -84,7 +89,7 @@ export function createSet(paper: Object3D): CupSet {
   sky.name = "clouds";
   const cloudMaterial = toonMaterial({ color: PROPS.cloud, highlight: 0 });
   for (const spec of CLOUDS) {
-    const puff = new Mesh(cloud(random), cloudMaterial);
+    const puff = new Mesh(cloud(), cloudMaterial);
     puff.scale.set(spec.size, spec.size * 0.75, spec.size * 0.6);
     puff.position.set(spec.x, spec.y, spec.z);
     sky.add(puff);

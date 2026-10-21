@@ -37,8 +37,8 @@ import type { CupTarget } from "./track";
 // The 3D stage: a canvas behind the page with its actors on it, each flying between the sections' slots as the
 // page scrolls (track.ts, actor.ts): the cover photo's set (set/), which floats in the hero; the flavour carousel's
 // cup (flavor-rig.ts); the clear PP cup of grape tea with grapes and ice in it and floating round it (splash.ts);
-// the lidded paper cup. Everything is drawn as a stylized low-poly game asset (toon/: the Làng Mây edition's toon
-// rules): flat-shaded facets in hard bands, same-hue outlines, flat white highlights, sparkles. The logo flower
+// the lidded paper cup. Everything is drawn as a smooth stylized game asset (toon/: the Làng Mây edition's toon
+// rules): soft cel bands, sticker outlines, flat white highlights, sparkles. The logo flower
 // drifts behind them at depth (petals.ts). The canvas clears to the page's cream, opaque (the body is the same cream,
 // so nothing shows; it saves blending the whole viewport). A drag turns an actor, a tap on a lid flips its strap,
 // the keyboard does both. With reduced motion nothing moves on its own: everything sits in its slot, follows the

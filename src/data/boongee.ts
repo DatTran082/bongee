@@ -49,7 +49,7 @@ export const cup = {
     set: {
       short: "Bộ ảnh bìa",
       label:
-        "Bộ ảnh bìa Boongee dựng 3D kiểu low-poly hoạt hình: hai ly giấy 16 oz in bốn dấu monogram và chữ Boongee; ly kem bông rắc cánh hồng khô đứng trên tảng đá, ly đậy nắp bật trắng đứng trên khúc gỗ, mây trắng trôi phía sau.",
+        "Bộ ảnh bìa Boongee dựng 3D kiểu hoạt hình: hai ly giấy 16 oz in bốn dấu monogram và chữ Boongee; ly kem bông rắc cánh hồng khô đứng trên tảng đá, ly đậy nắp bật trắng đứng trên khúc gỗ, mây trắng trôi phía sau.",
     },
     flavor: {
       short: "Ly theo hương vị",
@@ -59,12 +59,12 @@ export const cup = {
     pp: {
       short: "Ly nhựa",
       label:
-        "Ly Boongee 700 ml, mô hình 3D kiểu low-poly hoạt hình: ly nhựa trong in bốn dấu monogram và chữ Boongee, bên trong là trà nho xanh, đậy nắp bật nút trong; nho xanh, viên đá và đốm lấp lánh quanh ly.",
+        "Ly Boongee 700 ml, mô hình 3D kiểu hoạt hình: ly nhựa trong in bốn dấu monogram và chữ Boongee, bên trong là trà nho xanh, đậy nắp bật nút trong; nho xanh, viên đá và đốm lấp lánh quanh ly.",
     },
     paper: {
       short: "Ly giấy",
       label:
-        "Ly giấy Boongee 16 oz, mô hình 3D kiểu low-poly hoạt hình: ly giấy hai lớp in bốn dấu monogram và chữ Boongee, đậy nắp bật nút trắng.",
+        "Ly giấy Boongee 16 oz, mô hình 3D kiểu hoạt hình: ly giấy hai lớp in bốn dấu monogram và chữ Boongee, đậy nắp bật nút trắng.",
     },
   },
   hint: "Kéo để xoay, chạm nắp để bật nút",

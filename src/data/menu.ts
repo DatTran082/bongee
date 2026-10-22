@@ -1,8 +1,8 @@
 // The menu, from the shop's Odoo: the till's dishes, their groups and their counter prices, copied to
 // src/data/odoo/menu.json by `npm run sync-menu` (through the Boongee MCP server). Change a dish in Odoo, never here.
 // What Odoo does not hold, the cup sizes' volumes and the sugar / ice options, still comes from the ShanMay brand
-// kit's menu-data.json (`npm run sync-brand`). Items have no descriptions on purpose: none were supplied, so none are
-// invented. Prices are in thousand đồng.
+// kit's menu-data.json (`npm run sync-brand`). A drink's plain line under its name ("Trà sữa dành dành") is written
+// from its recipe in Odoo by sync-menu (src/lib/menu/describe.ts), never by hand. Prices are in thousand đồng.
 import odoo from "./odoo/menu.json";
 import data from "./shanmay/menu-data.json";
 
@@ -22,6 +22,8 @@ export interface MenuItem {
   name: string;
   /** [M, L] for sized items, one price otherwise; thousand đồng. */
   prices: number[];
+  /** what the drink is, from its recipe ("Trà sữa dành dành"); none when the recipe says nothing */
+  note?: string;
 }
 
 export interface MenuCategory {
@@ -39,7 +41,11 @@ export const sizes = Object.entries(data.sizes).map(([label, volume]) => ({ labe
 export const categories: MenuCategory[] = odoo.groups.flatMap((group) => {
   const id = GROUP_IDS[group.title as keyof typeof GROUP_IDS];
   if (!id) return [];
-  const items = group.items.map((item) => ({ name: item.name, prices: item.prices }));
+  const items = group.items.map((item) => ({
+    name: item.name,
+    prices: item.prices,
+    ...("note" in item && item.note ? { note: item.note } : {}),
+  }));
   return [{ id, title: group.title, sized: items.every((item) => item.prices.length > 1), items }];
 });
 

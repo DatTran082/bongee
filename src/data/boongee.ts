@@ -106,23 +106,24 @@ export type PromiseIcon = "flower" | "droplet" | "feather";
 
 /** What a Boongee drink keeps to: the USP of docs/01 §1 and its proofs. */
 export const promises = {
-  tagline: "Điều Boongee giữ",
-  title: "Ba điều nhỏ",
+  tagline: "Cam kết",
+  title: "Ba điều Boongee giữ",
   items: [
     {
       title: "Hoa thật",
-      text: "Hoa dành dành, bạch lan, hoa trúc ướp thẳng vào trà.",
+      // the teas in the till's recipes (Odoo): cốt trà dành dành, bạch lan hoa, quế hoa, hoa nhài
+      text: "Cốt trà ướp cùng hoa dành dành, bạch lan, quế hoa và hoa nhài.",
       icon: "flower",
     },
     {
       // TODO(boongee): 50 % is the default ShanMay proposes (USP proof 3); confirm it at the counter.
-      title: "Ngọt vừa",
-      text: "Mặc định 50% đường. Bạn chỉnh từ 0 đến 100%.",
+      title: "Ngọt tuỳ bạn",
+      text: "Mặc định 50% đường. Muốn ngọt hơn hay ít hơn, cứ dặn quầy.",
       icon: "droplet",
     },
     {
-      title: "Pha nhẹ",
-      text: "Uống hết ly vẫn thấy dễ chịu, không gắt.",
+      title: "Vị thanh",
+      text: "Trà pha vừa tay, uống đến cuối ly vẫn nhẹ.",
       icon: "feather",
     },
   ] satisfies Array<{ title: string; text: string; icon: PromiseIcon }>,
@@ -137,7 +138,7 @@ export const menuIntro = {
 
 export const offersIntro = {
   tagline: "Ưu đãi",
-  title: "Đang có gì",
+  title: "Giảm giá và tích điểm",
 };
 
 // TODO(boongee): ShanMay places the shop in phố Hoa Bằng, Cầu Giấy, Hà Nội as an assumption; the street address is

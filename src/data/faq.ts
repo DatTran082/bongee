@@ -12,6 +12,7 @@ const singleSize = categories
   .join(" và ");
 const toppingFrom = Math.min(...(categories.find((c) => c.id === "topping")?.items.flatMap((i) => i.prices) ?? [0]));
 const sweetness = promises.items.find((p) => p.icon === "droplet")?.text ?? "";
+const featuredNote = categories.flatMap((c) => c.items).find((i) => i.name === menuIntro.featured)?.note;
 const levels = customisation.options.map((o) => `${o.label.toLowerCase()} ${o.options}`).join("; ");
 
 /** `topic` lets the structured data leave out answers built on unconfirmed facts (address, prices). */
@@ -39,7 +40,7 @@ export const faq: Array<{ question: string; answer: string; topic: "address" | "
   {
     question: "Nên thử món nào trước?",
     topic: "other",
-    answer: `Bạn có thể bắt đầu với ${menuIntro.featured}.`,
+    answer: `Bạn có thể bắt đầu với ${menuIntro.featured}${featuredNote ? ` (${featuredNote.toLowerCase()})` : ""}.`,
   },
   {
     question: "Thẻ tích điểm hoạt động thế nào?",

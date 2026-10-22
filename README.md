@@ -43,7 +43,7 @@ bổng; phần câu chuyện mở đầu bằng một bài thơ ngắn.
 | ------------------------ | ----------------------------- | ----------------------------------------------------------------------------- |
 | Hero                     | `src/components/hero.tsx`     | slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất) bên bộ ảnh bìa dựng 3D  |
 | Câu chuyện `#cau-chuyen` | `src/components/story.tsx`    | Gốc · Nghi thức · Cảm xúc, hoạ tiết monogram                                  |
-| Điều Boongee giữ         | `src/components/promises.tsx` | hoa thật, ngọt vừa (mặc định 50%), pha thật nhẹ                               |
+| Ba điều Boongee giữ      | `src/components/promises.tsx` | hoa thật, ngọt tuỳ bạn (mặc định 50%), vị thanh                               |
 | Thực đơn `#thuc-don`     | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá      |
 | Ưu đãi `#uu-dai`         | `src/components/offers.tsx`   | giảm 20% thứ 2 – thứ 4 cho đơn từ 2 ly, thẻ tích điểm 10 dấu                  |
 | Hỏi đáp `#hoi-dap`       | `src/components/faq.tsx`      | 7 câu, trả lời ghép từ dữ liệu thực đơn, ưu đãi, địa chỉ                      |
@@ -108,7 +108,15 @@ bao giờ che chữ.
 | Câu chuyện, cam kết, địa chỉ, giờ, điện thoại, mạng xã hội | `src/data/boongee.ts`                                                    |
 | Câu hỏi đáp                                                | `src/data/faq.ts` (câu trả lời tự lấy số liệu từ các file trên)          |
 
-Thực đơn trên web trùng với máy bán hàng vì cùng lấy từ Odoo. Món không có mô tả, vì nguồn không có (không tự viết).
+Thực đơn trên web trùng với máy bán hàng vì cùng lấy từ Odoo. Dưới tên mỗi món có một **dòng nói món đó là gì**
+("Bạch Thiên Hương — trà sữa dành dành"), học theo cách đặt tên hai tầng của thực đơn Bông Biêng. Dòng này được ghép
+tự động từ **công thức món trên Odoo** (cốt trà, trái cây, kem, cà phê; bỏ đường, đá, sữa), không viết tay; món chưa
+có công thức thì không có dòng. Muốn sửa dòng mô tả thì sửa công thức trên Odoo rồi `npm run sync-menu`.
+
+**Giọng văn:** câu ngắn, chữ thường ngày, nói điều có thật (tên hoa, tên cốt trà, giá), không dùng chữ khen chung chung
+như "cao cấp", "mê hoặc", "tinh tế". Tiêu đề mỗi phần gọi đúng thứ bên trong (ví dụ "Giảm giá và tích điểm"). Chỗ
+cần cảm xúc thì dùng một bài thơ ngắn với hình ảnh nhỏ, có thật (mây, gió, bếp, ấm trà). Không có câu hướng dẫn kiểu
+"cuộn để…", "kéo để…".
 
 `npm run sync-menu` chạy MCP của Odoo (`../odoo/mcp-boongee/run.sh prod`, khoá API nằm trong `.env.prod` của nó, script
 không đọc khoá). Ở mạng văn phòng (chặn sslip.io), mở SSH tunnel tới Odoo rồi đặt `BOONGEE_MCP=<lệnh chạy MCP qua tunnel>`.

@@ -31,7 +31,8 @@ const ITEMS_SHOWN = 4;
 
 export interface Flavor extends FlavorSpec {
   readonly title: string;
-  readonly items: readonly string[];
+  /** the first items' names and plain lines (src/data/menu.ts) */
+  readonly items: readonly { readonly name: string; readonly note?: string }[];
   /** the tone as a hex colour */
   readonly toneHex: string;
 }
@@ -43,7 +44,7 @@ export const flavors: readonly Flavor[] = SPECS.flatMap((spec) => {
     {
       ...spec,
       title: category.title,
-      items: category.items.slice(0, ITEMS_SHOWN).map((item) => item.name),
+      items: category.items.slice(0, ITEMS_SHOWN).map(({ name, note }) => ({ name, note })),
       toneHex: tokens[spec.tone],
     },
   ];

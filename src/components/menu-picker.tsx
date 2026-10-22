@@ -113,12 +113,13 @@ function GroupCard({
               <button
                 type="button"
                 aria-pressed={picked}
-                aria-label={`${item.name}, ${priceText}`}
+                aria-label={`${item.name}${item.note ? `, ${item.note.toLowerCase()}` : ""}, ${priceText}`}
                 onClick={() => onPick({ group: group.id, name: item.name })}
                 className="my-1 flex w-full items-center gap-3 rounded-2xl px-2 py-2 text-left transition-colors hover:bg-brand-pink-100 focus-visible:outline-2 focus-visible:outline-brand-ink aria-pressed:bg-brand-pink-100 aria-pressed:shadow-sticker-small"
               >
                 <span className="min-w-0 flex-1">
                   <span className="text-[1.05rem]">{item.name}</span>
+                  {item.note && <span className="block text-xs leading-snug text-brand-ink-muted">{item.note}</span>}
                   {item.name === menuIntro.featured && (
                     <span className="ml-2 inline-block rounded-full bg-brand-honey-400 px-2 py-0.5 align-middle text-[0.7rem] font-semibold">
                       Nên thử
@@ -259,7 +260,7 @@ export function MenuPicker() {
             <p className="mt-1 text-2xl" aria-live="polite">
               {item.name}
             </p>
-            <p className="text-sm text-brand-ink-muted">{group.title}</p>
+            <p className="text-sm text-brand-ink-muted">{item.note ?? group.title}</p>
             <div className="mt-3">{sizeSwitch(false)}</div>
             <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
               <dt className="text-brand-ink-muted">Đường</dt>

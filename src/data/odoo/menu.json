@@ -8,32 +8,38 @@
         {
           "name": "Bạch Lan Hoa",
           "kind": "do-uong",
-          "prices": [40]
+          "prices": [40],
+          "note": "Trà sữa bạch lan hoa"
         },
         {
           "name": "Bạch Thiên Hương",
           "kind": "do-uong",
-          "prices": [40]
+          "prices": [40],
+          "note": "Trà sữa dành dành"
         },
         {
           "name": "Bạch Đào Hoa",
           "kind": "do-uong",
-          "prices": [40]
+          "prices": [40],
+          "note": "Trà sữa olong bạch đào"
         },
         {
           "name": "Mộc Hương",
           "kind": "do-uong",
-          "prices": [40]
+          "prices": [40],
+          "note": "Trà sữa quế hoa"
         },
         {
           "name": "Thanh Nhài",
           "kind": "do-uong",
-          "prices": [40]
+          "prices": [40],
+          "note": "Trà sữa hoa nhài"
         },
         {
           "name": "Thanh Trúc",
           "kind": "do-uong",
-          "prices": [40]
+          "prices": [40],
+          "note": "Trà sữa trúc"
         }
       ]
     },
@@ -43,17 +49,20 @@
         {
           "name": "Bông Lan",
           "kind": "do-uong",
-          "prices": [39, 46]
+          "prices": [39, 46],
+          "note": "Trà sữa bạch lan hoa, kem bông, vụn hoa"
         },
         {
           "name": "Bông Trúc",
           "kind": "do-uong",
-          "prices": [39, 46]
+          "prices": [39, 46],
+          "note": "Trà sữa trúc"
         },
         {
           "name": "Bông Đào",
           "kind": "do-uong",
-          "prices": [39, 46]
+          "prices": [39, 46],
+          "note": "Trà sữa olong bạch đào"
         }
       ]
     },
@@ -63,17 +72,20 @@
         {
           "name": "Nho Thanh Trúc",
           "kind": "do-uong",
-          "prices": [39, 46]
+          "prices": [39, 46],
+          "note": "Trà trúc, nho tươi, nho xanh, tắc"
         },
         {
           "name": "Xoài Hạ Tuyết",
           "kind": "do-uong",
-          "prices": [39, 46]
+          "prices": [39, 46],
+          "note": "Trà sữa hoa nhài, thạch trà, bưởi, xoài tươi"
         },
         {
           "name": "Xoài Xanh Hồng Bì",
           "kind": "do-uong",
-          "prices": [39, 46]
+          "prices": [39, 46],
+          "note": "Trà hoa nhài, quất hồng bì, xoài xanh"
         }
       ]
     },
@@ -83,17 +95,20 @@
         {
           "name": "Lài Cheese",
           "kind": "do-uong",
-          "prices": [42, 49]
+          "prices": [42, 49],
+          "note": "Trà hoa nhài, kem cheese"
         },
         {
           "name": "Nho Cheese",
           "kind": "do-uong",
-          "prices": [42, 49]
+          "prices": [42, 49],
+          "note": "Trà trúc, nho tím, nho xanh, nho tươi"
         },
         {
           "name": "Đào Cheese",
           "kind": "do-uong",
-          "prices": [42, 49]
+          "prices": [42, 49],
+          "note": "Trà olong bạch đào, đào hồng, kem cheese"
         }
       ]
     },
@@ -103,32 +118,38 @@
         {
           "name": "Bạc Xỉu",
           "kind": "do-uong",
-          "prices": [29]
+          "prices": [29],
+          "note": "Cà phê phin, sữa"
         },
         {
           "name": "Coldbrew Bưởi",
           "kind": "do-uong",
-          "prices": [45]
+          "prices": [45],
+          "note": "Coldbrew, bưởi hồng"
         },
         {
           "name": "Coldbrew Chanh Vàng",
           "kind": "do-uong",
-          "prices": [39]
+          "prices": [39],
+          "note": "Coldbrew, chanh vàng"
         },
         {
           "name": "Coldbrew Khế",
           "kind": "do-uong",
-          "prices": [39]
+          "prices": [39],
+          "note": "Coldbrew, khế, chanh vàng tươi"
         },
         {
           "name": "Cà Phê Muối",
           "kind": "do-uong",
-          "prices": [32]
+          "prices": [32],
+          "note": "Cà phê phin, sữa, kem muối"
         },
         {
           "name": "Phindi Hạnh Nhân",
           "kind": "do-uong",
-          "prices": [39]
+          "prices": [39],
+          "note": "Cà phê phin, sữa, hạnh nhân"
         }
       ]
     },

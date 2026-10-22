@@ -12,7 +12,7 @@
     "format:check": "prettier --check .",
     "check": "npm run lint && npm run typecheck && npm run format:check && npm run test",
     "sync-brand": "node scripts/sync-brand.mjs",
-    "sync-menu": "node scripts/sync-menu.mjs",
+    "sync-menu": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/sync-menu.mjs",
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"src/**/*.test.ts\""
   },
   "dependencies": {

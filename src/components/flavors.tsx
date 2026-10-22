@@ -152,7 +152,15 @@ export function Flavors() {
                 <h3 className="mt-2 text-2xl leading-tight md:mt-3 md:text-5xl">{flavor.title}</h3>
                 <ul className="mt-3 space-y-0.5 md:mt-5 md:space-y-1.5 md:text-xl">
                   {flavor.items.map((item) => (
-                    <li key={item}>{item}</li>
+                    <li key={item.name}>
+                      {item.name}
+                      {item.note && (
+                        <span className="hidden text-sm text-brand-ink-muted sm:inline">
+                          {" "}
+                          · {item.note.toLowerCase()}
+                        </span>
+                      )}
+                    </li>
                   ))}
                 </ul>
                 <a

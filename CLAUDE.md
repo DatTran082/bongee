@@ -31,7 +31,7 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   instructions ("scroll to…", "drag to…"): the 3D controls are described to assistive tech only (`cup.hint`). Everything else is
   in `src/data/boongee.ts`; FAQ answers (`src/data/faq.ts`) are composed from that data. Facts ShanMay marks as
   assumptions or illustrative (prices, address, tea origin, 50% sweetness) carry `TODO(boongee)`. Unknown facts are
-  `null`; components render them as "Đang cập nhật" and drop unset links. Items have no descriptions: none exist. Never invent addresses, prices, phone numbers,
+  `null`; components render them as "Đang cập nhật" and drop unset links. A drink's only description is its plain line ("Trà sữa dành dành"), written by sync-menu from its Odoo recipe (`src/lib/menu/describe.ts`, tested); no recipe, no line. Never invent addresses, prices, phone numbers,
   social URLs or testimonials. The domain is not in it: `src/lib/site-url.ts` (server-only, may throw) reads
   `NEXT_PUBLIC_SITE_URL`, then Vercel's production domain, then localhost in dev; a production build with none fails.
 - **Brand assets come from the sibling brand kits** (`../brandkit`, and `../brandkit-ghibli` for the Làng Mây look:

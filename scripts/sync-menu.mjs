@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Copies the shop's menu from its Odoo (the till's own dishes, groups and counter prices) into
 // src/data/odoo/menu.json, through the Boongee MCP server (../odoo/mcp-boongee: `list_menu` for the dishes and prices,
-// `get_dish` for each dish's group on the till). Only dishes shown on the till are kept. Run after the menu changes in
+// `get_dish` for each dish's group on the till and its recipe, from which each drink gets a plain line under its
+// name: src/lib/menu/describe.ts). Only dishes shown on the till are kept. Run after the menu changes in
 // Odoo: `npm run sync-menu`. The file is committed, so building the site never needs Odoo.
 //
 //   BOONGEE_MCP   the server's command (default: ../odoo/mcp-boongee/run.sh prod). On the office network, which
@@ -14,6 +15,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
+import { describeDish } from "../src/lib/menu/describe.ts";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const COMMAND = (process.env.BOONGEE_MCP ?? path.join(ROOT, "..", "odoo", "mcp-boongee", "run.sh") + " prod").split(
@@ -82,7 +84,11 @@ try {
     const detail = await odoo.call("get_dish", { dish: name });
     const group = detail.pos_categories.find((g) => sections.has(g));
     const prices = dish.prices.M ? [dish.prices.M, dish.prices.L].filter(Boolean) : [dish.prices.one];
-    if (group) sections.get(group).push({ name, kind: dish.kind, prices });
+    // the plain line under the name, from the recipe's components (packaging left out); drinks only
+    const recipe = detail.variants?.[0]?.recipe ?? [];
+    const note =
+      dish.kind === "do-uong" ? describeDish(recipe.filter((r) => !r.is_packaging).map((r) => r.component)) : null;
+    if (group) sections.get(group).push({ name, kind: dish.kind, prices, ...(note ? { note } : {}) });
     else unplaced.push(name);
   }
   const menu = {

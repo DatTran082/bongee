@@ -27,9 +27,18 @@ export interface RedrawState {
   /** the page scrolled, so the marks behind the cup moved */
   readonly scrolled: boolean;
   readonly targetChanged: boolean;
+  /** ms since the last frame drawn, and the shortest gap between frames that only the idle float asks for */
+  readonly sinceDraw?: number;
+  readonly idleFrameMs?: number;
 }
 
-/** Whether a frame must be drawn: always while motion is allowed, otherwise only when something changed. */
+/**
+ * Whether a frame must be drawn: whenever something changed (an input, the scroll, an animation under way); while
+ * only the idle float moves, at most once every `idleFrameMs` (a light device draws it at 30 fps); with reduced
+ * motion, never for the float.
+ */
 export function needsRedraw(state: RedrawState): boolean {
-  return !state.reduced || state.moving || state.dirty || state.scrolled || state.targetChanged;
+  if (state.moving || state.dirty || state.scrolled || state.targetChanged) return true;
+  if (state.reduced) return false;
+  return (state.sinceDraw ?? Infinity) >= (state.idleFrameMs ?? 0);
 }

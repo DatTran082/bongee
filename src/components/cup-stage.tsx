@@ -18,19 +18,39 @@ type Status = "loading" | "ready" | "failed";
 const KEY_STEP = Math.PI / 12;
 /** Set on <html> when the stage cannot be shown: the slots collapse, the hero shows the cover photo. */
 const FAILED_CLASS = "cup-failed";
+/** The longest the stage waits for an idle moment after the page has loaded (ms). */
+const IDLE_WAIT = 1500;
 const CANVAS_CLASS = "block h-full w-full opacity-0 transition-opacity duration-700 motion-reduce:transition-none";
 
-/** three.js needs WebGL 2; a throwaway canvas tells before anything is downloaded. */
+/**
+ * three.js needs WebGL 2. Only the API is checked: a throwaway context would cost a GPU context and, on a phone, a
+ * long pause while the page loads. A browser with the API but a blocked GPU fails when the renderer starts, and the
+ * page falls back then (the same path as a model that fails to load).
+ */
 function webglAvailable(): boolean {
-  try {
-    const probe = document.createElement("canvas");
-    const gl = probe.getContext("webgl2");
-    if (!gl) return false;
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    return true;
-  } catch {
-    return false;
-  }
+  return typeof WebGL2RenderingContext !== "undefined";
+}
+
+/**
+ * Runs `start` once the page has loaded and the browser is idle (at most `IDLE_WAIT` ms later), so the 3D stage's
+ * download (three.js, the models) and set-up never compete with the first paint, the fonts and hydration. Returns a
+ * cancel.
+ */
+function whenSettled(start: () => void): () => void {
+  let idle = 0;
+  let timer = 0;
+  const go = () => {
+    if (typeof window.requestIdleCallback === "function")
+      idle = window.requestIdleCallback(start, { timeout: IDLE_WAIT });
+    else timer = window.setTimeout(start, 200);
+  };
+  if (document.readyState === "complete") go();
+  else window.addEventListener("load", go, { once: true });
+  return () => {
+    window.removeEventListener("load", go);
+    if (idle) window.cancelIdleCallback(idle);
+    window.clearTimeout(timer);
+  };
 }
 
 /** The visitor asked for less data (Chrome's Data Saver): the cover photo will do. */
@@ -96,7 +116,6 @@ export function CupStage() {
       fail(savesData() ? "data saver" : "no WebGL 2");
       return () => document.documentElement.classList.remove(FAILED_CLASS);
     }
-    for (const model of Object.values(MODELS)) preload(model.url, { as: "fetch", crossOrigin: "anonymous" }); // alongside three.js
     const canvas = document.createElement("canvas");
     canvas.className = CANVAS_CLASS;
     layer.replaceChildren(canvas);
@@ -105,41 +124,52 @@ export function CupStage() {
     const observers: ResizeObserver[] = [];
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const anchors = findAnchors(document);
-    import("@/lib/cup-scene")
-      .then(({ createCupScene }) =>
-        createCupScene(canvas, hits as Record<ActorName, HTMLElement>, {
-          reducedMotion: () => motion.matches,
-          measure: () => targetsByActor(measureAnchors(anchors), window.innerHeight, motion.matches),
-          scrollY: () => window.scrollY,
-          onStrapChange: (name, open) =>
-            setAnnouncement(`${cup.actors[name].short}: ${open ? cup.strapOpened : cup.strapClosed}`),
-          onPlace: (name, placement) => {
-            const hit = hits[name];
-            if (hit) placeHit(hit, placement);
-          },
-          flower: flower.src,
-          signal,
-        }),
-      )
-      .then((scene) => {
-        if (signal.aborted) {
-          scene.dispose();
-          return;
-        }
-        sceneRef.current = scene;
-        const fit = () => scene.resize(layer.clientWidth, layer.clientHeight);
-        fit();
-        observers.push(new ResizeObserver(fit), new ResizeObserver(() => scene.invalidate()));
-        observers[0].observe(layer); // the viewport
-        observers[1].observe(document.body); // the page's height: a <details> opened, a font arrived
-        canvas.classList.replace("opacity-0", "opacity-100");
-        setHintSlot(document.querySelector("[data-cup-hint]"));
-        setStatus("ready");
-      })
-      .catch((error: unknown) => {
-        if (!signal.aborted) fail(error); // no WebGL, or a model failed to load: the page stands without the stage
-      });
+    // the scroll, kept from the scroll event: reading window.scrollY every frame would force a layout each time
+    let scrollTop = window.scrollY;
+    const onScroll = () => {
+      scrollTop = window.scrollY;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const cancelStart = whenSettled(() => {
+      for (const model of Object.values(MODELS)) preload(model.url, { as: "fetch", crossOrigin: "anonymous" }); // alongside three.js
+      import("@/lib/cup-scene")
+        .then(({ createCupScene }) =>
+          createCupScene(canvas, hits as Record<ActorName, HTMLElement>, {
+            reducedMotion: () => motion.matches,
+            measure: () => targetsByActor(measureAnchors(anchors), window.innerHeight, motion.matches),
+            scrollY: () => scrollTop,
+            onStrapChange: (name, open) =>
+              setAnnouncement(`${cup.actors[name].short}: ${open ? cup.strapOpened : cup.strapClosed}`),
+            onPlace: (name, placement) => {
+              const hit = hits[name];
+              if (hit) placeHit(hit, placement);
+            },
+            flower: flower.src,
+            signal,
+          }),
+        )
+        .then((scene) => {
+          if (signal.aborted) {
+            scene.dispose();
+            return;
+          }
+          sceneRef.current = scene;
+          const fit = () => scene.resize(layer.clientWidth, layer.clientHeight);
+          fit();
+          observers.push(new ResizeObserver(fit), new ResizeObserver(() => scene.invalidate()));
+          observers[0].observe(layer); // the viewport
+          observers[1].observe(document.body); // the page's height: a <details> opened, a font arrived
+          canvas.classList.replace("opacity-0", "opacity-100");
+          setHintSlot(document.querySelector("[data-cup-hint]"));
+          setStatus("ready");
+        })
+        .catch((error: unknown) => {
+          if (!signal.aborted) fail(error); // no WebGL, or a model failed to load: the page stands without the stage
+        });
+    });
     return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelStart();
       controller.abort();
       for (const observer of observers) observer.disconnect();
       sceneRef.current?.dispose();
@@ -214,6 +244,9 @@ export function CupStage() {
             src={heroPhoto}
             alt={hero.imageAlt}
             placeholder="blur"
+            // shown only when the stage failed: then it is the hero's largest picture, wanted at once
+            loading="eager"
+            fetchPriority="high"
             sizes="(min-width: 80rem) 60vw, 100vw"
             className="h-full w-full rounded-3xl object-cover object-[72%_center]"
           />,

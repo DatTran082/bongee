@@ -127,6 +127,18 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   footer's top, melting into the cream), `<FlowerMark>` (the low-poly logo flower: tagline marks, story bullets),
   `<Sparkle>`. The header and footer use the Làng Mây logo (`<Logo>`). Accents (sky, moss, honey, cloud) only
   decorate: never text, never a ground under text.
+- **Performance (phones first, 22/10/2026).** The 3D stage starts only after `load` and an idle moment
+  (`whenSettled` in cup-stage.tsx, ≤ 1.5 s), so three.js and the models never compete with first paint; WebGL 2 is
+  checked by API, not by a throwaway context. Each device gets a quality (`quality.ts`, tested): phones and weak
+  machines draw at ≤ 1.5× pixel ratio, without the shadow pass, with fewer petals, and at 30 fps while only the idle
+  float moves (`needsRedraw` with `idleFrameMs`; scroll, input and changes still draw at once). Toppings and creams
+  are built in idle steps after the stage shows, then their shaders compiled. Per frame the stage never writes to
+  the root's style (a custom property there restyles the whole page): `--pointer-x / -y` go on `.bank-parallax`
+  only, when changed, and the scroll comes from the scroll event (reading `window.scrollY` after a style write
+  forces a layout). sync-brand keeps only the cups' print textures, ≤ 2048 px (the toon look uses nothing else; a
+  4096 px print is ~32 MB of GPU memory). Fraunces loads `opsz` only, latin + vietnamese. The header blurs its
+  backdrop from md up only. Measured on an emulated phone (4× CPU, real GPU): the whole page scrolls at 60 fps;
+  Lighthouse mobile ≈ 0.8, CLS 0, 824 KiB.
 - **Type**: Fraunces is the only typeface (`next/font/google` in `src/app/layout.tsx`, `vietnamese` subset).
 - `cacheComponents` is on (scaffold default): keep prerendering static, avoid `new Date()` / request APIs in server
   components unless wrapped as the docs require.

@@ -16,9 +16,12 @@ import { between, type Random } from "../random";
 // plump; the toon material paints them in soft bands. Each comes indexed with smooth normals (the outline hulls push
 // out along them), about 1 across, its middle at the origin unless noted.
 
-/** Detail of the round shapes (icosphere subdivisions): smooth at any size the stage draws them. */
-const ROUND = 4;
-const SMALL = 3;
+/**
+ * Detail of the round shapes (icosphere subdivisions): smooth at the sizes the stage draws them (a topping is a few
+ * dozen px across), and light: detail 3 is 642 vertices a ball, a quarter of detail 4.
+ */
+const ROUND = 3;
+const SMALL = 2;
 
 /** Positions (and colours) only, not indexed: parts in this form merge whatever they were made as. */
 function bare(geometry: BufferGeometry): BufferGeometry {
@@ -246,7 +249,7 @@ export function log(random: Random, radius: number, height: number, colours: Log
   profile.push(new Vector2(0, 0));
   const lumpy = lumps(random, 4);
   // a lathe faces outward when its profile runs from the foot up: built top-down above, so reversed here
-  const g = mergeVertices(bare(new LatheGeometry(profile.reverse(), 40)), 1e-6);
+  const g = mergeVertices(bare(new LatheGeometry(profile.reverse(), 28)), 1e-6);
   bend(g, (p) => {
     const k = 1 + 0.04 * lumpy(new Vector3(p.x / radius, p.y / height, p.z / radius));
     p.x *= k;

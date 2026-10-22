@@ -69,7 +69,7 @@ const CHEESE: Profile = [
   [0.0116, 0.1442],
   [0, 0.1444],
 ];
-const SMOOTH = { rows: 64, sides: 96 };
+const SMOOTH = { rows: 40, sides: 64 }; // smooth at the cup's size, a third of the vertices of 64 × 96
 /**
  * Each cream's look: its profile; the side's lobes (how many round it, how deep as a share of the radius, the height
  * they are deepest at, how far up and down they reach: none on the smooth cheese); its sprinkles' reach and height

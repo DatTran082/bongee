@@ -52,3 +52,16 @@ describe("needsRedraw", () => {
     assert.equal(needsRedraw({ ...still, targetChanged: true }), true);
   });
 });
+
+describe("needsRedraw at a capped idle rate", () => {
+  const idle = { reduced: false, moving: false, dirty: false, scrolled: false, targetChanged: false };
+  it("skips idle frames that come sooner than the idle frame time", () => {
+    assert.equal(needsRedraw({ ...idle, sinceDraw: 16, idleFrameMs: 33 }), false);
+    assert.equal(needsRedraw({ ...idle, sinceDraw: 34, idleFrameMs: 33 }), true);
+  });
+  it("never holds back a frame something asked for", () => {
+    for (const urgent of ["moving", "dirty", "scrolled", "targetChanged"] as const) {
+      assert.equal(needsRedraw({ ...idle, [urgent]: true, sinceDraw: 1, idleFrameMs: 33 }), true);
+    }
+  });
+});

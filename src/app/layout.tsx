@@ -8,12 +8,13 @@ import { SITE_URL } from "@/lib/site-url";
 import tokens from "@/data/brand-tokens.json";
 import "./globals.css";
 
-// The brand's only typeface (SIL OFL), self-hosted by next/font. The Vietnamese subset carries the diacritics; the
-// SOFT / WONK / opsz axes are the ones the wordmark is drawn with.
+// The brand's only typeface (SIL OFL), self-hosted by next/font: the weight axis and the optical-size axis (opsz,
+// which the browser sets from the font size). The wordmark is an SVG, so the SOFT and WONK axes are not loaded, and
+// Vietnamese needs only the latin and vietnamese subsets (latin-ext is left out): smaller files, faster first text.
 const fraunces = Fraunces({
   variable: "--font-fraunces",
-  subsets: ["latin", "latin-ext", "vietnamese"],
-  axes: ["SOFT", "WONK", "opsz"],
+  subsets: ["latin", "vietnamese"],
+  axes: ["opsz"],
   display: "swap",
 });
 

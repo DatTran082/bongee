@@ -19,6 +19,7 @@ import { disposeScene } from "./dispose";
 import { DISTANCE, FOV } from "./fit";
 import { MODELS, NODES } from "./model";
 import { approach, needsRedraw } from "./motion";
+import { qualityFor } from "./quality";
 import { createPetals } from "./petals";
 import { seeded } from "./random";
 import { createSet } from "./set";
@@ -50,11 +51,10 @@ export { ACTORS, type ActorName };
 const MAX_STEP = 250;
 /** The actors lean against the scroll: radians per px/ms of scroll speed, the most, the smoothing (ms). */
 const LEAN = { perSpeed: 0.05, max: 0.14, tau: 90 };
-const PETALS = { count: 6, seed: 7 }; // a few: the page's scenery is quiet
+const PETALS_SEED = 7; // how many: the device's quality (quality.ts); a few, the page's scenery is quiet
 const SPLASH_SEED = 19;
 const TOPPING_SEED = 43;
 const SPARKLES = { seed: 61, count: 7 };
-const DPR_MAX = 2;
 const CLEAR = new Color(tokens["bg"]); // the page's cream ground
 /** Idle motion and flight of the cups: they float, and a drag turns them. */
 const CUP_MOTION = { bob: 0.016, sway: 0.08, roll: 0.02, hz: 0.24, spin: 1.1, turnable: true, parallax: null };
@@ -145,15 +145,29 @@ const sameTarget = (a: CupTarget | null, b: CupTarget | null) =>
 const sameTargets = (a: Record<string, CupTarget | null>, b: Record<string, CupTarget | null>) =>
   ACTORS.every((name) => sameTarget(a[name] ?? null, b[name] ?? null));
 
+/** This device's quality (quality.ts), read once. */
+function deviceQuality() {
+  const { deviceMemory } = navigator as Navigator & { deviceMemory?: number };
+  return qualityFor({
+    coarsePointer: window.matchMedia("(pointer: coarse)").matches,
+    width: window.innerWidth,
+    cores: navigator.hardwareConcurrency || 4,
+    memory: deviceMemory,
+  });
+}
+
 export async function createCupScene(
   canvas: HTMLCanvasElement,
   hits: Record<ActorName, HTMLElement>,
   options: CupSceneOptions,
 ): Promise<CupScene> {
+  const quality = deviceQuality();
+  /** What follows the pointer on the page (lang-may.css): the cloud bank. */
+  const pointerTargets = Array.from(document.querySelectorAll<HTMLElement>(".bank-parallax"));
   const [pp, paper, petals] = await Promise.all([
     loadCup(MODELS.pp, options.signal),
     loadCup(MODELS.paper, options.signal),
-    createPetals(options.flower, tokens["pink-700"], PETALS.count, seeded(PETALS.seed), options.signal),
+    createPetals(options.flower, tokens["pink-700"], quality.petals, seeded(PETALS_SEED), options.signal),
   ]);
   const scene = new Scene();
   const listeners = new AbortController();
@@ -169,8 +183,10 @@ export async function createCupScene(
     cancelAnimationFrame(frame);
     frame = 0;
     listeners.abort();
-    document.documentElement.style.removeProperty("--pointer-x");
-    document.documentElement.style.removeProperty("--pointer-y");
+    for (const element of pointerTargets) {
+      element.style.removeProperty("--pointer-x");
+      element.style.removeProperty("--pointer-y");
+    }
     for (const actor of Object.values(actors)) actor.dispose();
     splash?.dispose();
     toppingsDispose?.();
@@ -188,10 +204,16 @@ export async function createCupScene(
     camera.position.set(0, 0, DISTANCE);
     camera.lookAt(0, 0, 0);
     // transparent: the page's scenery (the hero's sky and clouds, src/components/lang-may/) shows behind the actors
-    renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, premultipliedAlpha: true });
+    renderer = new WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true,
+      premultipliedAlpha: true,
+      powerPreference: quality.tier === "full" ? "high-performance" : "default",
+    });
     renderer.setClearColor(CLEAR, 0);
     renderer.toneMapping = NoToneMapping; // toon colours are the palette's own: nothing should bend them
-    renderer.shadowMap.enabled = true; // the set's cups and logs throw shadows on the boulder
+    renderer.shadowMap.enabled = quality.shadows; // the set's cups and logs throw shadows on the boulder (not on a phone)
     renderer.shadowMap.type = PCFShadowMap;
 
     // the actors, toon from the start (the clones below share the toon geometry and materials)
@@ -250,19 +272,30 @@ export async function createCupScene(
      * The toppings and what floats round the PP cup are not seen at first: they are made after the stage shows (their
      * shaders compile then), and hang on their actors. Without them the page still works, only plainer.
      */
+    /** Waits for an idle moment (or the next frame): the extras are built in small steps, not one long task. */
+    const breathe = () =>
+      new Promise<void>((resolve) => {
+        if (typeof window.requestIdleCallback === "function")
+          window.requestIdleCallback(() => resolve(), { timeout: 300 });
+        else requestAnimationFrame(() => resolve());
+      });
+
     async function loadExtras(): Promise<void> {
-      await new Promise((resolve) => setTimeout(resolve, 0)); // after the first frame
+      await breathe(); // after the first frames
       options.signal.throwIfAborted();
       const made = createSplash(seeded(SPLASH_SEED));
       splash = made;
       pp.add(made.inside); // what stands in the tea, in the cup's space
       carousel.pp.add(made.inside.clone(true)); // the carousel's PP cup holds the same tea
       cast.pp.decorate(made.group);
+      await breathe();
+      options.signal.throwIfAborted();
       const toppings = createToppings(seeded(TOPPING_SEED));
       toppingsDispose = () => toppings.dispose();
       carousel.setToppings(toppings);
       cast.flavor.decorate(toppings.group);
       // compile their shaders now, while nothing moves: not mid-scroll when a flavour's toppings first come in
+      await breathe();
       if (renderer) await renderer.compileAsync(scene, camera);
       options.signal.throwIfAborted();
       invalidate();
@@ -281,11 +314,11 @@ export async function createCupScene(
     scene.add(key, key.target);
 
     const lean = new Lean(LEAN.perSpeed, LEAN.max, LEAN.tau);
-    // the pointer, for the set's parallax and the page's (--pointer-x / -y on the root, lang-may.css): a mouse only
+    // the pointer, for the set's parallax and the page's (--pointer-x / -y, lang-may.css): a mouse only
     // (a touch has no hover), back to the middle when it leaves the window
     const pointerGoal = { x: 0, y: 0 };
     const pointer = { x: 0, y: 0 };
-    const root = document.documentElement;
+    let written = { x: NaN, y: NaN };
     let width = 1;
     let height = 1;
     let last = 0;
@@ -299,6 +332,10 @@ export async function createCupScene(
     const ground = new Color();
     const toneFrom = new Color();
     const toneTo = new Color();
+
+    /** While only the idle float moves, a frame at most this often (ms): 30 fps on a light device, a little slack. */
+    const idleFrameMs = 1000 / quality.idleFps - 4;
+    let lastDraw = 0;
 
     function schedule(): void {
       if (sized && !paused && !frame) frame = requestAnimationFrame(tick);
@@ -357,8 +394,15 @@ export async function createCupScene(
         pointer.x = goalX;
         pointer.y = goalY;
       }
-      root.style.setProperty("--pointer-x", pointer.x.toFixed(4));
-      root.style.setProperty("--pointer-y", pointer.y.toFixed(4));
+      // only on the elements that use it, and only when it changed: a custom property set on the root every frame
+      // would restyle the whole page each frame (and force a layout when the scroll is read)
+      if (Math.abs(pointer.x - written.x) > 1e-3 || Math.abs(pointer.y - written.y) > 1e-3) {
+        written = { x: pointer.x, y: pointer.y };
+        for (const element of pointerTargets) {
+          element.style.setProperty("--pointer-x", pointer.x.toFixed(3));
+          element.style.setProperty("--pointer-y", pointer.y.toFixed(3));
+        }
+      }
       const moving = [...ACTORS.map((name) => cast[name].step(dt)), lean.moving, flavorMoved, pointing].some(Boolean);
       const frameState: Frame = {
         dt,
@@ -382,12 +426,16 @@ export async function createCupScene(
       ground.lerpColors(toneFrom, toneTo, state.blend);
       renderer?.setClearColor(ground, fl.presence); // clear, but for the flavour section's tone while it has the view
       followSet();
-      key.castShadow = cast.set.root.visible; // the shadow pass serves the set alone
+      key.castShadow = quality.shadows && cast.set.root.visible; // the shadow pass serves the set alone
       splash?.update(time, reduced ? 0 : dt / 1000);
       for (const s of sparkles) s.update(time, reduced);
       petals.update(scroll, time, reduced ? 0 : dt / 1000, width, height);
-      if (needsRedraw({ reduced, moving: moving || flavorMoved, dirty, scrolled, targetChanged })) {
+      const sinceDraw = now - lastDraw;
+      if (
+        needsRedraw({ reduced, moving: moving || flavorMoved, dirty, scrolled, targetChanged, sinceDraw, idleFrameMs })
+      ) {
         renderer?.render(scene, camera);
+        lastDraw = now;
       }
       dirty = false;
     }
@@ -443,7 +491,7 @@ export async function createCupScene(
         width = w;
         height = h;
         sized = true;
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, DPR_MAX)); // the window may have moved to another screen
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality.dprMax)); // the window may have moved to another screen
         renderer.setSize(w, h, false);
         const ratio = renderer.getPixelRatio();
         setOutlineSize(w * ratio, h * ratio, ratio);

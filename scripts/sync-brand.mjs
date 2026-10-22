@@ -20,7 +20,8 @@
 //   nhan-dien/03-hoa-tiet/monogram_hong.png            → src/assets/images/monogram-hong.png
 //   lookbook/anh-bia/facebook.png                      → src/assets/images/hero.jpg   shown only when the 3D cup cannot
 //   nhan-dien/04-anh-bia/facebook-slogan-den.png       → src/app/opengraph-image.jpg, twitter-image.jpg (1200 × 628)
-//   3d/boongee-pp-700ml.glb, 3d/boongee-paper-16oz.glb → public/models/<name>.<hash>.glb   the 3D cups, compressed
+//   3d/boongee-pp-700ml.glb, 3d/boongee-paper-16oz.glb → public/models/<name>.<hash>.glb   the 3D cups, compressed,
+//                                                        prints only (≤ 2048 px), no normal or metal maps
 //                                                        src/data/cup-model.json          their URLs
 //
 // The menu and the offers come from the ShanMay brand kit (../../ShanMay/brand-kit, or BOONGEE_SHANMAY), the same
@@ -191,13 +192,20 @@ async function cupModel({ name: CUP, nodes: CUP_NODES }, io) {
     node.addChild(doc.createNode(`${node.getName()}-mesh`).setMesh(mesh));
     node.setMesh(null);
   }
+  // The stage draws the cups toon (src/lib/cup-scene/toon/cups.ts): of the textures only the prints (base colour) are
+  // used. The grain and lid normal maps and the metal-roughness map are dropped, so phones neither download nor
+  // decode them, and the prints are capped at 2048 px (a 4096 px print is ~32 MB of GPU memory once decoded).
+  for (const material of doc.getRoot().listMaterials()) {
+    material
+      .setNormalTexture(null)
+      .setMetallicRoughnessTexture(null)
+      .setOcclusionTexture(null)
+      .setEmissiveTexture(null);
+  }
   await doc.transform(
     dedup(),
     prune({ keepLeaves: true }),
-    // the prints, the metal-roughness map and the grain normal maps lossy (grain is noise anyway); the lid's normal
-    // map lossless (lossy WebP dents the embossed marks)
-    textureCompress({ encoder: sharp, targetFormat: "webp", quality: 90, pattern: /^(?!lid_top_normal)/ }),
-    textureCompress({ encoder: sharp, targetFormat: "webp", lossless: true, pattern: /^lid_top_normal/ }),
+    textureCompress({ encoder: sharp, targetFormat: "webp", quality: 90, resize: [2048, 2048] }),
     meshopt({ encoder: MeshoptEncoder, level: "medium" }),
   );
   const names = new Set(

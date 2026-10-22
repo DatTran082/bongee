@@ -67,9 +67,15 @@ function cream(seed: number): Group {
 
 /**
  * `paper` and `pp` are the stage's prepared models (toon materials, the PP cup's tea and what stands in it added);
- * they are cloned, sharing geometry and materials. `pet` is the carousel's own PET cup (used as it is).
+ * they are cloned, sharing geometry and materials. `pet` is the carousel's own PET cup (used as it is), or null when
+ * no flavour is served in it.
  */
-export function createFlavorRig(paper: Object3D, pp: Object3D, pet: Object3D, flavors: readonly Flavor[]): FlavorRig {
+export function createFlavorRig(
+  paper: Object3D,
+  pp: Object3D,
+  pet: Object3D | null,
+  flavors: readonly Flavor[],
+): FlavorRig {
   const paperBody = paper.clone(true);
   const lid = required(paperBody, "lid");
   const toppers: Record<Exclude<CupTopper, "none">, { object: Object3D; restY: number }> = {
@@ -79,9 +85,13 @@ export function createFlavorRig(paper: Object3D, pp: Object3D, pet: Object3D, fl
   };
   paperBody.add(toppers.cream.object, toppers.cheese.object);
   const ppCup = pp.clone(true);
-  const bodies: Record<CupBody, Object3D> = { paper: holder(paperBody), pp: holder(ppCup), pet: holder(pet) };
+  const bodies: Partial<Record<CupBody, Object3D>> = {
+    paper: holder(paperBody),
+    pp: holder(ppCup),
+    ...(pet ? { pet: holder(pet) } : {}),
+  };
   const spinner = new Group(); // turns the cup about its axis
-  for (const body of Object.values(bodies)) spinner.add(body);
+  for (const body of Object.values(bodies)) if (body) spinner.add(body);
   const group = new Group();
   group.name = "flavor-cups";
   group.add(spinner);
@@ -104,7 +114,10 @@ export function createFlavorRig(paper: Object3D, pp: Object3D, pet: Object3D, fl
     update(state, time, drift) {
       spinner.rotation.y = state.turn;
       const parts = cupParts(state, kinds);
-      for (const body of ["paper", "pp", "pet"] as const) showBody(bodies[body], parts.bodies[body]);
+      for (const body of ["paper", "pp", "pet"] as const) {
+        const object = bodies[body];
+        if (object) showBody(object, parts.bodies[body]);
+      }
       for (const [name, topper] of Object.entries(toppers) as [keyof typeof toppers, (typeof toppers)["lid"]][]) {
         const { size, lift } = parts.toppers[name];
         show(topper.object, size);

@@ -104,11 +104,12 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   (`flavor-rig.ts`) reads it every frame through `flavor-track.ts` (pure, tested): the cup turns once per flavour;
   `cupParts` keeps one paper cup between two paper-cup flavours and swaps only its topper (the lid lifts off and
   shrinks, the milk-foam or cheese cream drops in and settles), and swaps the whole cup only between paper and a
-  clear cup: the PP cup of the fruit teas, or the 350 ml PET cup of the coffees (owner, 22/10/2026; `toon/pet-cup.ts`:
-  no GLB, turned from its sizes in `src/data/pet-cup.json` and wrapped with its white print by the print fan, both
-  written by sync-brand from `brandkit/thuc-don/ly/src`; coldbrew poured in it, no lid) (about its middle, never below
-  half size, never both at once); every shader, hidden cups too (`compileAll`), compiles before the first frame and
-  the PET print is uploaded then, not mid-scroll; the
+  clear cup: the PP cup of the fruit teas (about its middle, never below half size, never both at once). The coffees
+  are in the lidded paper cup (the owner tried the 350 ml PET cup and went back, 22/10/2026). The PET cup stays ready
+  (`cup: "pet"` in flavors.ts; `toon/pet-cup.ts`: no GLB, turned from its sizes in `src/data/pet-cup.json` and wrapped
+  with its white print by the print fan, both written by sync-brand from `brandkit/thuc-don/ly/src`; coldbrew in it,
+  no lid); the stage builds it and fetches its print only when a flavour uses it. Every shader, hidden cups too
+  (`compileAll`), compiles before the first frame and the PET print (when used) is uploaded then, not mid-scroll; the
   toppings (`toppings.ts`) fade from one flavour's set to the next, and the canvas's clear colour moves through the
   flavours' tones. **Tones stay in the brand's creams and whites** (`bg`, `bg-alt`, `grey-100`); flavour colours live
   only in the drink and the toppings. While the section has the viewport the `pp` and `paper` actors shrink away.

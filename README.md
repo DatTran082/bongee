@@ -78,7 +78,7 @@ của riêng mình:
 
 - **Xoay ly đổi hương vị** (`#huong-vi`, `src/components/flavors.tsx`): section ghim cố định khi cuộn, mỗi nhóm
   thực đơn một vị (hương hoa, kem bông, trái cây, kem cheese, cà phê). Cuộn tới đâu ly xoay một vòng và đổi sang ly
-  của vị kế tiếp (ly giấy đậy nắp, ly giấy kem bông, ly nhựa trà trái cây, ly giấy kem cheese, ly PET 350 ml coldbrew), topping quanh ly
+  của vị kế tiếp (ly giấy đậy nắp, ly giấy kem bông, ly nhựa trà trái cây, ly giấy kem cheese, ly giấy đậy nắp cho cà phê), topping quanh ly
   chuyển dần (hoa năm cánh, bọt kem và cánh hồng, nho, xoài và đá, phô mai và mâm xôi, hạt cà phê), nền chuyển trong
   dải kem và trắng của thương hiệu. Không dùng thư viện cuộn: trình duyệt tự dừng trang ở từng vị (scroll snap), ly 3D trượt mượt theo; chấm bên dưới để nhảy
   tới vị bất kỳ. Tên nhóm và tên món lấy từ thực đơn.

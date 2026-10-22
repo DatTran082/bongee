@@ -1,6 +1,6 @@
 // The flavour carousel (src/components/flavors.tsx): one flavour per menu category, in the menu's order, each with
-// the cup it is served in (the clear PP cup for the fruit teas, the clear PET cup for coffee, a paper cup for the
-// rest), the toppings that float
+// the cup it is served in (the clear PP cup for the fruit teas, a paper cup for the rest; "pet", the clear 350 ml
+// PET cup, is ready but unused), the toppings that float
 // round it and the tone the stage's background takes. Tones stay in the brand's creams and whites
 // (brandkit/color/tokens.json): the flavour's own colours are in the cup and the toppings, never the ground. Words
 // come from the menu (the shop's Odoo, src/data/menu.ts): the group's title and its items' names, nothing written here.
@@ -24,7 +24,7 @@ const SPECS: readonly FlavorSpec[] = [
   { id: "kem-bong", cup: "paper-cream", topping: "cream", tone: "bg-alt" },
   { id: "trai-cay", cup: "pp", topping: "fruit", tone: "bg" },
   { id: "kem-cheese", cup: "paper-cheese", topping: "cheese", tone: "bg-alt" },
-  { id: "ca-phe", cup: "pet", topping: "coffee", tone: "grey-100" }, // coldbrew in the clear 350 ml PET cup (22/10/2026)
+  { id: "ca-phe", cup: "paper-lidded", topping: "coffee", tone: "grey-100" }, // the paper cup (owner, 22/10/2026: not the PET one)
 ];
 
 /** How many of a category's items the carousel names. */

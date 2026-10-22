@@ -186,10 +186,11 @@ export async function createCupScene(
   options: CupSceneOptions,
 ): Promise<CupScene> {
   const quality = deviceQuality();
+  const usesPet = flavors.some((flavor) => flavor.cup === "pet"); // the PET cup and its print only when served
   const [pp, paper, petPrint] = await Promise.all([
     loadCup(MODELS.pp, options.signal),
     loadCup(MODELS.paper, options.signal),
-    loadPrint(PET_PRINT_URL),
+    usesPet ? loadPrint(PET_PRINT_URL) : null,
   ]);
   const scene = new Scene();
   const listeners = new AbortController();
@@ -239,7 +240,7 @@ export async function createCupScene(
     const set = createSet(paper);
     const single = paper.clone(true);
     // the flavour carousel clones the prepared cups before any actor re-centres them
-    const carousel = (rig = createFlavorRig(paper, pp, createPetCup(petPrint), flavors));
+    const carousel = (rig = createFlavorRig(paper, pp, usesPet ? createPetCup(petPrint) : null, flavors));
     const specs: Record<ActorName, ActorSpec> = {
       set: { subject: set.group, lid: set.lid, strap: set.strap, lidLift: 0, ...SET_MOTION, phase: 0 },
       flavor: { subject: carousel.group, lid: null, strap: null, lidLift: 0, ...FLAVOR_MOTION, phase: 2.6 },

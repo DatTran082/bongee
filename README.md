@@ -15,12 +15,12 @@ npm run start        # chạy bản đã dựng
 npm run check        # ESLint + TypeScript + Prettier + test
 npm run test         # test phần toán của ly 3D (node --test)
 npm run format       # định dạng lại mã (Prettier, có sắp xếp class Tailwind)
-npm run sync-brand   # chép lại tài sản thương hiệu từ ../brandkit và màu phụ, luật toon từ ../brandkit-ghibli (xem dưới)
+npm run sync-brand   # chép lại tài sản thương hiệu từ ../brandkit (Làng Mây) và phần in ấn ../brandkit/in-an (xem dưới)
 ```
 
 ## Phong cách giao diện: Làng Mây
 
-Cả trang (không chỉ cảnh 3D) theo bản DNA **Boongee · Làng Mây** (`../brandkit-ghibli`, hoạt hình vẽ tay):
+Cả trang (không chỉ cảnh 3D) theo bộ nhận diện chính thức **Boongee · Làng Mây** (`../brandkit`, hoạt hình vẽ tay):
 
 - hero dưới **bầu trời** xanh sớm tan vào kem (không có mây), **biển mây** ở chân hero; bộ ảnh bìa 3D
   đứng yên và **nghiêng theo chuột**, biển mây lệch theo (parallax);
@@ -54,7 +54,7 @@ dữ liệu có cấu trúc (JSON-LD: WebSite, CafeOrCoffeeShop, FAQPage), favic
 
 ### Cảnh 3D bay theo trang
 
-Hai mô hình ly của brand kit (`brandkit/3d/boongee-paper-16oz.glb` ≈ 510 kB và `boongee-pp-700ml.glb` ≈ 360 kB sau
+Hai mô hình ly của brand kit (`brandkit/in-an/3d/boongee-paper-16oz.glb` ≈ 510 kB và `boongee-pp-700ml.glb` ≈ 360 kB sau
 nén, tên file theo nội dung trong `public/models/`) được vẽ bằng **three.js** trên một canvas trong suốt cố định phía
 sau nội dung (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`). Có ba "diễn viên", mỗi diễn viên bay theo các ô
 của riêng mình:
@@ -67,7 +67,7 @@ của riêng mình:
 - **Ly giấy** đậy nắp: ô ở ghé quán.
 
 - **Menu tương tác** (`#menu`, `src/components/menu-picker.tsx`) có cùng bố cục và thiết kế với bảng menu in
-  (`../brandkit-ghibli/thuc-don/thuc-don.pdf`):
+  (`../brandkit/thuc-don/thuc-don.pdf`):
   - cột ly nổi bật (ảnh ly render bằng Blender);
   - các nhóm món có dấu hoa tròn, mỗi món có dòng mô tả và giá M/L trong vòng tròn nhỏ;
   - ảnh lookbook;
@@ -84,7 +84,7 @@ của riêng mình:
   tới vị bất kỳ. Tên nhóm và tên món lấy từ thực đơn.
 
 **Phong cách 3D: hoạt hình khối mượt, kiểu "stylized drink game asset"** (chọn ngày 21/10/2026, thay bản tả thực,
-bản cũ vẫn giữ trong `git stash`; sau đó bỏ bản low-poly cắt mặt vì nhìn thô). Theo luật toon của bản DNA Làng Mây (`../brandkit-ghibli`):
+bản cũ vẫn giữ trong `git stash`; sau đó bỏ bản low-poly cắt mặt vì nhìn thô). Theo luật toon của bộ Làng Mây (`../brandkit`):
 
 - Ly của brand kit giữ nguyên độ tròn và hình in.
 - Ánh sáng chia 3 dải mềm như tô màu, có vệt sáng trắng dọc thân ly.
@@ -106,13 +106,13 @@ bao giờ che chữ.
 
 ### Sửa nội dung ở đâu
 
-| Nội dung                                                   | Sửa ở                                                                                                                              |
-| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Món, nhóm món, giá                                         | Odoo của quán, rồi `npm run sync-menu`                                                                                             |
-| Cỡ ly (ml), mức đường và đá                                | ShanMay `menu-posm/print-ready/menu-data.json`, rồi `npm run sync-brand`                                                           |
-| Ưu đãi trong tuần, thẻ tích điểm, voucher                  | ShanMay `collateral/collateral.json`, rồi dựng lại ấn phẩm (`build_an_pham.py` trong `../brandkit-ghibli`) và `npm run sync-brand` |
-| Câu chuyện, cam kết, địa chỉ, giờ, điện thoại, mạng xã hội | `src/data/boongee.ts`                                                                                                              |
-| Câu hỏi đáp                                                | `src/data/faq.ts` (câu trả lời tự lấy số liệu từ các file trên)                                                                    |
+| Nội dung                                                   | Sửa ở                                                                                                                       |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Món, nhóm món, giá                                         | Odoo của quán, rồi `npm run sync-menu`                                                                                      |
+| Cỡ ly (ml), mức đường và đá                                | ShanMay `menu-posm/print-ready/menu-data.json`, rồi `npm run sync-brand`                                                    |
+| Ưu đãi trong tuần, thẻ tích điểm, voucher                  | ShanMay `collateral/collateral.json`, rồi dựng lại ấn phẩm (`build_an_pham.py` trong `../brandkit`) và `npm run sync-brand` |
+| Câu chuyện, cam kết, địa chỉ, giờ, điện thoại, mạng xã hội | `src/data/boongee.ts`                                                                                                       |
+| Câu hỏi đáp                                                | `src/data/faq.ts` (câu trả lời tự lấy số liệu từ các file trên)                                                             |
 
 Thực đơn trên web trùng với máy bán hàng vì cùng lấy từ Odoo. Dưới tên mỗi món có một **dòng nói món đó là gì**
 ("Bạch Thiên Hương — trà sữa dành dành"), học theo cách đặt tên hai tầng của thực đơn Bông Biêng. Dòng này được ghép
@@ -141,7 +141,7 @@ không đọc khoá). Ở mạng văn phòng (chặn sslip.io), mở SSH tunnel 
 
 ## Bộ nhận diện
 
-- **Màu** sinh từ `brandkit/color/tokens.json` thành `src/styles/brand-tokens.css` (lớp Tailwind `bg-brand-pink-500`,
+- **Màu** sinh từ `brandkit/in-an/color/tokens.json` (cộng màu phụ của `brandkit/color/tokens.json`) thành `src/styles/brand-tokens.css` (lớp Tailwind `bg-brand-pink-500`,
   `text-brand-ink`, `border-brand-line`…) và `src/data/brand-tokens.json`. Không gõ mã màu trong component. Chữ luôn là
   Đen Than trên nền hồng hoặc trắng; chữ trắng chỉ trên nền Đen Than.
 - **Nền** cả trang là hồng phấn `pink-500` như hero; các khối (thực đơn, ưu đãi, địa chỉ…) là thẻ trắng. Chữ xám
@@ -156,7 +156,7 @@ Tài sản thương hiệu được chép vào repo (dựng và deploy không c�
 `brand-kit`). Ngoài các file dưới, script chép `menu-data.json` và `collateral.json` của ShanMay vào
 `src/data/shanmay/`:
 
-| Từ `brandkit/`                                         | Sang                                                                                                                                          |
+| Từ `brandkit/in-an/`                                   | Sang                                                                                                                                          |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | `color/tokens.json`                                    | `src/styles/brand-tokens.css`, `src/data/brand-tokens.json`                                                                                   |
 | `nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg`    | `src/assets/brand/logo-ngang.svg`                                                                                                             |

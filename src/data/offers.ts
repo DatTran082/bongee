@@ -1,6 +1,6 @@
 // Offers, from the ShanMay brand kit's collateral.json (the file the vouchers and the loyalty card are printed from),
 // copied by `npm run sync-brand`. The standing offers are shown: the weekly discount, the loyalty card and the
-// vouchers (their printed Làng Mây designs, brandkit-ghibli/an-pham, in public/uu-dai). The opening offer
+// vouchers (their printed Làng Mây designs, brandkit/an-pham, in public/uu-dai). The opening offer
 // (`promos.opening`, 10.10) is over and left out.
 import collateral from "./shanmay/collateral.json";
 

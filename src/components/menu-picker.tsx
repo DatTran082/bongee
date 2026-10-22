@@ -7,13 +7,13 @@ import { menuIntro } from "@/data/boongee";
 import board from "@/data/menu-featured.json";
 import { categories, customisation, formatPrice, type MenuCategory, type MenuCategoryId, sizes } from "@/data/menu";
 
-// The menu as the printed menu board (brandkit-ghibli/thuc-don/thuc-don.pdf), alive. The same layout: the featured
+// The menu as the printed menu board (brandkit/thuc-don/thuc-don.pdf), alive. The same layout: the featured
 // cups (Blender toon renders, public/menu/ly) in a column, the drink groups under a painted monogram mark with their
 // plain lines and M / L prices in small size discs, the lookbook poster, the topping / sugar / ice strips at the foot.
 // A group's mark turns only while the pointer is on the group (or a drink in it has focus: lang-may.css,
 // .mark-spin). Picking a drink (a row, or a cup) or a strip's choice only marks it. Nothing is ordered here.
 
-/** Each group's heading mark's URL: its painted monogram mark (as the board; brandkit-ghibli → public/menu/mark). */
+/** Each group's heading mark's URL: its painted monogram mark (as the board; brandkit → public/menu/mark). */
 const MARKS: Readonly<Record<string, string>> = board.marks;
 /** The default sugar level: the promise's 50 % (src/data/boongee.ts, promises). */
 const DEFAULT_SUGAR = "50%";

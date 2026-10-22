@@ -12,7 +12,7 @@ import {
 import toon from "@/data/brand-toon.json";
 import tokens from "@/data/brand-tokens.json";
 
-// The stage's one material, after the Làng Mây edition's toon rules (brandkit-ghibli/color/tokens.json → toon,
+// The stage's one material, after the Làng Mây edition's toon rules (brandkit/color/tokens.json → toon,
 // copied to src/data/brand-toon.json by sync-brand): smooth shapes lit in three soft-edged bands, as a brush paints
 // them (toon.softness), the shade side cooled toward lilac by the hemisphere light (index.ts), a flat white
 // highlight where the surface mirrors the key light (on a cup, a narrow upright stripe), and a faint rim of light on

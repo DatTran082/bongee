@@ -6,11 +6,11 @@ import { offersIntro, sections } from "@/data/boongee";
 import { loyalty, voucherTerms, vouchers, weeklyOffer } from "@/data/offers";
 import pieces from "@/data/uu-dai.json";
 
-/** A collateral piece's URL by its file name in brandkit-ghibli/an-pham (written by sync-brand, content-hashed). */
+/** A collateral piece's URL by its file name in brandkit/an-pham (written by sync-brand, content-hashed). */
 const piece = (file: string) => (pieces as Record<string, string>)[file];
 
 /**
- * The offers as their printed pieces (brandkit-ghibli/an-pham, Làng Mây; built from the same collateral.json as
+ * The offers as their printed pieces (brandkit/an-pham, Làng Mây; built from the same collateral.json as
  * the words here): the weekly-offer post, the loyalty card and the vouchers, each card turning over to its back, a
  * voucher downloadable to show at the counter. The pictures carry the words, so every `alt` says them in full.
  */

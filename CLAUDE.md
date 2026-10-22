@@ -15,8 +15,8 @@ npm run check        # eslint + tsc --noEmit + prettier --check (must pass)
 npm run format       # prettier --write (with prettier-plugin-tailwindcss)
 npm run sync-menu    # the menu (dishes, groups, counter prices) from the shop's Odoo through its MCP server → src/data/odoo/
                      # (BOONGEE_MCP: the server command; default ../odoo/mcp-boongee/run.sh prod; the office blocks sslip.io)
-npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from ../brandkit-ghibli, sizes/offers from ShanMay
-                     # (BOONGEE_BRANDKIT, BOONGEE_LANGMAY, BOONGEE_SHANMAY)
+npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and its print kit ../brandkit/in-an, sizes/offers
+                     # from ShanMay (BOONGEE_BRANDKIT, BOONGEE_SHANMAY)
 ```
 
 ## Boongee specifics
@@ -34,7 +34,8 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   `null`; components render them as "Đang cập nhật" and drop unset links. A drink's only description is its plain line ("Trà sữa dành dành"), written by sync-menu from its Odoo recipe (`src/lib/menu/describe.ts`, tested); no recipe, no line. Never invent addresses, prices, phone numbers,
   social URLs or testimonials. The domain is not in it: `src/lib/site-url.ts` (server-only, may throw) reads
   `NEXT_PUBLIC_SITE_URL`, then Vercel's production domain, then localhost in dev; a production build with none fails.
-- **Brand assets come from the sibling brand kits** (`../brandkit`, and `../brandkit-ghibli` for the Làng Mây look:
+- **Brand assets come from the sibling brand kit** (`../brandkit`, Boongee · Làng Mây, the only official kit since
+  22/10/2026; tokens, the logo sources, favicon, cover photos and the 3D cups from its print kit `../brandkit/in-an`; the Làng Mây look:
   its logo, flower marks, clouds, cloud bank and tea hills into `src/assets/lang-may/`, its accents and toon rules)
   through `scripts/sync-brand.mjs` and are committed.
   Do not hand-edit what it writes (`src/styles/brand-tokens.css`, `src/data/brand-tokens.json`, `src/assets/`,
@@ -51,7 +52,7 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   against it through `--pointer-x / -y` on the root (lang-may.css), a still picture with depth); `pp`, the 700 ml PP cup,
   clear plastic by alpha, holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
   standing in it and drifting round it (`splash.ts`), sparkles about it; `paper`, the lidded paper cup alone; `flavor`,
-  the carousel's cup (below). Both GLBs (`brandkit/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
+  the carousel's cup (below). Both GLBs (`brandkit/in-an/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
   meshopt + WebP to `public/models/<name>.<hash>.glb`, URLs in `src/data/cup-model.json`, cached immutable by
   `next.config.ts`. Sections lay out empty slots with `<CupAnchor name actor turn tilt lid fill>`; `track.ts`
   rests each actor in its own slot nearest above the viewport's middle and flies it to its next (dwell 12 % at
@@ -66,9 +67,9 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   `<noscript>` copy is there without script). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
 - **The menu is laid out as the printed menu board** (`src/components/menu-picker.tsx`, client; `menu.tsx` keeps the
-  heading), after `../brandkit-ghibli/thuc-don/thuc-don.pdf`: a column of featured cups (the board's Blender toon
+  heading), after `../brandkit/thuc-don/thuc-don.pdf`: a column of featured cups (the board's Blender toon
   renders, `public/menu/ly/*.<hash>.png`, list and URLs in `src/data/menu-featured.json`, both written by sync-brand from
-  `brandkit-ghibli/thuc-don/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
+  `brandkit/thuc-don/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
   monogram mark, `public/menu/mark/*.<hash>.svg`, group → mark in menu-featured.json → marks, an upper-case heading over a rule, each drink's plain line in italics, M / L prices in small
   size discs, a honey sparkle on the featured drink), the lookbook photo (`public/menu/poster.jpg`, when the board has
   one), and the topping / sugar / ice strips at the foot. It is alive: a group's mark turns slowly only while the
@@ -83,7 +84,7 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   ShopeeFood's orange bag-box with a fork and a spoon; no words in them, their names are text). The shop's page in each app is `href` (`TODO(boongee)`); while it is `null` the card asks to search
   "Boongee" in the app instead of linking.
 - **The offers are their printed pieces** (`src/components/offers.tsx`, `flip-card.tsx`): the Làng Mây collateral
-  built by `../brandkit-ghibli/scripts/build_an_pham.py` from the same `collateral.json` (vouchers front and back, the
+  built by `../brandkit/scripts/build_an_pham.py` from the same `collateral.json` (vouchers front and back, the
   loyalty card front and back, the weekly-offer post, an A4 poster, a story, a cup sticker), copied by sync-brand to
   `public/uu-dai/*.<hash>.png` (resized; URLs in `src/data/uu-dai.json`). Like the models, every picture sync-brand
   writes to `public/menu` and `public/uu-dai` is named after its content and cached immutable (next.config.ts), so a
@@ -108,7 +109,7 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
 - **The 3D look is a smooth stylized drink game asset** (owner's choice of 21/10/2026, over the earlier realistic
   scans, which are in `git stash` "snapshot: 3D tả thực…", and then over a faceted low-poly pass the owner found too
   coarse), after the Làng Mây edition's toon rules
-  (`../brandkit-ghibli`, `color/tokens.json → toon`, copied to `src/data/brand-toon.json`; its accents sky, cloud,
+  (`../brandkit`, `color/tokens.json → toon`, copied to `src/data/brand-toon.json`; its accents sky, cloud,
   moss, cream, honey, wood, stone join the brand tokens, for the 3D and decoration only, never text). All in
   `src/lib/cup-scene/toon/`: `cups.ts` keeps the kit's GLB cups round and swaps each material by its GLB name
   (paper and the white lid matte: a faint highlight); `material.ts` is the one material (MeshToonMaterial, smooth,
@@ -134,7 +135,7 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   panels on it are white cards (`bg-brand-bg-alt`) with a `border-brand-line` hairline, since white on cream needs an
   edge. Rules are `border-brand-ink/15`.
 - **The Làng Mây UI** (owner's request of 22/10/2026, "sử dụng linh hoạt brandkit ghibli style"): the page's own
-  look follows `../brandkit-ghibli` as the 3D does. `src/styles/lang-may.css` (imported by globals.css): `.card-sticker`
+  look follows `../brandkit` as the 3D does. `src/styles/lang-may.css` (imported by globals.css): `.card-sticker`
   (white card, sticker edge: a cloud-white band and a thin lilac-rose line, a soft lilac shadow) for every panel;
   `.badge-sticker` (round icon badge on an accent tint, icon in ink); `.button-game` with `data-variant="primary" |
 "outline"` (pill on a lip it presses onto) for every button and button-like link; `.sky` (sky-200 into cream);

@@ -166,7 +166,7 @@ export const visit = {
 
 /**
  * The delivery apps Boongee is on (owner, 22/10/2026), shown in the visit section with their painted badges
- * (brandkit-ghibli giao_hang.py → src/assets/lang-may/). A `null` href shows the app without a link: the page then
+ * (brandkit giao_hang.py → src/assets/lang-may/). A `null` href shows the app without a link: the page then
  * asks to search the shop's name in the app.
  */
 export const delivery = {

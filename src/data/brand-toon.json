@@ -1,5 +1,5 @@
 {
-  "_readme": "Phong cách 3D: stylized drink game asset, khối mượt bo tròn, đổ bóng toon mềm (soft cel), viền sticker. Áp cho mọi mô hình 3D của thương hiệu (web, ảnh dựng, game). Đổi 21/10/2026 từ low-poly cắt mặt sang khối mượt theo ảnh mẫu chủ shop chọn.",
+  "_readme": "Phong cách 3D: stylized drink game asset, khối mượt bo tròn, đổ bóng toon mềm (soft cel), một nét viền mảnh. Áp cho mọi mô hình 3D của thương hiệu (web, ảnh dựng, game). Đổi 21/10/2026 từ low-poly cắt mặt sang khối mượt theo ảnh mẫu chủ shop chọn.",
   "facets": {
     "cup": 0,
     "_readme": "0 = tròn mượt, không cắt mặt. Topping, đá, mây: khối cầu và hình bo góc mượt, không lộ mặt phẳng."
@@ -13,10 +13,8 @@
   "outline": {
     "lightness": 0.62,
     "saturation": 1.1,
-    "widthPx": 2.6,
-    "edgePx": 1.3,
-    "inner": "cloud",
-    "_readme": "viền sticker hai lớp: lớp trong màu mây (trắng ấm) dày widthPx, lớp ngoài mảnh edgePx cùng tông, đậm hơn màu thân (không dùng viền đen); nền kem vẫn thấy rõ mép"
+    "widthPx": 1.5,
+    "_readme": "một nét viền mảnh cùng tông, đậm hơn màu thân (không dùng viền đen); không dải trắng sticker (22/10/2026: dải trắng và ánh viền làm vật trông như kính)"
   },
   "highlight": {
     "color": "cloud",
@@ -25,7 +23,8 @@
   },
   "rim": {
     "color": "cloud",
-    "strength": 0.35
+    "strength": 0,
+    "_readme": "tắt (22/10/2026): ánh viền trắng ở mép làm vật trông như kính"
   },
   "transparent": "Nhựa trong vẽ bằng alpha 0.25–0.4, không khúc xạ.",
   "softness": 0.06,
@@ -36,5 +35,5 @@
     "bubbles": true,
     "_readme": "nước chia 2–3 lớp màu, ranh giới lượn sóng xiên; bọt tròn li ti"
   },
-  "cream": "kem tươi xoắn ốc (soft-serve) 2–3 vòng, rắc topping"
+  "cream": "chóp kem mịn như bản gốc: vòm ngồi trên vành ly, mép vừa khít vành (không tràn ra ngoài), cao khoảng 2,6 cm, rắc cánh hồng và hoa quế; kem cheese là vòm thấp phồng nhẹ"
 }

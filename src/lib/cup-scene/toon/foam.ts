@@ -1,15 +1,14 @@
 import {
+  type BufferGeometry,
   Color,
-  Curve,
   Euler,
   Group,
-  IcosahedronGeometry,
   InstancedMesh,
   LatheGeometry,
   Matrix4,
   Mesh,
   Quaternion,
-  TubeGeometry,
+  SplineCurve,
   Vector2,
   Vector3,
 } from "three";
@@ -20,98 +19,123 @@ import { addOutlines } from "./outline";
 import { PROPS } from "./palette";
 import { petalFlake, puff } from "./shapes";
 
-// The cream on an open paper cup, as a stylized drink game asset draws whipped cream: a soft-serve swirl, a plump
-// rope of cream wound two and a half times up from a low dome that rests on the rolled rim (in the cup GLB's space:
-// base at the origin, the rim round y = 0.1337 m, outer radius 0.0466 m), thinning to a tip; sprinkled with dried
-// rose petals on the milk foam, mulberry flecks on the cheese foam.
+// The cream on an open paper cup, as a stylized drink game asset draws a foam top: one smooth cap sitting on the
+// rolled rim (in the cup GLB's space: base at the origin, the rim round y = FOAM_RIM, outer radius 0.0466 m), never
+// past it. The milk foam is the first design's round dome; the cheese foam a low, smooth swell. Sprinkled on top:
+// dried rose petals and osmanthus on the milk foam, mulberry flecks on the cheese foam.
 
-/** The dome on the rim (radius, height), from its flat underside to the axis. */
-const DOME: ReadonlyArray<readonly [number, number]> = [
-  [0, 0.1348],
-  [0.044, 0.1348],
-  [0.0478, 0.1362],
-  [0.0494, 0.1388],
-  [0.0486, 0.1412],
-  [0.044, 0.1432],
-  [0.02, 0.1446],
-  [0, 0.1448],
+/** The height of the cup's rolled rim: the cream's foot, and where it grows from in the carousel. */
+export const FOAM_RIM = 0.1337;
+
+/** A cap's profile (radius, height), from its foot on the rim to the top on the axis, smoothed by a spline. */
+type Profile = ReadonlyArray<readonly [number, number]>;
+
+/**
+ * The milk foam, as first designed (brandkit/lookbook/prompts-anh-bia.md, "Chóp kem bông"; the realistic cap's own
+ * profile): a round dome about 2.6 cm over the rim, its side rising almost straight from the rim before it rounds
+ * over; drawn 7 % narrower than that first cap, so its widest (46.2 mm) stays on the rim (outer radius 46.6 mm).
+ */
+const BLOOM: Profile = [
+  [0.0, 0.1348],
+  [0.041, 0.1348],
+  [0.0415, 0.1354],
+  [0.0427, 0.1358],
+  [0.0445, 0.1366],
+  [0.0458, 0.1385],
+  [0.0462, 0.141],
+  [0.0451, 0.1442],
+  [0.0423, 0.1482],
+  [0.0377, 0.1522],
+  [0.0312, 0.1557],
+  [0.023, 0.1584],
+  [0.0144, 0.16],
+  [0.0058, 0.1608],
+  [0.0, 0.161],
 ];
-/** The swirl: turns, its rope's path (radius and height at its start and end) and thickness (start → end). */
-const SWIRL = {
-  turns: 2.6,
-  radius: [0.034, 0.003] as const,
-  y: [0.1452, 0.1705] as const,
-  rope: [0.0118, 0.0058] as const,
-  /** the rope is a little flattened, so the turns stack like piped cream */
-  squash: 0.78,
-  segments: 220,
-  sides: 18,
-};
-const SPRINKLES = { count: 24, size: [0.0055, 0.0085] as const };
+/**
+ * The cheese foam: a low, smooth swell that stays inside the rim (its widest, 45 mm, sits on the rolled rim's top,
+ * whose outer radius is 46.6 mm), about 1 cm high, as a cheese cap poured level and set.
+ */
+const CHEESE: Profile = [
+  [0, 0.1346],
+  [0.0436, 0.1346],
+  [0.0448, 0.1354],
+  [0.0452, 0.1366],
+  [0.0448, 0.138],
+  [0.0428, 0.1396],
+  [0.0386, 0.1412],
+  [0.0318, 0.1426],
+  [0.0226, 0.1436],
+  [0.0116, 0.1442],
+  [0, 0.1444],
+];
+const SMOOTH = { rows: 64, sides: 96 };
+/**
+ * Each cream's look: its profile; the side's lobes (how many round it, how deep as a share of the radius, the height
+ * they are deepest at, how far up and down they reach: none on the smooth cheese); its sprinkles' reach and height
+ * above which they lie (the top, not the side).
+ */
+const STYLES = {
+  bloom: {
+    profile: BLOOM,
+    lobes: { count: 6, depth: 0, y: 0.1475, spread: 0.0125 },
+    sprinkles: { count: 20, size: [0.0058, 0.009] as const, reach: 0.036, above: 0.146 },
+  },
+  cheese: {
+    profile: CHEESE,
+    lobes: { count: 6, depth: 0, y: 0.14, spread: 0.01 },
+    sprinkles: { count: 16, size: [0.0058, 0.009] as const, reach: 0.034, above: 0.138 },
+  },
+} as const;
 
 export type FoamStyle = "bloom" | "cheese";
 
-const lerp = (range: readonly [number, number], t: number) => range[0] + (range[1] - range[0]) * t;
-
-/** The swirl's centre line at t ∈ [0, 1]. */
-class Swirl extends Curve<Vector3> {
-  constructor() {
-    super(); // Curve's own constructor is protected
-  }
-
-  getPoint(t: number, target = new Vector3()): Vector3 {
-    const a = t * SWIRL.turns * Math.PI * 2;
-    const r = lerp(SWIRL.radius, Math.pow(t, 0.8));
-    return target.set(r * Math.cos(a), lerp(SWIRL.y, Math.pow(t, 0.9)), r * Math.sin(a));
-  }
+/** The smoothed profile, foot to top. */
+function profile(points: Profile): Vector2[] {
+  return new SplineCurve(points.map(([r, y]) => new Vector2(r, y))).getSpacedPoints(SMOOTH.rows);
 }
 
-const ropeAt = (t: number) => lerp(SWIRL.rope, t);
-
-/** The rope round the swirl, thinning along it and squashed upright; its far end closed by a round tip. */
-function swirlGeometry(): TubeGeometry {
-  const path = new Swirl();
-  const tube = new TubeGeometry(path, SWIRL.segments, 1, SWIRL.sides, false);
-  const position = tube.getAttribute("position");
-  const centre = new Vector3();
-  const p = new Vector3();
-  for (let ring = 0; ring <= SWIRL.segments; ring++) {
-    const t = ring / SWIRL.segments;
-    path.getPointAt(t, centre);
-    // the first turn swells out of the dome, the last tapers into the tip
-    const k = ropeAt(t) * Math.min(1, 0.35 + t * 12) * Math.min(1, (1 - t) * 30 + 0.25);
-    for (let side = 0; side <= SWIRL.sides; side++) {
-      const i = ring * (SWIRL.sides + 1) + side;
-      p.fromBufferAttribute(position, i).sub(centre).multiplyScalar(k);
-      p.y *= SWIRL.squash;
-      position.setXYZ(i, centre.x + p.x, centre.y + p.y, centre.z + p.z);
+/** The cap's top at `r` from the axis (for sprinkles to lie on it): the profile above `above`. */
+function surface(points: readonly Vector2[], r: number, above: number): number {
+  for (let i = points.length - 1; i > 0; i--) {
+    const a = points[i];
+    const b = points[i - 1];
+    if (r >= Math.min(a.x, b.x) && r <= Math.max(a.x, b.x) && b.y > above) {
+      return a.y + ((b.y - a.y) * (r - a.x)) / (b.x - a.x || 1);
     }
   }
-  tube.computeVertexNormals();
-  return tube;
+  return points[points.length - 1].y;
+}
+
+function capGeometry(points: Vector2[], lobes: (typeof STYLES)[FoamStyle]["lobes"]): BufferGeometry {
+  const cap = new LatheGeometry(points, SMOOTH.sides);
+  cap.deleteAttribute("uv");
+  const position = cap.getAttribute("position");
+  for (let i = 0; i < position.count; i++) {
+    const x = position.getX(i);
+    const y = position.getY(i);
+    const z = position.getZ(i);
+    const angle = Math.atan2(z, x);
+    const band = Math.exp(-(((y - lobes.y) / lobes.spread) ** 2)); // the lobes swell the side, not the foot or top
+    const k = 1 + lobes.depth * band * Math.cos(lobes.count * angle);
+    position.setXYZ(i, x * k, y, z * k);
+  }
+  const welded = mergeVertices(cap, 1e-6); // one vertex at the lathe's seam: no crease down the cap
+  cap.dispose();
+  welded.computeVertexNormals();
+  return welded;
 }
 
 export function createFoam(style: FoamStyle = "bloom", seed = 5): Group {
   const random: Random = seeded(seed);
   const group = new Group();
   group.name = "foam";
-  const material = toonMaterial({ color: style === "bloom" ? PROPS.foam : PROPS.cheeseFoam, highlight: 0.7 });
-  const dome = new LatheGeometry(
-    DOME.map(([r, y]) => new Vector2(r, y)),
-    48,
-  );
-  dome.deleteAttribute("uv");
-  const tip = new IcosahedronGeometry(1, 3);
-  tip.scale(SWIRL.rope[1] * 0.9, SWIRL.rope[1] * 1.1, SWIRL.rope[1] * 0.9);
-  const end = new Swirl().getPoint(1);
-  tip.translate(end.x, end.y + SWIRL.rope[1] * 0.3, end.z);
-  group.add(
-    new Mesh(mergeVertices(dome, 1e-6), material),
-    new Mesh(swirlGeometry(), material),
-    new Mesh(tip, material),
-  );
-  for (const mesh of group.children as Mesh[]) mesh.geometry.computeVertexNormals();
-  group.add(sprinkles(random, style));
+  const look = STYLES[style];
+  const points = profile(look.profile);
+  const material = toonMaterial({ color: style === "bloom" ? PROPS.foam : PROPS.cheeseFoam, highlight: 0.55 });
+  group.add(new Mesh(capGeometry(points, look.lobes), material));
+  group.add(sprinkles(random, style, points));
+  if (style === "bloom") group.add(osmanthus(random, points));
   addOutlines(group, (mesh) => mesh instanceof InstancedMesh); // the sprinkles are too small for an outline
   group.traverse((object) => {
     if (object instanceof Mesh && !object.userData.outline) object.castShadow = object.receiveShadow = true;
@@ -119,29 +143,39 @@ export function createFoam(style: FoamStyle = "bloom", seed = 5): Group {
   return group;
 }
 
-/** Petals or flecks lying on the swirl's rope, on its outer, upper side. */
-function sprinkles(random: Random, style: FoamStyle): InstancedMesh {
+/** Petals or flecks lying on the cap's top. */
+function sprinkles(random: Random, style: FoamStyle, points: readonly Vector2[]): InstancedMesh {
   const geometry = style === "bloom" ? petalFlake() : puff();
   const colours = style === "bloom" ? PROPS.petal : PROPS.fleck;
-  const mesh = new InstancedMesh(geometry, toonMaterial({ highlight: 0.4 }), SPRINKLES.count);
-  const path = new Swirl();
+  const spec = STYLES[style].sprinkles;
+  const mesh = new InstancedMesh(geometry, toonMaterial({ highlight: 0.4 }), spec.count);
   const euler = new Euler();
   const matrix = new Matrix4();
-  const point = new Vector3();
-  for (let i = 0; i < SPRINKLES.count; i++) {
-    const t = between(random, 0.05, 0.92);
-    path.getPointAt(t, point);
-    const out = new Vector3(point.x, 0, point.z).normalize();
-    const rope = ropeAt(t);
-    const lift = between(random, 0.3, 1); // from the rope's outer side round to its top
-    const position = point
-      .clone()
-      .addScaledVector(out, rope * (1 - lift) * 0.95)
-      .add(new Vector3(0, rope * SWIRL.squash * lift * 0.95, 0));
-    const tilt = new Quaternion().setFromEuler(euler.set(between(random, -0.6, 0.6), random() * 6.28, 0));
-    const size = between(random, ...SPRINKLES.size) * (style === "bloom" ? 1 : 0.55);
-    mesh.setMatrixAt(i, matrix.compose(position, tilt, new Vector3(size, size, size)));
+  for (let i = 0; i < spec.count; i++) {
+    const a = between(random, 0, Math.PI * 2);
+    const r = spec.reach * Math.sqrt(random());
+    const position = new Vector3(r * Math.cos(a), surface(points, r, spec.above) + 0.0008, r * Math.sin(a));
+    const tilt = new Quaternion().setFromEuler(euler.set(between(random, -0.35, 0.35), random() * 6.28, 0));
+    const size = between(random, ...spec.size) * (style === "bloom" ? 1 : 0.55);
+    mesh.setMatrixAt(i, matrix.compose(position, tilt, new Vector3(size, size * 0.6, size)));
     mesh.setColorAt(i, new Color(pick(random, colours)));
+  }
+  return mesh;
+}
+
+/** Dried osmanthus on the milk foam, as first designed: many small gold flecks among the petals. */
+function osmanthus(random: Random, points: readonly Vector2[]): InstancedMesh {
+  const spec = { count: 40, size: [0.0018, 0.003] as const, reach: 0.04, above: 0.144 };
+  const mesh = new InstancedMesh(puff(), toonMaterial({ highlight: 0.3 }), spec.count);
+  const matrix = new Matrix4();
+  const flat = new Quaternion();
+  for (let i = 0; i < spec.count; i++) {
+    const a = between(random, 0, Math.PI * 2);
+    const r = spec.reach * Math.sqrt(random());
+    const position = new Vector3(r * Math.cos(a), surface(points, r, spec.above) + 0.0005, r * Math.sin(a));
+    const size = between(random, ...spec.size);
+    mesh.setMatrixAt(i, matrix.compose(position, flat, new Vector3(size, size * 0.5, size)));
+    mesh.setColorAt(i, new Color(pick(random, PROPS.osmanthus)));
   }
   return mesh;
 }

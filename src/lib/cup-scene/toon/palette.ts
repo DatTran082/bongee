@@ -26,6 +26,7 @@ export const PROPS = {
   cheeseFoam: "#F7E3A6",
   petal: [tokens["pink-500"], tokens["pink-700"], "#F09DB5"],
   fleck: ["#6A3263", "#5B2A55"],
+  osmanthus: ["#F2A43C", "#E48B1E", "#F7C35C"],
   stone: tokens["stone-300"],
   bark: tokens["wood-500"],
   barkDark: "#8A5E45",

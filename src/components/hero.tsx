@@ -2,10 +2,16 @@ import Image from "next/image";
 import heroPhoto from "@/assets/images/hero.jpg";
 import { ButtonLink } from "@/components/button-link";
 import { CupAnchor } from "@/components/cup-anchor";
+import { CloudBank } from "@/components/lang-may/cloud-bank";
+import { FlowerMark } from "@/components/lang-may/flower-mark";
+import { Sky } from "@/components/lang-may/sky";
+import { Sparkle } from "@/components/lang-may/sparkle";
 import { brand, hero, sections } from "@/data/boongee";
 
 /**
- * The slogan as the page's one <h1>, in ink on the page's cream, beside the slot of the cover photo's set: the two
+ * The slogan as the page's one <h1>, in ink under a painted morning sky with drifting clouds (Làng Mây: <Sky>, behind
+ * the 3D stage), the section ending in a bank of clouds (<CloudBank>, in front of it), beside the slot of the cover
+ * photo's set: the two
  * paper cups on the block and the logs, built in 3D and floating (src/lib/cup-scene/set). From xl (1280 px) up the
  * text takes the left column and the set the right; below that the text comes first and the set follows. The slot
  * is empty: the set itself is drawn by the stage behind the page (src/components/cup-stage.tsx), which puts the
@@ -13,10 +19,15 @@ import { brand, hero, sections } from "@/data/boongee";
  */
 export function Hero() {
   return (
-    <section className="relative">
+    <section className="relative pb-16 md:pb-24">
+      <Sky />
       <div className="mx-auto grid max-w-7xl items-center gap-6 px-4 sm:px-6 xl:min-h-[min(80vh,46rem)] xl:grid-cols-[42%_1fr] xl:gap-12">
         <div className="pt-14 text-center xl:py-24 xl:text-left">
-          <p className="text-sm tracking-[0.35em] uppercase xl:text-base">{brand.name}</p>
+          <p className="flex items-center justify-center gap-3 text-sm tracking-[0.35em] uppercase xl:justify-start xl:text-base">
+            <FlowerMark className="size-6" />
+            {brand.name}
+            <Sparkle className="size-4 text-brand-honey-400" delay="-1.2s" />
+          </p>
           <h1 className="mt-4 text-4xl leading-[1.25] font-normal tracking-[0.15em] uppercase sm:text-5xl xl:text-6xl">
             {brand.sloganLines.map((line, i) => (
               <span key={line} className="block">
@@ -32,7 +43,7 @@ export function Hero() {
             </ButtonLink>
             <ButtonLink href={`#${sections.visit}`}>Ghé quán</ButtonLink>
           </div>
-          <div data-cup-hint className="mt-5 min-h-6" />
+          <div data-cup-hint className="sr-only" />
         </div>
         <CupAnchor
           name="hero"
@@ -52,6 +63,7 @@ export function Hero() {
           </noscript>
         </CupAnchor>
       </div>
+      <CloudBank className="h-24 md:h-36" />
     </section>
   );
 }

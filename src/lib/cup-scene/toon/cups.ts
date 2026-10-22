@@ -1,6 +1,6 @@
 import { type Material, Mesh, MeshStandardMaterial, type Object3D } from "three";
 import tokens from "@/data/brand-tokens.json";
-import { toonMaterial } from "./material";
+import { outlineColour, toonMaterial } from "./material";
 import { addOutlines } from "./outline";
 import { type DrinkName, DRINKS } from "./palette";
 
@@ -26,32 +26,58 @@ export interface ToonCup {
   readonly drink: Material;
 }
 
+/** A drink's outline in its own darkest layer's tone (its material is white, tinted by its layers in the shader). */
+function drinkOutline<T extends Material>(material: T, colour: string): T {
+  material.userData.outlineColour = outlineColour(colour);
+  return material;
+}
+
+/** The clear plastic's edge line: the sky tint's outline tone. */
+const CLEAR_EDGE = outlineColour(tokens["sky-400"]);
+
+/** A see-through material: no outline hull (toon/outline.ts). */
+function clear<T extends Material>(material: T): T {
+  material.userData.noOutline = true;
+  return material;
+}
+
 function swap(material: Material, tea: DrinkName, drink: DrinkShape): Material {
   const source = material instanceof MeshStandardMaterial ? material : null;
   const name = material.name;
   switch (name) {
+    // paper is matte: a faint highlight (a bright one made the paper cup read as glass)
     case "paper":
-      return toonMaterial({ name, color: tokens.cloud, highlight: 0.85 });
+      return toonMaterial({ name, color: tokens.cloud, highlight: 0.18 });
     case "paper-print":
-      return toonMaterial({ name, color: tokens.cloud, map: source?.map ?? null, highlight: 0.85 });
+      return toonMaterial({ name, color: tokens.cloud, map: source?.map ?? null, highlight: 0.18 });
     case "lid-white":
     case "lid-white-plain":
-      return toonMaterial({ name, color: tokens["bg-alt"] });
+      return toonMaterial({ name, color: tokens["bg-alt"], highlight: 0.5 });
+    // clear plastic: no outline hull (it would show through the wall as a solid band); its edge line is drawn in
+    // the shader instead
     case "pp-frosted":
-      return toonMaterial({ name, color: tokens["sky-200"], opacity: CLEAR.body, doubleSided: true });
+      return clear(
+        toonMaterial({ name, color: tokens["sky-200"], opacity: CLEAR.body, doubleSided: true, edge: CLEAR_EDGE }),
+      );
     case "lid-clear":
     case "lid-clear-plain":
-      return toonMaterial({ name, color: tokens["sky-200"], opacity: CLEAR.lid, doubleSided: true });
+      return clear(
+        toonMaterial({ name, color: tokens["sky-200"], opacity: CLEAR.lid, doubleSided: true, edge: CLEAR_EDGE }),
+      );
     case "ink-white":
-      return toonMaterial({ name, color: tokens.cloud, map: source?.map ?? null, alphaTest: 0.5, highlight: 0 });
+      // the PP cup's white print lies on its clear wall: no hull (it would show through the wall as a band)
+      return clear(toonMaterial({ name, color: tokens.cloud, map: source?.map ?? null, alphaTest: 0.5, highlight: 0 }));
     case "milk-tea":
-      return toonMaterial({
-        name,
-        color: "#ffffff",
-        opacity: CLEAR.tea,
-        layers: { colours: DRINKS[tea], y0: drink.y0, y1: drink.y1, axis: drink.axis },
-        highlight: 0.6,
-      });
+      return drinkOutline(
+        toonMaterial({
+          name,
+          color: "#ffffff",
+          opacity: CLEAR.tea,
+          layers: { colours: DRINKS[tea], y0: drink.y0, y1: drink.y1, axis: drink.axis },
+          highlight: 0.6,
+        }),
+        DRINKS[tea][0],
+      );
     default:
       return material;
   }
@@ -101,7 +127,6 @@ export function toonCup(root: Object3D, tea: DrinkName): ToonCup {
   });
   if (!drink)
     throw new Error('The cup model has no "milk-tea" material: rebuild brandkit/3d and run npm run sync-brand.');
-  // the PP cup's print lies on its wall: the wall's own hull outlines the cup once
-  addOutlines(root, (mesh) => mesh.name === "print");
+  addOutlines(root);
   return { drink };
 }

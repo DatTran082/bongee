@@ -37,6 +37,13 @@ export interface ActorSpec {
   readonly phase: number;
   /** extra turn (radians) at mid-flight */
   readonly spin: number;
+  /** a drag (or the arrow keys) turns it; false: it holds still and only its lid takes a tap */
+  readonly turnable: boolean;
+  /**
+   * How it answers the pointer (Frame.pointer): radians it turns and leans toward it, px it shifts with it (a still
+   * picture with depth, as the hero's set); null: not at all.
+   */
+  readonly parallax: { readonly yaw: number; readonly pitch: number; readonly shift: number } | null;
 }
 
 export interface ActorHooks {
@@ -58,6 +65,8 @@ export interface Frame {
   readonly lean: number;
   readonly width: number;
   readonly height: number;
+  /** the pointer over the viewport, smoothed: −1 … 1 left to right, top to bottom (0, 0 with reduced motion) */
+  readonly pointer: { readonly x: number; readonly y: number };
 }
 
 export interface CupPlacement {
@@ -133,13 +142,17 @@ export class Actor {
         if (this.hitsLid(x, y)) hooks.onLidTap();
       },
       onHover: (x, y) => {
-        hit.style.cursor = this.hitsLid(x, y) ? "pointer" : "grab";
+        hit.style.cursor = this.hitsLid(x, y) ? "pointer" : this.idleCursor;
       },
       onDragChange: (dragging) => {
-        hit.style.cursor = dragging ? "grabbing" : "grab";
+        hit.style.cursor = dragging && spec.turnable ? "grabbing" : this.idleCursor;
       },
     });
-    hit.style.cursor = "grab";
+    hit.style.cursor = this.idleCursor;
+  }
+
+  private get idleCursor(): string {
+    return this.spec.turnable ? "grab" : "default";
   }
 
   /** Adds something that floats with the actor (turns and leans with it), in metres about its box's middle. */
@@ -153,7 +166,7 @@ export class Actor {
   }
 
   turnBy(radians: number): void {
-    this.table.turnBy(radians);
+    if (this.spec.turnable) this.table.turnBy(radians);
   }
 
   reset(): void {
@@ -187,13 +200,17 @@ export class Actor {
     const sway = frame.reduced ? 0 : spec.sway * Math.sin(idle * 0.41);
     const roll = frame.reduced ? 0 : spec.roll * Math.sin(idle * 0.29);
     const liftM = current.lid * spec.lidLift; // the lid off the cup, metres
-    const world = toWorld(current.x, current.y - lift - bob, frame.width, frame.height);
+    const look = spec.parallax ?? { yaw: 0, pitch: 0, shift: 0 }; // toward the pointer
+    const shiftX = frame.pointer.x * look.shift;
+    const shiftY = frame.pointer.y * look.shift * 0.6;
+    const world = toWorld(current.x + shiftX, current.y - lift - bob + shiftY, frame.width, frame.height);
     // keep the whole composition on the slot's centre: the lifted lid adds height
     this.root.position.set(world.x, world.y - (liftM * scale) / 2, 0);
     this.root.scale.setScalar(scale);
+    const turned = spec.turnable ? this.table.angle : 0;
     this.pivot.rotation.set(
-      current.tilt - frame.lean,
-      current.turn + this.table.angle + target.flight * spec.spin + sway,
+      current.tilt - frame.lean + frame.pointer.y * look.pitch,
+      current.turn + turned + target.flight * spec.spin + sway + frame.pointer.x * look.yaw,
       roll,
     );
     if (spec.lid) {

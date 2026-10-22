@@ -1,6 +1,8 @@
 @import "tailwindcss";
 /* Brand colours as --color-brand-* (bg-brand-pink-500, text-brand-ink…), generated from the brand kit. */
 @import "../styles/brand-tokens.css";
+/* The Làng Mây look (brandkit-ghibli): sticker cards, game buttons, the painted sky, drifting clouds, sparkles. */
+@import "../styles/lang-may.css";
 
 /* Fraunces is the brand's only typeface (next/font in layout.tsx exposes it as --font-fraunces). */
 @theme inline {
@@ -48,8 +50,9 @@ section[id] {
 
 /*
  * The 3D stage (src/components/cup-stage.tsx, mounted by the home page inside <main>) is a fixed, transparent
- * canvas at z-index −10 in main's own stacking context: it paints over the body's pink and under every section, so
- * the cup shows wherever the pink does, passes behind the white cards and never covers a line of text. The footer
+ * canvas at z-index −10 in main's own stacking context: it paints over the body's cream and the painted scenery
+ * behind it (the hero's sky at −20) and under every section, so the cup passes behind the white cards and never
+ * covers a line of text; a cloud bank at z-index auto lies in front of it. The footer
  * stacks above main's context too (the header already does, at z-50).
  */
 main {
@@ -118,8 +121,8 @@ footer {
 }
 
 /*
- * The flavour carousel (src/components/flavors.tsx). Without script: a list, no cup. With it (data-live): one
- * viewport of height per flavour, the inside pinned (sticky) while the scroll runs through the flavours, the panels
+ * The flavour carousel (src/components/flavors.tsx). Without script: a list, no cup. With it (data-live): 1.7
+ * viewports of scroll per change of flavour, the inside pinned (sticky) while the scroll runs through the flavours, the panels
  * stacked in one grid cell for GSAP to cross-fade.
  */
 .flavors:not([data-live="true"]) .flavors-cup,
@@ -132,7 +135,8 @@ footer {
 }
 
 .flavors[data-live="true"] {
-  height: calc(var(--flavor-count) * 100svh);
+  /* the pinned viewport, then 1.7 viewports of scroll for each change: unhurried, a wheel flick does not skip one */
+  height: calc((var(--flavor-count) - 1) * 170svh + 100svh);
 }
 
 .flavors[data-live="true"] .flavors-pin {

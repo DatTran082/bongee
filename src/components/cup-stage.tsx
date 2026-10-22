@@ -1,6 +1,5 @@
 "use client";
 
-import { IconRotate360 } from "@tabler/icons-react";
 import Image from "next/image";
 import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
 import { createPortal, preload } from "react-dom";
@@ -202,10 +201,9 @@ export function CupStage() {
       {ready &&
         hintSlot &&
         createPortal(
-          <p id={hintId} className="flex items-center justify-center gap-2 text-sm xl:justify-start">
-            <IconRotate360 aria-hidden className="size-5" />
-            {cup.hint}
-            <span className="sr-only"> {cup.keys}</span>
+          // for assistive tech only: the page shows no instructions (owner, 22/10/2026)
+          <p id={hintId} className="sr-only">
+            {cup.hint} {cup.keys}
           </p>,
           hintSlot,
         )}

@@ -27,7 +27,7 @@ export function Offers() {
           />
         </div>
         <div className="grid gap-6 md:grid-cols-2">
-          <article className="parallax-rise flex flex-col justify-center rounded-3xl border border-brand-line bg-brand-bg-alt p-8 text-center md:p-10">
+          <article className="card-sticker parallax-rise flex flex-col justify-center p-8 text-center md:p-10">
             <h3 className="text-sm tracking-[0.2em] uppercase">{weeklyOffer.eyebrow.toLowerCase()}</h3>
             <p className="mt-3 text-7xl leading-none md:text-8xl">
               <span aria-hidden>{weeklyOffer.value}</span>
@@ -36,7 +36,7 @@ export function Offers() {
             <p className="mt-4 text-2xl">{weeklyOffer.offer}</p>
             <p className="mt-2 text-lg">{weeklyOffer.detail}</p>
           </article>
-          <article className="parallax-rise rounded-3xl border border-brand-line bg-brand-bg-alt p-8 md:p-10">
+          <article className="card-sticker parallax-rise p-8 md:p-10">
             <h3 className="text-center text-sm tracking-[0.2em] uppercase">Thẻ tích điểm</h3>
             <p className="mt-3 text-center text-2xl md:text-3xl">{loyalty.headline}</p>
             <div

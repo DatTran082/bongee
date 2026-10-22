@@ -18,11 +18,26 @@ npm run format       # định dạng lại mã (Prettier, có sắp xếp class
 npm run sync-brand   # chép lại tài sản thương hiệu từ ../brandkit và màu phụ, luật toon từ ../brandkit-ghibli (xem dưới)
 ```
 
+## Phong cách giao diện: Làng Mây
+
+Cả trang (không chỉ cảnh 3D) theo bản DNA **Boongee · Làng Mây** (`../brandkit-ghibli`, hoạt hình vẽ tay):
+
+- hero dưới **bầu trời** xanh sớm tan vào kem (không có mây), **biển mây** ở chân hero; bộ ảnh bìa 3D
+  đứng yên và **nghiêng theo chuột**, biển mây lệch theo (parallax);
+- **đồi chè** ở đầu footer;
+- logo hoa low-poly ở header và footer, hoa low-poly cạnh tiêu đề và làm gạch đầu dòng, **đốm lấp lánh**;
+- thẻ trắng **viền sticker**, **nút kiểu game** nhấn xuống được, huy hiệu biểu tượng tròn trên nền màu phụ.
+
+Chữ vẫn đen than trên kem hoặc trắng; màu phụ (trời, rêu, mật ong) chỉ để trang trí. Mã ở `src/styles/lang-may.css` và
+`src/components/lang-may/`; tài sản ở `src/assets/lang-may/` (do `npm run sync-brand` chép từ bộ DNA).
+
 ## Nội dung trang
 
-Một trang (`src/app/page.tsx`), giao diện sáng, tiếng Việt. Nội dung lấy từ bộ brand kit gốc **ShanMay**
-(`../../ShanMay/brand-kit`): câu chuyện và giọng văn từ `docs/01-brand-foundation.md`, thực đơn từ
-`menu-posm/print-ready/menu-data.json`, ưu đãi từ `collateral/collateral.json`.
+Một trang (`src/app/page.tsx`), giao diện sáng, tiếng Việt. **Thực đơn** (tên món, nhóm, giá tại quầy) lấy từ **Odoo**
+của quán (`npm run sync-menu`, qua MCP của Odoo). Phần còn lại lấy từ bộ brand kit gốc **ShanMay**
+(`../../ShanMay/brand-kit`): giọng văn từ `docs/01-brand-foundation.md`, cỡ ly và mức đường/đá từ
+`menu-posm/print-ready/menu-data.json`, ưu đãi từ `collateral/collateral.json`. Câu chữ viết đơn giản, không bay
+bổng; phần câu chuyện mở đầu bằng một bài thơ ngắn.
 
 | Phần                     | Mã nguồn                      | Nội dung                                                                      |
 | ------------------------ | ----------------------------- | ----------------------------------------------------------------------------- |
@@ -48,9 +63,13 @@ của riêng mình:
   hồng, đứng trên tảng đá; ly sau đậy nắp bật trắng, đứng trên khúc gỗ cao, khúc gỗ thấp phía sau; hai đám mây trôi
   phía sau; không có cây hay hoa; bóng đổ từ đèn chếch trái, cả bộ bồng bềnh như một đảo nhỏ.
 - **Ly nhựa** 700 ml trong suốt: bên trong là **trà nho** xanh đậm dần xuống đáy; chùm nho và viên đá đứng trong nước
-  và lơ lửng xoay quanh ly, kèm đốm lấp lánh; không có giọt nước, không mô phỏng chất lỏng. Ô ở câu chuyện (nắp nhấc lên, nhìn xuống mặt trà), thực đơn (cột dính bên phải), ưu đãi.
+  và lơ lửng xoay quanh ly, kèm đốm lấp lánh; không có giọt nước, không mô phỏng chất lỏng. Ô ở câu chuyện (nắp nhấc lên, nhìn xuống mặt trà) và ưu đãi.
 - **Ly giấy** đậy nắp: ô ở ưu đãi (đứng cạnh ly nhựa: **hai ly** vì giảm giá cho đơn từ 2 ly) và ghé quán.
 
+- **Thực đơn tương tác** (`#thuc-don`, `src/components/menu-picker.tsx`), bố cục theo kiểu thực đơn in: mỗi nhóm có
+  dấu tròn, giá M/L trong vòng tròn nhỏ, dải topping, đường, đá ở cuối. Bấm một món thì ly 3D ở cột trái (chính ly của
+  phần Hương vị) xoay sang ly của nhóm đó, thẻ **Ly của bạn** cộng size, topping và giá tạm tính (giá tại quầy, từ
+  Odoo). Không đặt món trên web. Trên điện thoại, món đang chọn hiện ở thanh cuối màn hình khi đang xem thực đơn.
 - **Xoay ly đổi hương vị** (`#huong-vi`, `src/components/flavors.tsx`): section ghim cố định khi cuộn, mỗi nhóm
   thực đơn một vị (hương hoa, kem bông, trái cây, kem cheese, cà phê). Cuộn tới đâu ly xoay một vòng và đổi sang ly
   của vị kế tiếp (ly giấy đậy nắp, ly giấy kem bông, ly nhựa trà trái cây, ly giấy kem cheese), topping quanh ly
@@ -64,7 +83,7 @@ bản cũ vẫn giữ trong `git stash`; sau đó bỏ bản low-poly cắt mặ
 - Ly của brand kit giữ nguyên độ tròn và hình in.
 - Ánh sáng chia 3 dải mềm như tô màu, có vệt sáng trắng dọc thân ly.
 - Viền sticker hai lớp: trong màu trắng ấm, ngoài một nét mảnh cùng tông, không dùng viền đen.
-- Nước rót 3 lớp màu, ranh giới lượn sóng, có bọt li ti; kem tươi xoắn ốc.
+- Nước rót 3 lớp màu, ranh giới lượn sóng, có bọt li ti; kem là một chóp mịn, phồng, tràn nhẹ qua miệng ly.
 - Nhựa trong vẽ bằng độ mờ, không khúc xạ.
 - Đá, gỗ, mây và mọi topping (nho, xoài, đá viên, hạt cà phê, phô mai, mâm xôi, hoa năm cánh, bọt kem, cánh hồng)
   đều dựng bằng code trong `src/lib/cup-scene/toon/`, cùng một bảng màu; không tải model ngoài.
@@ -83,18 +102,20 @@ bao giờ che chữ.
 
 | Nội dung                                                   | Sửa ở                                                                    |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Món, giá, cỡ ly, tuỳ chỉnh                                 | ShanMay `menu-posm/print-ready/menu-data.json`, rồi `npm run sync-brand` |
+| Món, nhóm món, giá                                         | Odoo của quán, rồi `npm run sync-menu`                                   |
+| Cỡ ly (ml), mức đường và đá                                | ShanMay `menu-posm/print-ready/menu-data.json`, rồi `npm run sync-brand` |
 | Ưu đãi trong tuần, thẻ tích điểm                           | ShanMay `collateral/collateral.json`, rồi `npm run sync-brand`           |
 | Câu chuyện, cam kết, địa chỉ, giờ, điện thoại, mạng xã hội | `src/data/boongee.ts`                                                    |
 | Câu hỏi đáp                                                | `src/data/faq.ts` (câu trả lời tự lấy số liệu từ các file trên)          |
 
-Thực đơn trên web và thực đơn in luôn trùng nhau vì cùng một file. Món không có mô tả, vì nguồn không có (không tự viết).
+Thực đơn trên web trùng với máy bán hàng vì cùng lấy từ Odoo. Món không có mô tả, vì nguồn không có (không tự viết).
+
+`npm run sync-menu` chạy MCP của Odoo (`../odoo/mcp-boongee/run.sh prod`, khoá API nằm trong `.env.prod` của nó, script
+không đọc khoá). Ở mạng văn phòng (chặn sslip.io), mở SSH tunnel tới Odoo rồi đặt `BOONGEE_MCP=<lệnh chạy MCP qua tunnel>`.
 
 **Cần xác nhận trước khi ra mắt** (đánh dấu `TODO(boongee)` trong mã):
 
-- **giá**: `menu-data.json` ghi `illustrativePrices: true` (giá minh hoạ). Khi còn cờ này, trang ghi "Giá tham khảo,
-  đang cập nhật" và dữ liệu cấu trúc (JSON-LD) bỏ khoảng giá. Chốt giá thì đổi thành `false` trong ShanMay rồi
-  `npm run sync-brand`;
+- **giá**: đã là giá thật trên máy bán hàng (Odoo), không còn là giá minh hoạ;
 - **địa chỉ** và khu vực (Hoa Bằng, Cầu Giấy, Hà Nội): tài liệu ShanMay ghi là giả định. Trang vẫn hiện địa chỉ,
   nhưng mô tả SEO và JSON-LD chỉ dùng nó khi `ADDRESS.confirmed: true` trong `src/data/boongee.ts`;
 - **câu chuyện** (Gốc · Nghi thức · Cảm xúc, hình ảnh "mây") viết cho tên cũ Shan Mây, nguồn trà núi cao chưa xác

@@ -11,7 +11,10 @@
 //   color/tokens.json, its `use: illustration` colours → added to the two token files above (sky, cloud, moss, …;
 //                                                        for the 3D and decoration only, never text or print)
 //   color/tokens.json → toon                           → src/data/brand-toon.json   bands, shade, outline, highlight
-//   nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg  → src/assets/brand/logo-ngang.svg
+//   nhan-dien/logo-ngang_hong.svg                      → src/assets/lang-may/logo-ngang.svg   the header's logo
+//   nhan-dien/hoa-low-poly_hong.svg, hoa-ve-tay_hong.svg → src/assets/lang-may/hoa*.svg      headings, bullets
+//   nhan-dien/bien-may.svg, doi-che.svg                → src/assets/lang-may/   cloud bank, tea hills (the page's
+//                                                        scenery, src/components/lang-may/)
 //   nhan-dien/01-logo/bieu-tuong-hoa_den.svg           → src/assets/brand/hoa.svg (the floating marks of the 3D stage),
 //                                                        src/app/icon.svg, favicon.ico, apple-icon.png
 //   nhan-dien/03-hoa-tiet/monogram_hong.png            → src/assets/images/monogram-hong.png
@@ -56,6 +59,11 @@ const CUPS = {
   },
 };
 
+const langMay = (rel) => {
+  const file = path.join(LANGMAY, rel);
+  if (!existsSync(file)) throw new Error(`Thiếu ${file}: dựng lại brandkit-ghibli (scripts/build_lang_may.py).`);
+  return file;
+};
 const kit = (rel) => {
   const file = path.join(KIT, rel);
   if (!existsSync(file)) throw new Error(`Thiếu ${file}: dựng lại brand kit trước (xem brandkit/CLAUDE.md).`);
@@ -221,9 +229,18 @@ async function cupModels() {
 }
 
 const hex = tokens();
-copy("nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg", "src/assets/brand/logo-ngang.svg");
 copy("nhan-dien/01-logo/bieu-tuong-hoa_den.svg", "src/assets/brand/hoa.svg");
 copy("nhan-dien/03-hoa-tiet/monogram_hong.png", "src/assets/images/monogram-hong.png");
+for (const [from, to] of [
+  ["logo-ngang_hong.svg", "logo-ngang.svg"],
+  ["hoa-low-poly_hong.svg", "hoa.svg"],
+  ["hoa-ve-tay_hong.svg", "hoa-ve-tay.svg"],
+  ["bien-may.svg", "bien-may.svg"],
+  ["doi-che.svg", "doi-che.svg"],
+]) {
+  copyFileSync(langMay(`nhan-dien/${from}`), out(`src/assets/lang-may/${to}`));
+  done(`src/assets/lang-may/${to}`);
+}
 await icons(hex);
 await photos();
 await cupModels();

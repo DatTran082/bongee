@@ -1,4 +1,10 @@
-/** Centred section heading: small tracked tagline, the section's <h2>, optional subtitle; drifts a little faster than the page (parallax). */
+import { FlowerMark } from "@/components/lang-may/flower-mark";
+import { Sparkle } from "@/components/lang-may/sparkle";
+
+/**
+ * Centred section heading: small tracked tagline between two low-poly flowers, the section's <h2> with a sparkle on
+ * it (Làng Mây), optional subtitle; drifts a little faster than the page (parallax).
+ */
 export function SectionHeading({
   tagline,
   title,
@@ -13,9 +19,16 @@ export function SectionHeading({
 }) {
   return (
     <div className="parallax-near mx-auto mb-10 max-w-2xl text-center md:mb-14">
-      <p className="text-sm font-semibold tracking-[0.2em] text-brand-pink-800 uppercase">{tagline}</p>
+      <p className="flex items-center justify-center gap-3 text-sm font-semibold tracking-[0.2em] text-brand-pink-800 uppercase">
+        <FlowerMark className="size-5" />
+        {tagline}
+        <FlowerMark className="size-5" />
+      </p>
       <h2 id={id} className="mt-2 text-3xl font-bold tracking-tight text-balance text-brand-ink md:text-5xl">
-        {title}
+        <span className="relative">
+          {title}
+          <Sparkle className="absolute -top-2 -right-5 size-4 text-brand-honey-400 md:-top-3 md:-right-7 md:size-6" />
+        </span>
       </h2>
       {subtitle && <p className="mt-4 text-lg md:text-xl">{subtitle}</p>}
     </div>

@@ -82,7 +82,7 @@ export function createSplash(random: Random): Splash {
   const geometries = { grapes: grapeBunch(), ice: ice(), bubble: puff() };
   const materials: Record<string, Material[]> = {
     grapes: PROPS.grape.map((colour) => toonMaterial({ color: colour, highlight: 0.8 })),
-    ice: [toonMaterial({ color: PROPS.ice, opacity: 0.55 })],
+    ice: [toonMaterial({ color: PROPS.ice, opacity: 0.55, edge: outlineColour(tokens["sky-400"]) })],
   };
   const maker = (geometry: keyof typeof geometries) => () =>
     new Mesh(geometries[geometry], pick(random, materials[geometry] as Material[]));
@@ -103,7 +103,7 @@ export function createSplash(random: Random): Splash {
       inside.add(object);
     }
   }
-  materials.ice[0].userData.outlineColour = outlineColour(tokens["sky-400"]);
+  materials.ice[0].userData.noOutline = true; // see-through: its edge line is in the shader
   const bubbles = toonMaterial({ color: PROPS.bubble, opacity: 0.75, highlight: 0 });
   bubbles.userData.noOutline = true;
   materials.bubbles = [bubbles];

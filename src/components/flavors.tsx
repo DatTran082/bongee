@@ -9,12 +9,17 @@ import { flavorState, restProgress } from "@/lib/cup-scene/flavor-track";
 
 /** Where the background tone starts to come in before the pin, and goes out after it (ScrollTrigger positions). */
 const PRESENCE = { enter: ["top 70%", "top top"], leave: ["bottom bottom", "bottom 30%"] } as const;
-/** Scrub smoothing (s): the cup and the words lag the scroll a little, as if they had weight. */
-const SCRUB = 0.6;
+/** Scrub smoothing (s): the cup and the words follow the scroll with a little weight, so wheel steps glide. */
+const SCRUB = 1;
+/**
+ * The snap to the nearest flavour: it waits until the scroll has really stopped (not between two wheel steps), then
+ * glides there, easing in and out, so it never snatches the page from the reader.
+ */
+const SNAP = { delay: 0.35, duration: { min: 0.5, max: 1.2 }, ease: "power2.inOut" } as const;
 
 /**
- * Flavour carousel: one flavour per menu category. With script, the section is as tall as one viewport per flavour
- * and its inside stays pinned (CSS sticky) while GSAP's ScrollTrigger turns the scroll into the carousel's progress:
+ * Flavour carousel: one flavour per menu category. With script, the section gives each change of flavour 1.7
+ * viewports of scroll (globals.css) and its inside stays pinned (CSS sticky) while GSAP's ScrollTrigger turns the scroll into the carousel's progress:
  * the 3D cup (the stage's `flavor` actor, src/lib/cup-scene/flavor-rig.ts) turns once round its axis per flavour
  * and changes for the next flavour's cup, its toppings fade from one flavour's to the next, the stage's ground
  * moves through the brand's pinks and creams, the words cross-fade, and the scroll snaps to each flavour. Without
@@ -40,6 +45,7 @@ export function Flavors() {
         setLive(true);
         const reduced = motion.matches;
         const count = flavors.length;
+        let shown = 0;
         const ctx = gsap.context(() => {
           const panels = panelRefs.current;
           gsap.set(panels.slice(1), { autoAlpha: 0, y: 32 });
@@ -55,14 +61,14 @@ export function Flavors() {
                 : {
                     snapTo: 1 / Math.max(1, count - 1),
                     inertia: false, // the nearest flavour, not where the scroll's momentum would carry it
-                    duration: { min: 0.2, max: 0.6 },
-                    delay: 0.08,
+                    ...SNAP,
                   },
             },
             onUpdate() {
               const progress = timeline.progress();
               setFlavorScroll({ progress });
-              setCurrent(flavorState(progress, count, reduced).current);
+              const next = flavorState(progress, count, reduced).current;
+              if (next !== shown) setCurrent((shown = next)); // re-render only when the flavour changes
             },
           });
           timeline.to({}, { duration: count - 1 }, 0); // one unit of the timeline per flavour change
@@ -152,7 +158,8 @@ export function Flavors() {
                 <a
                   href={`#${sections.menu}`}
                   tabIndex={live && i !== current ? -1 : undefined}
-                  className="mt-4 inline-flex rounded-full border border-brand-ink px-5 py-2 text-sm transition-colors hover:bg-brand-ink hover:text-white md:mt-6"
+                  data-variant="outline"
+                  className="button-game mt-4 inline-flex rounded-full px-5 py-2 text-sm md:mt-6"
                 >
                   {flavorsIntro.more}
                 </a>

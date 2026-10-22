@@ -267,18 +267,3 @@ export function log(random: Random, radius: number, height: number, colours: Log
   g.computeBoundingSphere();
   return g;
 }
-
-/** A cloud: a few round puffs on a flat underside, about 1 wide. */
-export function cloud(): BufferGeometry {
-  const puffs = [
-    [-0.28, 0, 0, 0.26],
-    [0, 0.08, 0, 0.34],
-    [0.3, 0.02, 0, 0.24],
-    [0.1, 0.02, 0.12, 0.22],
-  ].map(([x, y, z, r]) =>
-    bend(ball(r, SMALL).translate(x, y, z), (p) => {
-      p.y = Math.max(p.y, -0.1); // a flat underside
-    }),
-  );
-  return finish(merge(puffs));
-}

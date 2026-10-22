@@ -103,10 +103,10 @@ export function createToppings(random: Random): Toppings {
   const materials = {
     solid: toonMaterial({ highlight: 0.8 }),
     painted: toonMaterial({ vertexColors: true, highlight: 0.5 }),
-    ice: toonMaterial({ opacity: 0.55, highlight: 1 }),
+    ice: toonMaterial({ opacity: 0.55, highlight: 1, edge: outlineColour(tokens["sky-400"]) }),
     flake: toonMaterial({ highlight: 0.3, doubleSided: true }),
   };
-  materials.ice.userData.outlineColour = outlineColour(tokens["sky-400"]); // ice: a cool blue line, not grey
+  materials.ice.userData.noOutline = true; // see-through: its edge line is in the shader (toon/material.ts)
   materials.flake.userData.noOutline = true; // petal flakes: an outline would swallow them
   materials.painted.userData.outlineColour = outlineColour(PROPS.flower); // white petals: a rose outline, not grey
   const geometries = {

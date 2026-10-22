@@ -53,7 +53,8 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <Link
             href={`/#${sections.visit}`}
-            className="hidden rounded-full border border-brand-ink px-5 py-2 text-sm transition-colors hover:bg-brand-ink hover:text-white md:inline-block"
+            data-variant="outline"
+            className="button-game hidden rounded-full px-5 py-2 text-sm md:inline-block"
           >
             Ghé quán
           </Link>

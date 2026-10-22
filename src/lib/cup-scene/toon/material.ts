@@ -64,6 +64,13 @@ export interface ToonOptions {
   readonly vertexColors?: boolean;
   /** 0 … 1: how strongly the white highlight shows (0: none) */
   readonly highlight?: number;
+  /** the rim of light on the silhouette (default toon.rim.strength; 0 for matte paper, which has none) */
+  readonly rim?: number;
+  /**
+   * For see-through surfaces: their outline drawn in the shader, where the surface turns edge-on to the eye, in this
+   * colour (an outline hull behind clear plastic would show through it as a solid band).
+   */
+  readonly edge?: ColorRepresentation;
   readonly layers?: DrinkLayers;
   readonly doubleSided?: boolean;
   readonly name?: string;
@@ -99,13 +106,15 @@ export function toonMaterial(options: ToonOptions = {}): MeshToonMaterial {
     uHighlightStrength: { value: options.highlight ?? 1 },
     uHighlightColour: { value: new Color(tokens.cloud) },
     uRimColour: { value: RIM.colour },
-    uRimStrength: { value: RIM.strength },
+    uRimStrength: { value: options.rim ?? RIM.strength },
     uLayer0: { value: new Color(layers?.colours[0] ?? "#ffffff") },
     uLayer1: { value: new Color(layers?.colours[1] ?? "#ffffff") },
     uLayer2: { value: new Color(layers?.colours[2] ?? "#ffffff") },
     uLayerRange: { value: new Vector3(layers?.y0 ?? 0, layers?.y1 ?? 1, LAYER.wave) },
     uLayerAxis: { value: [layers?.axis[0] ?? 0, layers?.axis[1] ?? 0] },
+    uEdgeColour: { value: new Color(options.edge ?? "#000000") },
   };
+  const edged = options.edge === undefined ? 0 : 1;
   const poured = layers ? 1 : 0;
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
@@ -126,7 +135,8 @@ uniform vec3 uLayer0;
 uniform vec3 uLayer1;
 uniform vec3 uLayer2;
 uniform vec3 uLayerRange;
-uniform vec2 uLayerAxis;`,
+uniform vec2 uLayerAxis;
+uniform vec3 uEdgeColour;`,
       )
       .replace(
         "#include <color_fragment>",
@@ -155,11 +165,18 @@ uniform vec2 uLayerAxis;`,
   outgoingLight = mix( outgoingLight, uHighlightColour, toonLit );
   outgoingLight += uRimColour * toonRim;
   diffuseColor.a = max( diffuseColor.a, max( toonLit, toonRim * 0.5 ) );
+  #if ${edged}
+  {
+    float toonEdge = 1.0 - smoothstep( 0.1, 0.18, abs( dot( normal, geometryViewDir ) ) );
+    outgoingLight = mix( outgoingLight, uEdgeColour, toonEdge );
+    diffuseColor.a = max( diffuseColor.a, toonEdge * 0.9 );
+  }
+  #endif
 }
 #include <opaque_fragment>`,
       );
   };
-  material.customProgramCacheKey = () => `toon-${poured}`;
+  material.customProgramCacheKey = () => `toon-${poured}-${edged}`;
   return material;
 }
 

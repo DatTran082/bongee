@@ -1,8 +1,8 @@
 // Where everything stands in the cover-photo set, in metres (the cup GLB's unit), after the approved cover photo
 // and its measured layout (brandkit/lookbook/prompts-anh-bia.md, "Bố cục"): the open cup with its foam on a pale
-// boulder, the lidded cup behind and to the right on a tall log, a short log behind it, two small clouds behind
-// everything. In the photo the block and the logs run out of the frame; here the set floats, so they end at FOOT, a
-// little under the boulder's top. y = 0 is the top of the boulder; +z faces the viewer.
+// boulder, the lidded cup behind and to the right on a tall log, a short log behind it. In the photo the block and
+// the logs run out of the frame; here the set floats, so they end at FOOT, a little under the boulder's top. y = 0
+// is the top of the boulder; +z faces the viewer.
 
 export interface LogSpec {
   readonly x: number;
@@ -27,20 +27,6 @@ export const FOOT = -0.065;
 export const LOGS: readonly LogSpec[] = [
   { x: 0.07, z: -0.055, radius: 0.046, top: 0.095, seed: 11 },
   { x: 0.135, z: -0.005, radius: 0.03, top: 0.058, seed: 23 },
-];
-
-/**
- * The clouds behind the set: centre (metres about the set's middle, as they hang on its actor and do not count in its
- * size) and width.
- */
-export const CLOUDS: ReadonlyArray<{
-  readonly x: number;
-  readonly y: number;
-  readonly z: number;
-  readonly size: number;
-}> = [
-  { x: -0.17, y: 0.1, z: -0.14, size: 0.12 },
-  { x: 0.24, y: 0.2, z: -0.18, size: 0.09 },
 ];
 
 export const OPEN_CUP: Placement = { x: -0.062, y: 0, z: 0.045, turn: 0 };

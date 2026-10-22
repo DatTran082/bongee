@@ -2,7 +2,7 @@
 // the cup it is served in (the clear PP cup for the fruit teas, a paper cup for the rest), the toppings that float
 // round it and the tone the stage's background takes. Tones stay in the brand's creams and whites
 // (brandkit/color/tokens.json): the flavour's own colours are in the cup and the toppings, never the ground. Words
-// come from the menu (menu-data.json): the category's title and its items' names, nothing written here.
+// come from the menu (the shop's Odoo, src/data/menu.ts): the group's title and its items' names, nothing written here.
 
 import tokens from "./brand-tokens.json";
 import { categories, type MenuCategoryId } from "./menu";

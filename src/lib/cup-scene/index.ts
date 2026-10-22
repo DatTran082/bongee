@@ -18,7 +18,7 @@ import { ACTORS, type ActorName } from "./actors";
 import { disposeScene } from "./dispose";
 import { DISTANCE, FOV } from "./fit";
 import { MODELS, NODES } from "./model";
-import { needsRedraw } from "./motion";
+import { approach, needsRedraw } from "./motion";
 import { createPetals } from "./petals";
 import { seeded } from "./random";
 import { createSet } from "./set";
@@ -39,8 +39,8 @@ import type { CupTarget } from "./track";
 // cup (flavor-rig.ts); the clear PP cup of grape tea with grapes and ice in it and floating round it (splash.ts);
 // the lidded paper cup. Everything is drawn as a smooth stylized game asset (toon/: the Làng Mây edition's toon
 // rules): soft cel bands, sticker outlines, flat white highlights, sparkles. The logo flower
-// drifts behind them at depth (petals.ts). The canvas clears to the page's cream, opaque (the body is the same cream,
-// so nothing shows; it saves blending the whole viewport). A drag turns an actor, a tap on a lid flips its strap,
+// drifts behind them at depth (petals.ts). The canvas is transparent, so the page's painted scenery (sky, clouds)
+// stays behind the actors; it takes the flavour section's tone only while that section has the viewport. A drag turns an actor, a tap on a lid flips its strap,
 // the keyboard does both. With reduced motion nothing moves on its own: everything sits in its slot, follows the
 // scroll, and frames are drawn only when something changed.
 
@@ -50,17 +50,31 @@ export { ACTORS, type ActorName };
 const MAX_STEP = 250;
 /** The actors lean against the scroll: radians per px/ms of scroll speed, the most, the smoothing (ms). */
 const LEAN = { perSpeed: 0.05, max: 0.14, tau: 90 };
-const PETALS = { count: 14, seed: 7 };
+const PETALS = { count: 6, seed: 7 }; // a few: the page's scenery is quiet
 const SPLASH_SEED = 19;
 const TOPPING_SEED = 43;
 const SPARKLES = { seed: 61, count: 7 };
 const DPR_MAX = 2;
 const CLEAR = new Color(tokens["bg"]); // the page's cream ground
-/** Idle motion and flight of the cups and of the set (slower, heavier). */
-const CUP_MOTION = { bob: 0.016, sway: 0.08, roll: 0.02, hz: 0.24, spin: 1.1 };
+/** Idle motion and flight of the cups: they float, and a drag turns them. */
+const CUP_MOTION = { bob: 0.016, sway: 0.08, roll: 0.02, hz: 0.24, spin: 1.1, turnable: true, parallax: null };
 /** The carousel's cup: a gentle float, no turn of its own (the scroll turns it). */
-const FLAVOR_MOTION = { bob: 0.01, sway: 0.03, roll: 0.012, hz: 0.2, spin: 0 };
-const SET_MOTION = { bob: 0.008, sway: 0.03, roll: 0.008, hz: 0.14, spin: 0.4 };
+const FLAVOR_MOTION = { bob: 0.01, sway: 0.03, roll: 0.012, hz: 0.2, spin: 0, turnable: true, parallax: null };
+/**
+ * The hero's set is a still picture with depth: it does not float or turn, it leans a little toward the pointer
+ * (radians) and shifts with it (px) while the page's sky and clouds shift the other way (lang-may.css).
+ */
+const SET_MOTION = {
+  bob: 0,
+  sway: 0,
+  roll: 0,
+  hz: 0,
+  spin: 0,
+  turnable: false,
+  parallax: { yaw: 0.2, pitch: 0.07, shift: 10 },
+};
+/** The pointer's smoothing (ms): the parallax eases after the mouse, it does not jump with it. */
+const POINTER_TAU = 240;
 /** The PP cup's lid rises this far (metres) in a slot that asks for it. */
 const PP_LID_LIFT = 0.055;
 /** The key light: from the upper left, as in the photo; it follows the set to throw its shadows. */
@@ -155,6 +169,8 @@ export async function createCupScene(
     cancelAnimationFrame(frame);
     frame = 0;
     listeners.abort();
+    document.documentElement.style.removeProperty("--pointer-x");
+    document.documentElement.style.removeProperty("--pointer-y");
     for (const actor of Object.values(actors)) actor.dispose();
     splash?.dispose();
     toppingsDispose?.();
@@ -171,8 +187,9 @@ export async function createCupScene(
     const camera = new PerspectiveCamera(FOV, 1, 0.1, 10);
     camera.position.set(0, 0, DISTANCE);
     camera.lookAt(0, 0, 0);
-    renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false });
-    renderer.setClearColor(CLEAR, 1); // the page's own cream: the body is this colour too, so nothing shows
+    // transparent: the page's scenery (the hero's sky and clouds, src/components/lang-may/) shows behind the actors
+    renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true, premultipliedAlpha: true });
+    renderer.setClearColor(CLEAR, 0);
     renderer.toneMapping = NoToneMapping; // toon colours are the palette's own: nothing should bend them
     renderer.shadowMap.enabled = true; // the set's cups and logs throw shadows on the boulder
     renderer.shadowMap.type = PCFShadowMap;
@@ -223,7 +240,6 @@ export async function createCupScene(
       paper: hire("paper"),
     };
     scene.add(petals.group);
-    cast.set.decorate(set.clouds);
     for (const name of ["pp", "flavor"] as const) {
       const made = createSparkles(seeded(SPARKLES.seed + sparkles.length), SPARKLES.count);
       sparkles.push(made);
@@ -246,6 +262,9 @@ export async function createCupScene(
       toppingsDispose = () => toppings.dispose();
       carousel.setToppings(toppings);
       cast.flavor.decorate(toppings.group);
+      // compile their shaders now, while nothing moves: not mid-scroll when a flavour's toppings first come in
+      if (renderer) await renderer.compileAsync(scene, camera);
+      options.signal.throwIfAborted();
       invalidate();
     }
 
@@ -262,6 +281,11 @@ export async function createCupScene(
     scene.add(key, key.target);
 
     const lean = new Lean(LEAN.perSpeed, LEAN.max, LEAN.tau);
+    // the pointer, for the set's parallax and the page's (--pointer-x / -y on the root, lang-may.css): a mouse only
+    // (a touch has no hover), back to the middle when it leaves the window
+    const pointerGoal = { x: 0, y: 0 };
+    const pointer = { x: 0, y: 0 };
+    const root = document.documentElement;
     let width = 1;
     let height = 1;
     let last = 0;
@@ -324,8 +348,27 @@ export async function createCupScene(
       const fl = flavorScroll();
       const flavorMoved = fl !== lastFlavor;
       lastFlavor = fl;
-      const moving = [...ACTORS.map((name) => cast[name].step(dt)), lean.moving, flavorMoved].some(Boolean);
-      const frameState: Frame = { dt, time, reduced, lean: lean.update(scroll, dt, reduced), width, height };
+      const goalX = reduced ? 0 : pointerGoal.x;
+      const goalY = reduced ? 0 : pointerGoal.y;
+      pointer.x = reduced ? 0 : approach(pointer.x, goalX, dt, POINTER_TAU);
+      pointer.y = reduced ? 0 : approach(pointer.y, goalY, dt, POINTER_TAU);
+      const pointing = Math.abs(pointer.x - goalX) + Math.abs(pointer.y - goalY) > 1e-4;
+      if (!pointing) {
+        pointer.x = goalX;
+        pointer.y = goalY;
+      }
+      root.style.setProperty("--pointer-x", pointer.x.toFixed(4));
+      root.style.setProperty("--pointer-y", pointer.y.toFixed(4));
+      const moving = [...ACTORS.map((name) => cast[name].step(dt)), lean.moving, flavorMoved, pointing].some(Boolean);
+      const frameState: Frame = {
+        dt,
+        time,
+        reduced,
+        lean: lean.update(scroll, dt, reduced),
+        width,
+        height,
+        pointer: { x: pointer.x, y: pointer.y },
+      };
       // while the flavour section has the viewport, the other cups make way for its carousel
       for (const name of ACTORS) {
         const fade = name === "pp" || name === "paper" ? fl.presence : 0;
@@ -337,7 +380,7 @@ export async function createCupScene(
       toneFrom.set(flavors[state.from]?.toneHex ?? CLEAR);
       toneTo.set(flavors[state.to]?.toneHex ?? CLEAR);
       ground.lerpColors(toneFrom, toneTo, state.blend);
-      renderer?.setClearColor(ground.lerpColors(CLEAR, ground, fl.presence), 1);
+      renderer?.setClearColor(ground, fl.presence); // clear, but for the flavour section's tone while it has the view
       followSet();
       key.castShadow = cast.set.root.visible; // the shadow pass serves the set alone
       splash?.update(time, reduced ? 0 : dt / 1000);
@@ -359,6 +402,24 @@ export async function createCupScene(
     }
 
     const { signal } = listeners;
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        if (event.pointerType !== "mouse") return;
+        pointerGoal.x = (event.clientX / window.innerWidth) * 2 - 1;
+        pointerGoal.y = (event.clientY / window.innerHeight) * 2 - 1;
+        schedule();
+      },
+      { signal, passive: true },
+    );
+    document.documentElement.addEventListener(
+      "pointerleave",
+      () => {
+        pointerGoal.x = pointerGoal.y = 0;
+        schedule();
+      },
+      { signal },
+    );
     canvas.addEventListener("webglcontextlost", (event) => event.preventDefault(), { signal }); // allow a restore
     canvas.addEventListener("webglcontextrestored", () => invalidate(), { signal });
     document.addEventListener(

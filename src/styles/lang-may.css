@@ -1,0 +1,127 @@
+/*
+ * The Làng Mây look for the page's own UI (../brandkit-ghibli/README.md): what the 3D stage does in toon shading,
+ * the page does in CSS. Soft, rounded, a sticker's edge (a warm white band, then a thin lilac-rose line), game-UI
+ * buttons that press down, painted scenery (sky, cloud bank, tea hills: src/components/lang-may/). The accent colours
+ * (sky, cloud, moss, honey) only ever decorate: text stays ink on cream or white, white only on ink.
+ */
+
+@theme {
+  /* the sticker's thin outer line: pink-700 cooled toward the clouds' lilac shade (as the 3D outlines) */
+  --color-sticker-line: color-mix(in oklab, var(--color-brand-pink-700) 65%, #9c8fb0);
+  --shadow-sticker:
+    0 0 0 5px var(--color-brand-cloud), 0 0 0 6.5px var(--color-sticker-line),
+    0 22px 34px -22px color-mix(in oklab, #9c8fb0 70%, transparent);
+  --shadow-sticker-small:
+    0 0 0 3px var(--color-brand-cloud), 0 0 0 4px var(--color-sticker-line),
+    0 10px 18px -12px color-mix(in oklab, #9c8fb0 70%, transparent);
+}
+
+/* A white card with a sticker's edge: the panels on the cream (menu, offers, promises, visit). */
+.card-sticker {
+  border-radius: 2rem;
+  background: var(--color-brand-bg-alt);
+  box-shadow: var(--shadow-sticker);
+}
+
+/* A round badge for an icon: an accent tint, the icon in ink, a sticker's edge. */
+.badge-sticker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: var(--color-brand-ink);
+  box-shadow: var(--shadow-sticker-small);
+}
+
+/*
+ * Game-UI buttons: a pill with a lip under it that it presses down onto, a soft highlight along its top. Primary is
+ * white on ink (allowed); the other is ink on cloud white.
+ */
+.button-game {
+  position: relative;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    background-color 150ms ease;
+}
+
+.button-game[data-variant="primary"] {
+  background: var(--color-brand-ink);
+  color: var(--color-brand-white);
+  box-shadow:
+    inset 0 2px 0 rgb(255 255 255 / 0.16),
+    0 4px 0 var(--color-brand-pink-800),
+    0 10px 18px -10px rgb(30 26 28 / 0.6);
+}
+
+.button-game[data-variant="outline"] {
+  background: var(--color-brand-cloud);
+  color: var(--color-brand-ink);
+  box-shadow:
+    inset 0 2px 0 rgb(255 255 255 / 0.9),
+    0 0 0 1.5px var(--color-brand-ink),
+    0 4px 0 1.5px var(--color-brand-ink),
+    0 10px 18px -10px rgb(30 26 28 / 0.35);
+}
+
+@media (hover: hover) {
+  .button-game:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.button-game:active {
+  transform: translateY(3px);
+}
+
+.button-game[data-variant="primary"]:active {
+  box-shadow:
+    inset 0 2px 0 rgb(255 255 255 / 0.16),
+    0 1px 0 var(--color-brand-pink-800);
+}
+
+.button-game[data-variant="outline"]:active {
+  box-shadow:
+    inset 0 2px 0 rgb(255 255 255 / 0.9),
+    0 0 0 1.5px var(--color-brand-ink),
+    0 1px 0 1.5px var(--color-brand-ink);
+}
+
+/* The hero's painted sky: early-morning sky blue at the top, melting into the page's cream at the foot. */
+.sky {
+  background: linear-gradient(
+    to bottom,
+    var(--color-brand-sky-200) 0%,
+    color-mix(in oklab, var(--color-brand-sky-200) 45%, var(--color-brand-bg)) 55%,
+    var(--color-brand-bg) 100%
+  );
+}
+
+/*
+ * Pointer parallax: the 3D stage writes the pointer's smoothed place over the viewport (−1 … 1) to --pointer-x /
+ * --pointer-y on the root (only with a mouse, never with reduced motion). The cloud bank in front slips with it while
+ * the 3D set leans toward it: a still picture with depth.
+ */
+.bank-parallax {
+  transform: translate3d(calc(var(--pointer-x, 0) * 14px), calc(var(--pointer-y, 0) * 4px), 0) scale(1.04);
+  transform-origin: bottom center;
+}
+
+/* A twinkle for the sparkles. */
+@media (prefers-reduced-motion: no-preference) {
+  .sparkle-twinkle {
+    animation: sparkle-twinkle var(--twinkle-time, 2.8s) ease-in-out var(--twinkle-delay, 0s) infinite;
+  }
+}
+
+@keyframes sparkle-twinkle {
+  0%,
+  100% {
+    transform: scale(0.55) rotate(0deg);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1) rotate(12deg);
+    opacity: 1;
+  }
+}

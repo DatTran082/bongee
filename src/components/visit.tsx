@@ -28,7 +28,7 @@ export function Visit() {
           tilt={0.08}
           className="mb-8 h-[40vh] max-h-[24rem] lg:mb-0 lg:h-[60vh] lg:max-h-[40rem]"
         />
-        <div className="parallax-rise rounded-3xl border border-brand-line bg-brand-bg-alt px-6 py-8 md:px-12 md:py-12">
+        <div className="card-sticker parallax-rise px-6 py-8 md:px-12 md:py-12">
           <address className="text-center not-italic">
             <p className="flex items-center justify-center gap-2 text-sm tracking-[0.2em] uppercase">
               <IconMapPin aria-hidden className="size-5" />
@@ -43,7 +43,8 @@ export function Visit() {
               href={visit.mapUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-2 rounded-full bg-brand-ink px-5 py-2.5 text-white transition-colors hover:bg-brand-pink-800"
+              data-variant="primary"
+              className="button-game mt-5 inline-flex items-center gap-2 rounded-full px-5 py-2.5"
             >
               Xem bản đồ
               <IconExternalLink aria-hidden className="size-4" />
@@ -77,7 +78,8 @@ export function Visit() {
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full bg-brand-ink px-5 py-2.5 text-white hover:bg-brand-pink-800"
+                    data-variant="primary"
+                    className="button-game inline-flex items-center gap-2 rounded-full px-5 py-2.5"
                   >
                     <SocialIcon name={s.icon} />
                     {s.name}

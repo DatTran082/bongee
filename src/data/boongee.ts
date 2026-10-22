@@ -10,7 +10,7 @@ export const site = {
   title: "Boongee — Trà hương thanh vị",
   // No address here until visit.address.confirmed (it would be indexed): see ADDRESS below.
   description:
-    "Boongee · Trà hương thanh vị: trà sữa hương hoa, kem bông, trà trái cây, kem cheese, cà phê phin và coldbrew, pha nhẹ, vị thanh.",
+    "Boongee · Trà hương thanh vị: trà sữa ướp hoa dành dành, bạch lan, hoa trúc; kem bông, trà trái cây, kem cheese, cà phê phin và coldbrew.",
   locale: "vi_VN",
 };
 
@@ -38,9 +38,9 @@ export const nav = [
 ];
 
 export const hero = {
-  intro: "Trà ướp hoa dành dành, bạch lan, hoa trúc. Pha thật nhẹ: thơm dịu, vị thanh.",
+  intro: "Trà ướp hoa dành dành, bạch lan, hoa trúc. Pha nhẹ, uống dễ.",
   /** the cover photo, shown in the hero's slot only when the 3D cup cannot be */
-  imageAlt: "Hai ly Boongee trên nền hồng: ly kem bông rắc cánh hồng khô và ly giấy đậy nắp, in hoa monogram màu bạc",
+  imageAlt: "Hai ly Boongee: ly kem bông rắc cánh hồng khô và ly giấy đậy nắp, in hoa monogram màu bạc",
 };
 
 /** The 3D stage's actors, floating through the page (src/components/cup-stage.tsx). */
@@ -67,7 +67,8 @@ export const cup = {
         "Ly giấy Boongee 16 oz, mô hình 3D kiểu hoạt hình: ly giấy hai lớp in bốn dấu monogram và chữ Boongee, đậy nắp bật nút trắng.",
     },
   },
-  hint: "Kéo để xoay, chạm nắp để bật nút",
+  /** read by assistive tech only (aria-describedby): the page itself shows no instructions */
+  hint: "Kéo ly để xoay, chạm nắp để bật nút.",
   keys: "Phím mũi tên trái, phải xoay; Enter bật hoặc đậy nút; Home về mặt trước.",
   strapOpened: "đã bật nút nắp.",
   strapClosed: "đã đậy nút nắp.",
@@ -76,28 +77,29 @@ export const cup = {
 /** The flavour carousel (src/components/flavors.tsx); the flavours' names come from the menu (src/data/flavors.ts). */
 export const flavorsIntro = {
   tagline: "Hương vị",
-  title: "Mỗi nhóm một hương",
+  title: "Từng vị một",
   nav: "Chọn hương vị",
   counter: (index: number, count: number) =>
     `${String(index + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}`,
   more: "Xem thực đơn",
 };
 
-/** The visual narrative of docs/01 §6: origin, ritual, feeling. */
+/**
+ * The story: a short poem, then three plain lines on what is in the cup. Words kept simple (the owner, 22/10/2026:
+ * no flowery copy); the pictures are small, quiet ones (clouds, wind, a kitchen), as in a hand-drawn film.
+ */
 export const story = {
   tagline: "Câu chuyện",
-  title: "Một chút mây, một chút hoa",
+  title: "Trà ướp hoa",
+  // The clouds and the wind are pictures, not facts: the tea's origin is not confirmed yet (TODO(boongee): docs/01
+  // asks for a name story once "boongee" has a meaning; add the origin then, if it is confirmed).
+  poem: ["Mây đi ngang mái nhà,", "gió mang hương hoa vào bếp.", "Ấm trà để yên một lúc,", "rồi rót ra, thật nhẹ."],
   beats: [
-    // TODO(boongee): this narrative (docs/01 §6) was written for the old name "Shan Mây" (mây = cloud; ShanMay
-    // assumes a highland Shan tuyết base tea). docs/01 asks for a new name story once "boongee" has a meaning, and
-    // the tea's origin is unconfirmed: rewrite or confirm "Gốc" and the cloud images (title, last beat) together.
-    { label: "Gốc", text: "Trà mọc trên núi cao, nơi mây phủ quanh năm." },
-    { label: "Nghi thức", text: "Ở Boongee, trà được ướp cùng hoa dành dành, bạch lan, hoa trúc, rồi pha thật nhẹ." },
-    { label: "Cảm xúc", text: "Giữa phố đông, một ly trà thơm dịu, vị thanh, như mang theo chút mây trời." },
+    { label: "Hoa", text: "Trà ướp cùng hoa dành dành, bạch lan, hoa trúc." },
+    { label: "Pha", text: "Pha nhẹ tay cho vị thanh, không gắt." },
+    { label: "Ly", text: "Mỗi ly in bông hoa năm cánh và bốn dấu hoa nhỏ." },
   ],
   closing: "Trà hương thanh vị.",
-  marks:
-    "Bông hoa năm cánh của logo đi cùng bốn dấu monogram: đĩa hoa, hoa đặc, sao hoa, hoa tròn đặc. Bạn sẽ gặp chúng trên mỗi chiếc ly.",
 };
 
 export type PromiseIcon = "flower" | "droplet" | "feather";
@@ -105,22 +107,22 @@ export type PromiseIcon = "flower" | "droplet" | "feather";
 /** What a Boongee drink keeps to: the USP of docs/01 §1 and its proofs. */
 export const promises = {
   tagline: "Điều Boongee giữ",
-  title: "Thơm dịu, không gắt",
+  title: "Ba điều nhỏ",
   items: [
     {
       title: "Hoa thật",
-      text: "Trà ướp cùng hoa dành dành, bạch lan, hoa trúc.",
+      text: "Hoa dành dành, bạch lan, hoa trúc ướp thẳng vào trà.",
       icon: "flower",
     },
     {
       // TODO(boongee): 50 % is the default ShanMay proposes (USP proof 3); confirm it at the counter.
       title: "Ngọt vừa",
-      text: "Mặc định ngọt 50% để giữ vị thanh. Chỉnh từ 0 đến 100%.",
+      text: "Mặc định 50% đường. Bạn chỉnh từ 0 đến 100%.",
       icon: "droplet",
     },
     {
-      title: "Pha thật nhẹ",
-      text: "Vị thanh, không gắt: một ly trà nhẹ nhàng giữa phố.",
+      title: "Pha nhẹ",
+      text: "Uống hết ly vẫn thấy dễ chịu, không gắt.",
       icon: "feather",
     },
   ] satisfies Array<{ title: string; text: string; icon: PromiseIcon }>,
@@ -128,14 +130,14 @@ export const promises = {
 
 export const menuIntro = {
   tagline: "Thực đơn",
-  title: "Hương dịu, vị thanh",
+  title: "Món ở quán",
   // TODO(boongee): ShanMay menu_data.py → HERO is a *sample* featured drink ("món nổi bật mẫu"); confirm or change.
-  featured: "Trà Sữa Bạch Lan Hoa",
+  featured: "Bạch Lan Hoa",
 };
 
 export const offersIntro = {
   tagline: "Ưu đãi",
-  title: "Ghé thường, có quà",
+  title: "Đang có gì",
 };
 
 // TODO(boongee): ShanMay places the shop in phố Hoa Bằng, Cầu Giấy, Hà Nội as an assumption; the street address is
@@ -150,7 +152,7 @@ const ADDRESS = {
 
 export const visit = {
   tagline: "Ghé quán",
-  title: "Hẹn bạn ở Boongee",
+  title: "Đường đến quán",
   address: ADDRESS,
   addressLine: `${ADDRESS.street}, ${ADDRESS.district}, ${ADDRESS.city}`,
   mapUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -173,7 +175,7 @@ export const socials: Array<{ name: string; icon: SocialIcon; href: string | nul
 
 export const faqIntro = {
   tagline: "Hỏi đáp",
-  title: "Trước khi ghé",
+  title: "Hay được hỏi",
 };
 
 export const PENDING = "Đang cập nhật";

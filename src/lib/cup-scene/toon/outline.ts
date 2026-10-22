@@ -11,55 +11,42 @@ import {
   Vector2,
 } from "three";
 import toon from "@/data/brand-toon.json";
-import tokens from "@/data/brand-tokens.json";
 import { outlineColour } from "./material";
 
-// The toon outline, a sticker's: two inverted hulls round each mesh, copies drawn from behind and pushed out along
-// their normals by a fixed number of screen pixels, so only a rim of each shows round the silhouette, the same width
-// near or far. The inner hull is the clouds' warm white (toon.outline.widthPx), the outer one a thin line in a darker
-// tone of the surface (edgePx more), which keeps the white edge visible on the page's cream. The hulls share the
-// mesh's geometry (and an instanced mesh's instance matrices), so they cost two draw calls and no memory.
+// The toon outline: one fine line round each mesh, in a darker tone of its own colour (never black). It is an inverted
+// hull, a copy of the mesh drawn from behind and pushed out along its normals by a fixed number of screen pixels
+// (toon.outline.widthPx), so only a rim of it shows round the silhouette, the same width near or far. No white
+// sticker band and no rim of light (the owner, 22/10/2026: they made everything look like glass). The hull shares
+// the mesh's geometry (and an instanced mesh's instance matrices), so it costs a draw call and no memory.
 
-type Layer = "inner" | "outer";
-
-/** Shared by every hull: the drawing buffer's size and the widths (device px), set on resize (setOutlineSize). */
+/** Shared by every hull: the drawing buffer's size and the width (device px), set on resize (setOutlineSize). */
 const uniforms = {
   uOutlineResolution: { value: new Vector2(1, 1) },
-  uOutlineInner: { value: toon.outline.widthPx },
-  uOutlineOuter: { value: toon.outline.widthPx + toon.outline.edgePx },
+  uOutlineWidth: { value: toon.outline.widthPx },
 };
 
 /** Call when the drawing buffer changes size: `width` × `height` device px at `pixelRatio`. */
 export function setOutlineSize(width: number, height: number, pixelRatio: number): void {
   uniforms.uOutlineResolution.value.set(width, height);
-  uniforms.uOutlineInner.value = toon.outline.widthPx * pixelRatio;
-  uniforms.uOutlineOuter.value = (toon.outline.widthPx + toon.outline.edgePx) * pixelRatio;
+  uniforms.uOutlineWidth.value = toon.outline.widthPx * pixelRatio;
 }
 
-/** What an instanced copy's colour is multiplied by for its outer line: toon.outline.lightness, in linear light. */
+/** What an instanced copy's colour is multiplied by for its outline: toon.outline.lightness, in linear light. */
 const DARKEN = new Color().setScalar(toon.outline.lightness ** 2.2);
-const INNER = new Color(tokens[toon.outline.inner as "cloud"]);
 
 const materials = new Map<string, MeshBasicMaterial>();
 
-/** One hull material per colour and layer (shared). */
-function hullMaterial(colour: Color, layer: Layer): MeshBasicMaterial {
-  const key = `${layer}-${colour.getHexString()}`;
+/** One hull material per colour (shared). */
+function hullMaterial(colour: Color): MeshBasicMaterial {
+  const key = colour.getHexString();
   const known = materials.get(key);
   if (known) return known;
   const material = new MeshBasicMaterial({ color: colour, side: BackSide });
-  if (layer === "outer") {
-    // the outer hull lies at the inner one's depth: pushed back, it shows only beyond the white
-    material.polygonOffset = true;
-    material.polygonOffsetFactor = 1;
-    material.polygonOffsetUnits = 4;
-  }
   material.name = `outline-${key}`;
-  const width = layer === "inner" ? "uOutlineInner" : "uOutlineOuter";
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.vertexShader = shader.vertexShader
-      .replace("#include <common>", `#include <common>\nuniform vec2 uOutlineResolution;\nuniform float ${width};`)
+      .replace("#include <common>", "#include <common>\nuniform vec2 uOutlineResolution;\nuniform float uOutlineWidth;")
       .replace(
         "#include <project_vertex>",
         `#include <project_vertex>
@@ -70,11 +57,11 @@ function hullMaterial(colour: Color, layer: Layer): MeshBasicMaterial {
   #endif
   vec2 clipNormal = ( projectionMatrix * vec4( normalMatrix * hullNormal, 0.0 ) ).xy;
   clipNormal /= max( length( clipNormal ), 1e-5 );
-  gl_Position.xy += clipNormal / uOutlineResolution * ${width} * gl_Position.w * 2.0;
+  gl_Position.xy += clipNormal / uOutlineResolution * uOutlineWidth * gl_Position.w * 2.0;
 }`,
       );
   };
-  material.customProgramCacheKey = () => `toon-outline-${layer}`;
+  material.customProgramCacheKey = () => "toon-outline";
   materials.set(key, material);
   return material;
 }
@@ -90,27 +77,10 @@ function baseColour(material: Material): Color | null {
   return null;
 }
 
-function hull(mesh: Mesh, colour: Color, layer: Layer, tinted: boolean): Mesh {
-  let made: Mesh;
-  if (mesh instanceof InstancedMesh) {
-    const instanced = new InstancedMesh(skin(mesh), hullMaterial(colour, layer), mesh.count);
-    instanced.instanceMatrix = mesh.instanceMatrix;
-    if (tinted) instanced.instanceColor = mesh.instanceColor;
-    made = instanced;
-  } else {
-    made = new Mesh(skin(mesh), hullMaterial(colour, layer));
-  }
-  made.userData.outline = true;
-  made.frustumCulled = mesh.frustumCulled;
-  made.castShadow = false;
-  made.renderOrder = mesh.renderOrder;
-  return made;
-}
-
 /**
- * Gives every toon mesh under `root` its two hulls (once: a mesh that has them, or is one, is skipped; so is one
- * whose material says `userData.noOutline`, for flecks too small to carry a line). `skip` leaves out a mesh by name
- * (a print layer lying on its cup's wall, whose own hulls would double the cup's).
+ * Gives every toon mesh under `root` its outline (once: a mesh that has one, or is one, is skipped; so is one whose
+ * material says `userData.noOutline`, for flecks too small to carry a line). `skip` leaves out a mesh by name (a
+ * print layer lying on its cup's wall, whose own hull would double the cup's).
  */
 export function addOutlines(root: Object3D, skip: (mesh: Mesh) => boolean = () => false): void {
   const meshes: Mesh[] = [];
@@ -124,10 +94,23 @@ export function addOutlines(root: Object3D, skip: (mesh: Mesh) => boolean = () =
     const base = material && baseColour(material);
     if (!base || material.userData.noOutline) continue;
     const own: Color | undefined = material.userData.outlineColour;
-    // instanced copies coloured one by one: the outer line darkens each copy's own colour
+    // instanced copies coloured one by one: the line darkens each copy's own colour
     const tinted = !own && mesh instanceof InstancedMesh && mesh.instanceColor !== null;
-    const outer = own ?? (tinted ? DARKEN : outlineColour(base));
+    const colour = own ?? (tinted ? DARKEN : outlineColour(base));
+    let hull: Mesh;
+    if (mesh instanceof InstancedMesh) {
+      const instanced = new InstancedMesh(skin(mesh), hullMaterial(colour), mesh.count);
+      instanced.instanceMatrix = mesh.instanceMatrix;
+      if (tinted) instanced.instanceColor = mesh.instanceColor;
+      hull = instanced;
+    } else {
+      hull = new Mesh(skin(mesh), hullMaterial(colour));
+    }
+    hull.userData.outline = true;
+    hull.frustumCulled = mesh.frustumCulled;
+    hull.castShadow = false;
+    hull.renderOrder = mesh.renderOrder;
     mesh.userData.hasOutline = true;
-    mesh.add(hull(mesh, INNER, "inner", false), hull(mesh, outer, "outer", tinted));
+    mesh.add(hull);
   }
 }

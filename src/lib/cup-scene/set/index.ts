@@ -4,14 +4,14 @@ import { createFoam } from "../toon/foam";
 import { outlineColour, toonMaterial } from "../toon/material";
 import { addOutlines } from "../toon/outline";
 import { PROPS } from "../toon/palette";
-import { boulder, cloud, log } from "../toon/shapes";
-import { CLOUDS, FOOT, LIDDED_CUP, LOGS, OPEN_CUP, type Placement } from "./layout";
+import { boulder, log } from "../toon/shapes";
+import { FOOT, LIDDED_CUP, LOGS, OPEN_CUP, type Placement } from "./layout";
 
-// The cover photo's set, as a stylized game scene: the brand kit's paper cup twice (one under a soft-serve swirl of
+// The cover photo's set, as a stylized game scene: the brand kit's paper cup twice (one under a smooth, plump cap of
 // cream sprinkled with rose petals, one lidded) on smooth props drawn here (toon/shapes.ts): a pale boulder under the
-// open cup, a sawn log under the lidded cup with a shorter one behind, and two small clouds drifting behind them (the
-// Làng Mây edition's accent: "trà mọc trên núi cao, nơi mây phủ quanh năm"). No plants or flowers. It floats as one
-// piece: the boulder and the logs end at FOOT (layout.ts).
+// open cup, a sawn log under the lidded cup with a shorter one behind. The sky and its clouds are the page's, behind
+// the stage (src/components/lang-may/sky.tsx). No plants or flowers. It floats as one piece: the boulder and the logs
+// end at FOOT (layout.ts). In the hero it holds still and leans toward the pointer (index.ts, SET_MOTION).
 
 /** The boulder's box (metres): its flat top a little under y = 0, where the open cup stands; its centre; its turn. */
 const STONE = { width: 0.3, height: -FOOT, depth: 0.22, x: -0.075, z: 0.027, sink: 0.002, turn: 0.35 };
@@ -19,8 +19,6 @@ const SEED = 31;
 
 export interface CupSet {
   readonly group: Group;
-  /** the clouds: hung on the set's actor (decorate), so they float behind without counting in its size */
-  readonly clouds: Group;
   /** the lidded cup's lid (a tap on it flips the strap) and its strap */
   readonly lid: Object3D;
   readonly strap: Object3D;
@@ -58,11 +56,11 @@ export function createSet(paper: Object3D): CupSet {
 
   const stone = new Mesh(
     boulder(random, STONE.width, STONE.height, STONE.depth),
-    toonMaterial({ color: PROPS.stone, highlight: 0.25 }),
+    toonMaterial({ color: PROPS.stone, highlight: 0 }),
   );
   stone.position.set(STONE.x, -STONE.sink, STONE.z);
   stone.rotation.y = STONE.turn;
-  const wood = toonMaterial({ vertexColors: true, highlight: 0.4 });
+  const wood = toonMaterial({ vertexColors: true, highlight: 0.12 });
   wood.userData.outlineColour = outlineColour(PROPS.bark);
   const logs = LOGS.map((spec, i) => {
     const mesh = new Mesh(
@@ -85,19 +83,8 @@ export function createSet(paper: Object3D): CupSet {
   shadows(open);
   shadows(lidded);
 
-  const sky = new Group();
-  sky.name = "clouds";
-  const cloudMaterial = toonMaterial({ color: PROPS.cloud, highlight: 0 });
-  for (const spec of CLOUDS) {
-    const puff = new Mesh(cloud(), cloudMaterial);
-    puff.scale.set(spec.size, spec.size * 0.75, spec.size * 0.6);
-    puff.position.set(spec.x, spec.y, spec.z);
-    sky.add(puff);
-  }
-  addOutlines(sky);
-
   const group = new Group();
   group.name = "cover-set";
   group.add(props, place(open, OPEN_CUP), place(lidded, LIDDED_CUP));
-  return { group, clouds: sky, lid, strap };
+  return { group, lid, strap };
 }

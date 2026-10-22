@@ -1,14 +1,16 @@
 import Link from "next/link";
+import { TeaHills } from "@/components/lang-may/tea-hills";
 import { Logo } from "@/components/logo";
 import { SocialIcon } from "@/components/social-icon";
 import { brand, nav, socials } from "@/data/boongee";
 
-/** Footer: logo and slogan, the section links, the social pages that are set. */
+/** Footer: tea hills across its top (Làng Mây), then the logo and slogan, the section links, the social pages that are set. */
 export function SiteFooter() {
   const links = socials.flatMap((s) => (s.href ? [{ ...s, href: s.href }] : []));
 
   return (
-    <footer className="border-t border-brand-ink/15">
+    <footer>
+      <TeaHills className="-mb-px" />
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[2fr_1fr_1fr] md:py-14">
         <div>
           <Link href="/" aria-label="Boongee — trang chủ" className="inline-block">
@@ -39,7 +41,8 @@ export function SiteFooter() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${s.name} (mở tab mới)`}
-                    className="inline-flex rounded-full border border-brand-ink p-2 hover:bg-brand-ink hover:text-white"
+                    data-variant="outline"
+                    className="button-game inline-flex rounded-full p-2"
                   >
                     <SocialIcon name={s.icon} />
                   </a>

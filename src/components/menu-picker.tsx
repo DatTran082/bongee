@@ -21,7 +21,7 @@ import {
 // Picking a drink (a row, or a cup) shows it in the "Ly của bạn" bar at the foot of the screen, which adds up the size
 // and the toppings at the counter prices (the shop's Odoo). Nothing is ordered here.
 
-/** Each group's heading mark: its painted monogram mark (as the board; brandkit-ghibli → public/menu/mark). */
+/** Each group's heading mark's URL: its painted monogram mark (as the board; brandkit-ghibli → public/menu/mark). */
 const MARKS: Readonly<Record<string, string>> = board.marks;
 /** The default sugar level: the promise's 50 % (src/data/boongee.ts, promises). */
 const DEFAULT_SUGAR = "50%";
@@ -48,19 +48,9 @@ function Sparkle({ className }: { className: string }) {
 }
 
 function Mark({ title }: { title: string }) {
-  const file = MARKS[title];
-  if (!file) return null;
-  return (
-    <Image
-      src={`/menu/mark/${file}`}
-      alt=""
-      aria-hidden
-      width={40}
-      height={40}
-      unoptimized
-      className="size-10 shrink-0"
-    />
-  );
+  const src = MARKS[title];
+  if (!src) return null;
+  return <Image src={src} alt="" aria-hidden width={40} height={40} unoptimized className="size-10 shrink-0" />;
 }
 
 function Group({
@@ -228,7 +218,7 @@ export function MenuPicker() {
                   >
                     <span aria-hidden className="absolute bottom-11 h-3 w-16 rounded-full bg-brand-cloud-shade/80" />
                     <Image
-                      src={`/menu/ly/${cup.file}`}
+                      src={cup.src}
                       alt=""
                       width={450}
                       height={630}
@@ -254,7 +244,7 @@ export function MenuPicker() {
           {board.poster && (
             <figure className="mb-10 break-inside-avoid overflow-hidden rounded-[2rem] shadow-sticker">
               <Image
-                src="/menu/poster.jpg"
+                src={board.poster}
                 alt="Ba ly Boongee trên phiến đá: ly giấy đậy nắp, ly kem bông rắc cánh hồng, ly trà nho"
                 width={1400}
                 height={1120}

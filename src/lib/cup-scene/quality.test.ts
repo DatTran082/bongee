@@ -13,13 +13,12 @@ describe("qualityFor", () => {
     assert.equal(q.idleFps, 60);
   });
 
-  it("goes light on a phone: lower resolution, no shadows, 30 fps when idle, fewer petals", () => {
+  it("goes light on a phone: lower resolution, no shadows, 30 fps when idle", () => {
     const q = qualityFor({ ...desktop, coarsePointer: true, width: 390 });
     assert.equal(q.tier, "light");
     assert.equal(q.dprMax, 1.5);
     assert.equal(q.shadows, false);
     assert.equal(q.idleFps, 30);
-    assert.ok(q.petals < qualityFor(desktop).petals);
   });
 
   it("goes light on a weak laptop too, and lighter still on a very weak device", () => {

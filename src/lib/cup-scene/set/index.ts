@@ -49,7 +49,7 @@ export function createSet(paper: Object3D): CupSet {
   const open = paper.clone(true);
   required(open, "lid").removeFromParent();
   required(open, "drink").removeFromParent(); // under the foam
-  open.add(createFoam("bloom"));
+  open.add(createFoam());
   const lidded = paper.clone(true);
   const lid = required(lidded, "lid");
   const strap = required(lidded, "lid-strap");

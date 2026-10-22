@@ -125,3 +125,36 @@
     opacity: 1;
   }
 }
+
+/*
+ * A card that turns over (the offers' vouchers and loyalty card): the front and the back stacked in one cell, the
+ * back turned away; [data-flipped] turns the whole card. With reduced motion it swaps at once.
+ */
+.flip {
+  perspective: 1600px;
+}
+
+.flip-inner {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.flip[data-flipped="true"] .flip-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-face {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+}
+
+.flip-back {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-inner {
+    transition: none;
+  }
+}

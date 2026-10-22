@@ -57,23 +57,31 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   rests each actor in its own slot nearest above the viewport's middle and flies it to its next (dwell 12 % at
   each end, smooth step between; with reduced motion it jumps halfway and nothing bobs, sways or drifts); an actor
   with one slot stays in it. Hidden slots are skipped, so a section can have one for phones and one for `lg`; a slot
-  may be `sticky`; two slots side by side (`cup-row`, offers) put two actors together. A hit element per actor
+  may be `sticky`; two slots side by side (`cup-row`) put two actors together (none does now: the offers show their
+  printed pieces instead). A hit element per actor
   takes the pointer while it rests on screen (drag turns, a tap on the lid flips the strap; arrows / Enter / Home on
-  the keyboard). Six logo flowers drift behind at
-  depth (`petals.ts`, parallax); section headings and cards use the CSS scroll-driven `parallax-near` /
+  the keyboard). No flowers drift behind (removed 22/10/2026); section headings and cards use the CSS scroll-driven `parallax-near` /
   `parallax-rise` (globals.css, only where supported). No WebGL 2, data saver or no model: `<html class="cup-failed">`,
   the other slots and the `cup-grid` / `cup-row` wrappers collapse and the hero's slot shows the cover photo (a
   `<noscript>` copy is there without script). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
 - **The menu is laid out as the printed menu board** (`src/components/menu-picker.tsx`, client; `menu.tsx` keeps the
   heading), after `../brandkit-ghibli/thuc-don/thuc-don.pdf`: a column of featured cups (the board's Blender toon
-  renders, `public/menu/ly/*.png`, list in `src/data/menu-featured.json`, both written by sync-brand from
+  renders, `public/menu/ly/*.<hash>.png`, list and URLs in `src/data/menu-featured.json`, both written by sync-brand from
   `brandkit-ghibli/thuc-don/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
-  monogram mark, `public/menu/mark/*.svg`, group → mark in menu-featured.json → marks, an upper-case heading over a rule, each drink's plain line in italics, M / L prices in small
+  monogram mark, `public/menu/mark/*.<hash>.svg`, group → mark in menu-featured.json → marks, an upper-case heading over a rule, each drink's plain line in italics, M / L prices in small
   size discs, a honey sparkle on the featured drink), the lookbook photo (`public/menu/poster.jpg`, when the board has
   one), and the topping / sugar / ice strips at the foot. It is alive: picking a drink (a row or a cup) and the strips
   feed the "Ly của bạn" bar fixed at the screen's foot while the menu is in view (size switch, choices, a running
   total at counter prices). Nothing is ordered on the site. No 3D actor rests in the menu (lighter on phones).
+- **The offers are their printed pieces** (`src/components/offers.tsx`, `flip-card.tsx`): the Làng Mây collateral
+  built by `../brandkit-ghibli/scripts/build_an_pham.py` from the same `collateral.json` (vouchers front and back, the
+  loyalty card front and back, the weekly-offer post, an A4 poster, a story, a cup sticker), copied by sync-brand to
+  `public/uu-dai/*.<hash>.png` (resized; URLs in `src/data/uu-dai.json`). Like the models, every picture sync-brand
+  writes to `public/menu` and `public/uu-dai` is named after its content and cached immutable (next.config.ts), so a
+  re-render is a new URL and no cache shows the old one. The section shows the weekly post, the loyalty card and both vouchers; each card
+  turns over (`.flip` in lang-may.css; instant with reduced motion), each voucher can be downloaded to show at the
+  counter. The pictures carry the words, so every `alt` says them in full and the terms are also set as text.
 - **The flavour carousel** (`src/components/flavors.tsx`, section `#huong-vi` after the story): one flavour per
   menu category (`src/data/flavors.ts`: its cup, its toppings, its background tone; titles and item names from the
   menu, never written by hand). With script the section gives each change 1.7 viewports of scroll and its inside sticks;
@@ -107,8 +115,7 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   sticker band and no rim light in the 3D: the owner found they made everything look like glass (22/10/2026).
   `shapes.ts` draws every prop (grapes, mango, ice, beans, cheese, berries, the five-petalled flower, foam puffs,
   petal flakes, boulder, logs) smooth and rounded (icospheres of detail 3–4, rounded boxes, bevelled extrusions,
-  lathes; smooth normals); `foam.ts` the cream caps, never past the rim (`FOAM_RIM`): the milk foam the first
-  design's round dome (its profile 7 % narrower) with rose petals and osmanthus, the cheese foam a low swell;
+  lathes; smooth normals); `foam.ts` the cream cap, one design for both creams (owner, 22/10/2026): a thin swell inside the rim (`FOAM_RIM`), cream colour, rose petals and osmanthus;
   `sparkles.ts` the twinkling stars;
   `palette.ts` the drinks' and props' own colours. No downloaded models: shapes drawn here keep one style and cost
   no requests. The toppings and the PP cup's splash are made after the stage shows (`loadExtras` in index.ts).

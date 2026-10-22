@@ -3,40 +3,46 @@
     {
       "file": "giay-nap.png",
       "name": "Bạch Lan Hoa",
-      "badge": "Nên thử"
+      "badge": null,
+      "src": "/menu/ly/giay-nap.87ca0e02.png"
     },
     {
       "file": "giay-kem-bong.png",
-      "name": "Bông Lan",
-      "badge": null
+      "name": "Bông Đào",
+      "badge": null,
+      "src": "/menu/ly/giay-kem-bong.3ca99cd2.png"
     },
     {
-      "file": "giay-kem-cheese.png",
-      "name": "Lài Cheese",
-      "badge": null
+      "file": "nhua-nho-cheese.png",
+      "name": "Nho Cheese",
+      "badge": null,
+      "src": "/menu/ly/nhua-nho-cheese.6b74e4c8.png"
     },
     {
       "file": "nhua-nho-thanh-truc.png",
       "name": "Nho Thanh Trúc",
-      "badge": null
+      "badge": null,
+      "src": "/menu/ly/nhua-nho-thanh-truc.5adb9828.png"
     },
     {
       "file": "nhua-xoai-ha-tuyet.png",
       "name": "Xoài Hạ Tuyết",
-      "badge": null
+      "badge": null,
+      "src": "/menu/ly/nhua-xoai-ha-tuyet.fcbb3d71.png"
     },
     {
-      "file": "nhua-xoai-xanh-hong-bi.png",
-      "name": "Xoài Xanh Hồng Bì",
-      "badge": null
+      "file": "nhua-coldbrew-buoi.png",
+      "name": "Coldbrew Bưởi",
+      "badge": null,
+      "src": "/menu/ly/nhua-coldbrew-buoi.593a7809.png"
     }
   ],
   "marks": {
-    "Trà sữa hương hoa": "hoa-dac_hong.svg",
-    "Trà sữa kem bông": "hoa-tron_troi.svg",
-    "Trà trái cây": "sao-hoa_reu.svg",
-    "Kem cheese": "dia-hoa_mat-ong.svg",
-    "Cà phê phin · Coldbrew": "dia-hoa_go.svg"
+    "Trà sữa hương hoa": "/menu/mark/hoa-dac_hong.3d414bc4.svg",
+    "Trà sữa kem bông": "/menu/mark/hoa-tron_troi.f0f78294.svg",
+    "Trà trái cây": "/menu/mark/sao-hoa_reu.4313ba3c.svg",
+    "Kem cheese": "/menu/mark/dia-hoa_mat-ong.55d28688.svg",
+    "Cà phê phin · Coldbrew": "/menu/mark/dia-hoa_go.4c5c0e02.svg"
   },
-  "poster": true
+  "poster": "/menu/poster.d0526a5b.jpg"
 }

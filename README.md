@@ -39,15 +39,15 @@ của quán (`npm run sync-menu`, qua MCP của Odoo). Phần còn lại lấy t
 `menu-posm/print-ready/menu-data.json`, ưu đãi từ `collateral/collateral.json`. Câu chữ viết đơn giản, không bay
 bổng; phần câu chuyện mở đầu bằng một bài thơ ngắn.
 
-| Phần                     | Mã nguồn                      | Nội dung                                                                      |
-| ------------------------ | ----------------------------- | ----------------------------------------------------------------------------- |
-| Hero                     | `src/components/hero.tsx`     | slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất) bên bộ ảnh bìa dựng 3D  |
-| Câu chuyện `#cau-chuyen` | `src/components/story.tsx`    | Gốc · Nghi thức · Cảm xúc, hoạ tiết monogram                                  |
-| Ba điều Boongee giữ      | `src/components/promises.tsx` | hoa thật, ngọt tuỳ bạn (mặc định 50%), vị thanh                               |
-| Thực đơn `#thuc-don`     | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá      |
-| Ưu đãi `#uu-dai`         | `src/components/offers.tsx`   | giảm 20% thứ 2 – thứ 4 cho đơn từ 2 ly, thẻ tích điểm 10 dấu                  |
-| Hỏi đáp `#hoi-dap`       | `src/components/faq.tsx`      | 7 câu, trả lời ghép từ dữ liệu thực đơn, ưu đãi, địa chỉ                      |
-| Ghé quán `#ghe-quan`     | `src/components/visit.tsx`    | 14B ngách 7/72 phố Hoa Bằng, Cầu Giấy, Hà Nội, bản đồ, giờ mở cửa, điện thoại |
+| Phần                     | Mã nguồn                      | Nội dung                                                                       |
+| ------------------------ | ----------------------------- | ------------------------------------------------------------------------------ |
+| Hero                     | `src/components/hero.tsx`     | slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất) bên bộ ảnh bìa dựng 3D   |
+| Câu chuyện `#cau-chuyen` | `src/components/story.tsx`    | Gốc · Nghi thức · Cảm xúc, hoạ tiết monogram                                   |
+| Ba điều Boongee giữ      | `src/components/promises.tsx` | hoa thật, ngọt tuỳ bạn (mặc định 50%), vị thanh                                |
+| Thực đơn `#thuc-don`     | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá       |
+| Ưu đãi `#uu-dai`         | `src/components/offers.tsx`   | ấn phẩm Làng Mây: bài đăng ưu đãi tuần, thẻ tích điểm, 2 voucher (lật, tải về) |
+| Hỏi đáp `#hoi-dap`       | `src/components/faq.tsx`      | 7 câu, trả lời ghép từ dữ liệu thực đơn, ưu đãi, địa chỉ                       |
+| Ghé quán `#ghe-quan`     | `src/components/visit.tsx`    | 14B ngách 7/72 phố Hoa Bằng, Cầu Giấy, Hà Nội, bản đồ, giờ mở cửa, điện thoại  |
 
 Kèm theo: header dính đầu trang có menu cho điện thoại, footer, trang 404 tiếng Việt, `sitemap.xml`, `robots.txt`,
 dữ liệu có cấu trúc (JSON-LD: WebSite, CafeOrCoffeeShop, FAQPage), favicon, icon iOS và ảnh chia sẻ.
@@ -63,8 +63,8 @@ của riêng mình:
   hồng, đứng trên tảng đá; ly sau đậy nắp bật trắng, đứng trên khúc gỗ cao, khúc gỗ thấp phía sau; hai đám mây trôi
   phía sau; không có cây hay hoa; bóng đổ từ đèn chếch trái, cả bộ bồng bềnh như một đảo nhỏ.
 - **Ly nhựa** 700 ml trong suốt: bên trong là **trà nho** xanh đậm dần xuống đáy; chùm nho và viên đá đứng trong nước
-  và lơ lửng xoay quanh ly, kèm đốm lấp lánh; không có giọt nước, không mô phỏng chất lỏng. Ô ở câu chuyện (nắp nhấc lên, nhìn xuống mặt trà) và ưu đãi.
-- **Ly giấy** đậy nắp: ô ở ưu đãi (đứng cạnh ly nhựa: **hai ly** vì giảm giá cho đơn từ 2 ly) và ghé quán.
+  và lơ lửng xoay quanh ly, kèm đốm lấp lánh; không có giọt nước, không mô phỏng chất lỏng. Ô ở câu chuyện (nắp nhấc lên, nhìn xuống mặt trà).
+- **Ly giấy** đậy nắp: ô ở ghé quán.
 
 - **Thực đơn tương tác** (`#thuc-don`, `src/components/menu-picker.tsx`) có cùng bố cục và thiết kế với bảng menu in
   (`../brandkit-ghibli/thuc-don/thuc-don.pdf`):
@@ -100,19 +100,19 @@ bao giờ che chữ.
 
 - **Tương tác**: kéo để xoay, chạm nắp để bật nút; bàn phím: mũi tên trái / phải xoay, Enter bật / đậy nút, Home về
   mặt trước; mỗi diễn viên là một vùng chạm riêng.
-- **Parallax**: bông hoa logo trôi phía sau ở nhiều độ sâu (xa thì chạy chậm hơn); tiêu đề và thẻ trôi nhẹ bằng CSS
+- **Parallax**: tiêu đề và thẻ trôi nhẹ bằng CSS
   scroll-driven animation ở trình duyệt hỗ trợ. Với `prefers-reduced-motion`, chỉ đổi ô, không bay, không bồng bềnh.
 - Không có WebGL 2, bật tiết kiệm dữ liệu, tắt JavaScript hoặc tải model lỗi: hero hiện lại ảnh bìa, các ô khác thu lại.
 
 ### Sửa nội dung ở đâu
 
-| Nội dung                                                   | Sửa ở                                                                    |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Món, nhóm món, giá                                         | Odoo của quán, rồi `npm run sync-menu`                                   |
-| Cỡ ly (ml), mức đường và đá                                | ShanMay `menu-posm/print-ready/menu-data.json`, rồi `npm run sync-brand` |
-| Ưu đãi trong tuần, thẻ tích điểm                           | ShanMay `collateral/collateral.json`, rồi `npm run sync-brand`           |
-| Câu chuyện, cam kết, địa chỉ, giờ, điện thoại, mạng xã hội | `src/data/boongee.ts`                                                    |
-| Câu hỏi đáp                                                | `src/data/faq.ts` (câu trả lời tự lấy số liệu từ các file trên)          |
+| Nội dung                                                   | Sửa ở                                                                                                                              |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Món, nhóm món, giá                                         | Odoo của quán, rồi `npm run sync-menu`                                                                                             |
+| Cỡ ly (ml), mức đường và đá                                | ShanMay `menu-posm/print-ready/menu-data.json`, rồi `npm run sync-brand`                                                           |
+| Ưu đãi trong tuần, thẻ tích điểm, voucher                  | ShanMay `collateral/collateral.json`, rồi dựng lại ấn phẩm (`build_an_pham.py` trong `../brandkit-ghibli`) và `npm run sync-brand` |
+| Câu chuyện, cam kết, địa chỉ, giờ, điện thoại, mạng xã hội | `src/data/boongee.ts`                                                                                                              |
+| Câu hỏi đáp                                                | `src/data/faq.ts` (câu trả lời tự lấy số liệu từ các file trên)                                                                    |
 
 Thực đơn trên web trùng với máy bán hàng vì cùng lấy từ Odoo. Dưới tên mỗi món có một **dòng nói món đó là gì**
 ("Bạch Thiên Hương — trà sữa dành dành"), học theo cách đặt tên hai tầng của thực đơn Bông Biêng. Dòng này được ghép

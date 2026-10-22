@@ -54,10 +54,10 @@ function holder(cup: Object3D): Group {
 }
 
 /** A cream on the rim: wrapped so that it grows and shrinks about the rim, not the cup's foot. */
-function cream(style: "bloom" | "cheese"): Group {
+function cream(seed: number): Group {
   const holder = new Group();
   holder.position.y = FOAM_RIM;
-  const foam = createFoam(style);
+  const foam = createFoam(seed);
   foam.position.y = -FOAM_RIM;
   holder.add(foam);
   return holder;
@@ -72,8 +72,8 @@ export function createFlavorRig(paper: Object3D, pp: Object3D, flavors: readonly
   const lid = required(paperBody, "lid");
   const toppers: Record<Exclude<CupTopper, "none">, { object: Object3D; restY: number }> = {
     lid: { object: lid, restY: lid.position.y },
-    cream: { object: cream("bloom"), restY: FOAM_RIM },
-    cheese: { object: cream("cheese"), restY: FOAM_RIM },
+    cream: { object: cream(5), restY: FOAM_RIM },
+    cheese: { object: cream(9), restY: FOAM_RIM }, // the same cap, its sprinkles scattered apart
   };
   paperBody.add(toppers.cream.object, toppers.cheese.object);
   const ppCup = pp.clone(true);

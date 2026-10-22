@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
 import { createPortal, preload } from "react-dom";
-import flower from "@/assets/brand/hoa.svg";
 import heroPhoto from "@/assets/images/hero.jpg";
 import { cup, hero } from "@/data/boongee";
 import type { CupPlacement, CupScene } from "@/lib/cup-scene";
@@ -144,7 +143,6 @@ export function CupStage() {
               const hit = hits[name];
               if (hit) placeHit(hit, placement);
             },
-            flower: flower.src,
             signal,
           }),
         )

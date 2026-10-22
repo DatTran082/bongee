@@ -20,7 +20,6 @@ import { DISTANCE, FOV } from "./fit";
 import { MODELS, NODES } from "./model";
 import { approach, needsRedraw } from "./motion";
 import { qualityFor } from "./quality";
-import { createPetals } from "./petals";
 import { seeded } from "./random";
 import { createSet } from "./set";
 import { createSplash, type Splash } from "./splash";
@@ -39,8 +38,8 @@ import type { CupTarget } from "./track";
 // page scrolls (track.ts, actor.ts): the cover photo's set (set/), which floats in the hero; the flavour carousel's
 // cup (flavor-rig.ts); the clear PP cup of grape tea with grapes and ice in it and floating round it (splash.ts);
 // the lidded paper cup. Everything is drawn as a smooth stylized game asset (toon/: the Làng Mây edition's toon
-// rules): soft cel bands, sticker outlines, flat white highlights, sparkles. The logo flower
-// drifts behind them at depth (petals.ts). The canvas is transparent, so the page's painted scenery (sky, clouds)
+// rules): soft cel bands, sticker outlines, flat white highlights, sparkles. No flowers drift behind them (the owner
+// took them out, 22/10/2026). The canvas is transparent, so the page's painted scenery (sky, clouds)
 // stays behind the actors; it takes the flavour section's tone only while that section has the viewport. A drag turns an actor, a tap on a lid flips its strap,
 // the keyboard does both. With reduced motion nothing moves on its own: everything sits in its slot, follows the
 // scroll, and frames are drawn only when something changed.
@@ -51,7 +50,6 @@ export { ACTORS, type ActorName };
 const MAX_STEP = 250;
 /** The actors lean against the scroll: radians per px/ms of scroll speed, the most, the smoothing (ms). */
 const LEAN = { perSpeed: 0.05, max: 0.14, tau: 90 };
-const PETALS_SEED = 7; // how many: the device's quality (quality.ts); a few, the page's scenery is quiet
 const SPLASH_SEED = 19;
 const TOPPING_SEED = 43;
 const SPARKLES = { seed: 61, count: 7 };
@@ -94,8 +92,6 @@ export interface CupSceneOptions {
   readonly onStrapChange: (actor: ActorName, open: boolean) => void;
   /** where an actor is after each frame, for the element that takes its pointer */
   readonly onPlace: (actor: ActorName, place: CupPlacement | null) => void;
-  /** URL of the logo flower SVG, for the marks behind the actors */
-  readonly flower: string;
   /** aborts the set-up (the component unmounted while the models were loading) */
   readonly signal: AbortSignal;
 }
@@ -164,11 +160,7 @@ export async function createCupScene(
   const quality = deviceQuality();
   /** What follows the pointer on the page (lang-may.css): the cloud bank. */
   const pointerTargets = Array.from(document.querySelectorAll<HTMLElement>(".bank-parallax"));
-  const [pp, paper, petals] = await Promise.all([
-    loadCup(MODELS.pp, options.signal),
-    loadCup(MODELS.paper, options.signal),
-    createPetals(options.flower, tokens["pink-700"], quality.petals, seeded(PETALS_SEED), options.signal),
-  ]);
+  const [pp, paper] = await Promise.all([loadCup(MODELS.pp, options.signal), loadCup(MODELS.paper, options.signal)]);
   const scene = new Scene();
   const listeners = new AbortController();
   const actors: Partial<Record<ActorName, Actor>> = {};
@@ -192,7 +184,6 @@ export async function createCupScene(
     toppingsDispose?.();
     rig?.dispose();
     for (const s of sparkles) s.dispose();
-    petals.dispose();
     disposeScene(scene);
     renderer?.dispose();
     renderer?.forceContextLoss(); // free the context now, not when the GC gets to it (dev reloads pile them up)
@@ -261,7 +252,6 @@ export async function createCupScene(
       pp: hire("pp"),
       paper: hire("paper"),
     };
-    scene.add(petals.group);
     for (const name of ["pp", "flavor"] as const) {
       const made = createSparkles(seeded(SPARKLES.seed + sparkles.length), SPARKLES.count);
       sparkles.push(made);
@@ -429,7 +419,6 @@ export async function createCupScene(
       key.castShadow = quality.shadows && cast.set.root.visible; // the shadow pass serves the set alone
       splash?.update(time, reduced ? 0 : dt / 1000);
       for (const s of sparkles) s.update(time, reduced);
-      petals.update(scroll, time, reduced ? 0 : dt / 1000, width, height);
       const sinceDraw = now - lastDraw;
       if (
         needsRedraw({ reduced, moving: moving || flavorMoved, dirty, scrolled, targetChanged, sinceDraw, idleFrameMs })

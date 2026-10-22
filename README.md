@@ -23,7 +23,7 @@ npm run sync-brand   # chép lại tài sản thương hiệu từ ../brandkit (
 Cả trang (không chỉ cảnh 3D) theo bộ nhận diện chính thức **Boongee · Làng Mây** (`../brandkit`, hoạt hình vẽ tay):
 
 - hero dưới **bầu trời** xanh sớm tan vào kem (không có mây), **biển mây** ở chân hero; bộ ảnh bìa 3D
-  đứng yên và **nghiêng theo chuột**, biển mây lệch theo (parallax);
+  đứng yên (không parallax: bỏ ngày 22/10/2026 vì làm điện thoại giật);
 - **đồi chè** ở đầu footer;
 - logo hoa low-poly ở header và footer, hoa low-poly cạnh tiêu đề và làm gạch đầu dòng, **đốm lấp lánh**;
 - thẻ trắng **viền sticker**, **nút kiểu game** nhấn xuống được, huy hiệu biểu tượng tròn trên nền màu phụ.
@@ -78,9 +78,9 @@ của riêng mình:
 
 - **Xoay ly đổi hương vị** (`#huong-vi`, `src/components/flavors.tsx`): section ghim cố định khi cuộn, mỗi nhóm
   thực đơn một vị (hương hoa, kem bông, trái cây, kem cheese, cà phê). Cuộn tới đâu ly xoay một vòng và đổi sang ly
-  của vị kế tiếp (ly giấy đậy nắp, ly giấy kem bông, ly nhựa trà trái cây, ly giấy kem cheese), topping quanh ly
+  của vị kế tiếp (ly giấy đậy nắp, ly giấy kem bông, ly nhựa trà trái cây, ly giấy kem cheese, ly PET 350 ml coldbrew), topping quanh ly
   chuyển dần (hoa năm cánh, bọt kem và cánh hồng, nho, xoài và đá, phô mai và mâm xôi, hạt cà phê), nền chuyển trong
-  dải kem và trắng của thương hiệu. Dùng GSAP ScrollTrigger (tải sau khi trang hiện), dừng đúng từng vị; chấm bên dưới để nhảy
+  dải kem và trắng của thương hiệu. Không dùng thư viện cuộn: trình duyệt tự dừng trang ở từng vị (scroll snap), ly 3D trượt mượt theo; chấm bên dưới để nhảy
   tới vị bất kỳ. Tên nhóm và tên món lấy từ thực đơn.
 
 **Phong cách 3D: hoạt hình khối mượt, kiểu "stylized drink game asset"** (chọn ngày 21/10/2026, thay bản tả thực,

@@ -61,7 +61,7 @@ export function restProgress(index: number, count: number): number {
 
 /** What a flavour is served in: the cup's body and what sits on it. */
 export interface CupKind {
-  readonly body: "paper" | "pp";
+  readonly body: "paper" | "pp" | "pet";
   readonly topper: "lid" | "cream" | "cheese" | "none";
 }
 export type CupBody = CupKind["body"];
@@ -85,10 +85,10 @@ const backOut = (t: number) => {
  * The carousel's cup, part by part, for a state: between two flavours served in the same body (a paper cup with a
  * lid, then with cream) the body stays whole and only the topper changes, the old one lifting away as it shrinks,
  * the new one dropping in and settling with a small bounce, overlapping a little; between different bodies (paper
- * and PP) the whole cup shrinks away by halfway and the next grows in from there, never both at once.
+ * and PP or PET) the whole cup shrinks away by halfway and the next grows in from there, never both at once.
  */
 export function cupParts(state: FlavorState, kinds: readonly CupKind[]): CupParts {
-  const bodies: Record<CupBody, number> = { paper: 0, pp: 0 };
+  const bodies: Record<CupBody, number> = { paper: 0, pp: 0, pet: 0 };
   const toppers: Record<CupTopper, { size: number; lift: number }> = {
     lid: { size: 0, lift: 0 },
     cream: { size: 0, lift: 0 },

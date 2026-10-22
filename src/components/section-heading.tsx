@@ -3,7 +3,7 @@ import { Sparkle } from "@/components/lang-may/sparkle";
 
 /**
  * Centred section heading: small tracked tagline between two low-poly flowers, the section's <h2> with a sparkle on
- * it (Làng Mây), optional subtitle; drifts a little faster than the page (parallax).
+ * it (Làng Mây), optional subtitle; still, as the page (no parallax).
  */
 export function SectionHeading({
   tagline,
@@ -18,7 +18,7 @@ export function SectionHeading({
   id?: string;
 }) {
   return (
-    <div className="parallax-near mx-auto mb-10 max-w-2xl text-center md:mb-14">
+    <div className="mx-auto mb-10 max-w-2xl text-center md:mb-14">
       <p className="flex items-center justify-center gap-3 text-sm font-semibold tracking-[0.2em] text-brand-pink-800 uppercase">
         <FlowerMark className="size-5" />
         {tagline}

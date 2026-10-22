@@ -18,7 +18,7 @@ export function Story() {
           className="mb-8 h-[46vh] max-h-[26rem] lg:sticky lg:top-24 lg:mb-0 lg:h-[70vh] lg:max-h-[44rem]"
         />
         <div className="mx-auto max-w-3xl lg:mx-0 lg:py-6">
-          <blockquote className="parallax-rise mb-10 text-2xl leading-relaxed md:text-3xl md:leading-relaxed">
+          <blockquote className="mb-10 text-2xl leading-relaxed md:text-3xl md:leading-relaxed">
             {story.poem.map((line) => (
               <span key={line} className="block">
                 {line}
@@ -27,7 +27,7 @@ export function Story() {
           </blockquote>
           <ol className="space-y-5">
             {story.beats.map((beat) => (
-              <li key={beat.label} className="parallax-rise flex gap-4">
+              <li key={beat.label} className="flex gap-4">
                 <FlowerMark className="mt-0.5 size-7" />
                 <div>
                   <p className="text-sm tracking-[0.2em] text-brand-pink-800 uppercase">{beat.label}</p>
@@ -36,7 +36,7 @@ export function Story() {
               </li>
             ))}
           </ol>
-          <p className="parallax-rise mt-8 text-2xl tracking-[0.15em] uppercase md:text-3xl">
+          <p className="mt-8 text-2xl tracking-[0.15em] uppercase md:text-3xl">
             <span className="sr-only">{brand.name}: </span>
             {story.closing}
           </p>

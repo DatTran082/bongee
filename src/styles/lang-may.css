@@ -97,16 +97,6 @@
   );
 }
 
-/*
- * Pointer parallax: the 3D stage writes the pointer's smoothed place over the viewport (−1 … 1) to --pointer-x /
- * --pointer-y on the .bank-parallax elements themselves (only with a mouse, never with reduced motion). The cloud bank in front slips with it while
- * the 3D set leans toward it: a still picture with depth.
- */
-.bank-parallax {
-  transform: translate3d(calc(var(--pointer-x, 0) * 14px), calc(var(--pointer-y, 0) * 4px), 0) scale(1.04);
-  transform-origin: bottom center;
-}
-
 /* A twinkle for the sparkles. */
 @media (prefers-reduced-motion: no-preference) {
   .sparkle-twinkle {

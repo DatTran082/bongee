@@ -24,7 +24,7 @@ export function Promises() {
           {promises.items.map((item) => {
             const Icon = ICONS[item.icon];
             return (
-              <li key={item.title} className="card-sticker parallax-rise p-6 text-center md:p-8">
+              <li key={item.title} className="card-sticker p-6 text-center md:p-8">
                 <span className={`badge-sticker mx-auto size-16 ${TINTS[item.icon]}`}>
                   <Icon aria-hidden className="size-8" stroke={1.6} />
                 </span>

@@ -78,53 +78,25 @@ footer {
 }
 
 /*
- * Parallax for the page's own content, driven by the scroll in CSS alone where the browser can (scroll-driven
- * animations); elsewhere, and with reduced motion, the page simply stands still. `parallax-rise` lifts a card into
- * place as it enters the viewport; `parallax-near` carries a heading a little faster than the page, as if nearer.
- * Neither may sit on an ancestor of a sticky slot or inside an `overflow: hidden` box (that would be the timeline).
- */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .parallax-rise {
-      animation: parallax-rise linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 80%;
-    }
-
-    .parallax-near {
-      animation: parallax-near linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-    }
-  }
-}
-
-/* The rise keeps text readable at every scroll position: opacity never drops under 0.8. */
-@keyframes parallax-rise {
-  from {
-    opacity: 0.8;
-    transform: translateY(2.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes parallax-near {
-  from {
-    transform: translateY(2rem);
-  }
-  to {
-    transform: translateY(-2rem);
-  }
-}
-
-/*
  * The flavour carousel (src/components/flavors.tsx). Without script: a list, no cup. With it (data-live): 1.7
- * viewports of scroll per change of flavour, the inside pinned (sticky) while the scroll runs through the flavours, the panels
- * stacked in one grid cell for GSAP to cross-fade.
+ * viewports of scroll per change of flavour, the inside held on screen (sticky) while the scroll runs through the
+ * flavours, the panels stacked in one grid cell and cross-faded by CSS (data-current), and the page snapping, by the
+ * browser itself, to an invisible mark at each flavour (html.flavor-snap, proximity: only near a mark).
  */
+html.flavor-snap {
+  scroll-snap-type: y proximity;
+}
+
+.flavor-snap-mark {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 100svh;
+  pointer-events: none;
+  scroll-snap-align: start;
+  scroll-snap-stop: always; /* a flick stops at the next flavour, it does not fly past */
+}
+
 .flavors:not([data-live="true"]) .flavors-cup,
 .flavors:not([data-live="true"]) .flavors-dots {
   display: none;
@@ -135,6 +107,7 @@ footer {
 }
 
 .flavors[data-live="true"] {
+  position: relative;
   /* the pinned viewport, then 1.7 viewports of scroll for each change: unhurried, a wheel flick does not skip one */
   height: calc((var(--flavor-count) - 1) * 170svh + 100svh);
 }
@@ -169,4 +142,25 @@ footer {
 
 .flavors[data-live="true"] .flavor-panel {
   grid-area: 1 / 1;
+  transition:
+    opacity 0.35s ease-out,
+    translate 0.35s ease-out,
+    visibility 0s linear 0s;
+}
+
+.flavors[data-live="true"] .flavor-panel[data-current="false"] {
+  opacity: 0;
+  translate: 0 1.5rem;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease-in,
+    translate 0.25s ease-in,
+    visibility 0s linear 0.25s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flavors[data-live="true"] .flavor-panel,
+  .flavors[data-live="true"] .flavor-panel[data-current="false"] {
+    transition: none;
+  }
 }

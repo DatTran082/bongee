@@ -15,6 +15,8 @@
 //   color/tokens.json → toon                           → src/data/brand-toon.json   bands, shade, outline, highlight
 //   nhan-dien/logo-ngang_hong.svg                      → src/assets/lang-may/logo-ngang.svg   the header's logo
 //   nhan-dien/hoa-low-poly_hong.svg, hoa-ve-tay_hong.svg → src/assets/lang-may/hoa*.svg      headings, bullets
+//   thuc-don/ly/src/pet-350ml{.json,_print.png}         → src/data/pet-cup.json, public/models/pet-350ml_print.<hash>.png
+//                                                        the coffee flavour's PET cup (sizes, print fan, print)
 //   thuc-don/ly/*.png, featured.json, lookbook/poster.* → public/menu/{ly/,}*.<hash>.*, URLs in src/data/menu-featured.json
 //   nhan-dien/monogram/*.svg (the groups' marks)       → public/menu/mark/*.<hash>.svg
 //   an-pham/*.png (vouchers, loyalty card, posts)      → public/uu-dai/*.<hash>.png, URLs in src/data/uu-dai.json
@@ -234,6 +236,25 @@ async function cupModel({ name: CUP, nodes: CUP_NODES }, io) {
 }
 
 /**
+ * The 350 ml PET cup (the coffee flavour's cup in the carousel): it has no GLB, the stage turns it from its sizes
+ * (toon/pet-cup.ts) and wraps its white print on it by the print fan. Both come from the brand kit's
+ * thuc-don/ly/src (scripts/pet_texture.py, from in-an/designs/pet-trong-350ml): the print, ≤ 2048 px, to
+ * public/models/pet-350ml_print.<hash>.png; the sizes (mm) and the fan to src/data/pet-cup.json.
+ */
+async function petCup() {
+  const spec = JSON.parse(readFileSync(langMay("thuc-don/ly/src/pet-350ml.json"), "utf8"));
+  const png = await sharp(langMay("thuc-don/ly/src/pet-350ml_print.png"))
+    .resize({ width: 2048 })
+    .png({ compressionLevel: 9 })
+    .toBuffer();
+  const dir = path.join(ROOT, "public", "models");
+  for (const old of readdirSync(dir).filter((name) => name.startsWith("pet-350ml_print."))) rmSync(path.join(dir, old));
+  const texture = hashed("models", "pet-350ml_print.png", png);
+  const { top, bottom, height, fan } = spec;
+  write("src/data/pet-cup.json", JSON.stringify({ texture, top, bottom, height, fan }, null, 2) + "\n");
+}
+
+/**
  * The menu board's pieces for the landing's menu section (the same look as brandkit/thuc-don/thuc-don.pdf):
  * the featured cups (Blender toon renders, resized to 450 px wide WebP-ready PNGs) with their list, and the poster's
  * lookbook photo when there is one (as JPEG; some AI-made PNGs do not decode everywhere).
@@ -337,6 +358,7 @@ await collateralSet();
 await icons(hex);
 await photos();
 await cupModels();
+await petCup();
 for (const [from, to] of [
   ["menu-posm/print-ready/menu-data.json", "src/data/shanmay/menu-data.json"],
   ["collateral/collateral.json", "src/data/shanmay/collateral.json"],

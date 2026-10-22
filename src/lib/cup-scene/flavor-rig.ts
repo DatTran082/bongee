@@ -7,7 +7,8 @@ import type { Toppings } from "./toppings";
 // The flavour carousel's actor: the cup each flavour is served in, at one place, turning about its axis as the
 // scroll moves through the flavours (flavor-track.ts), with each flavour's toppings floating round it. The paper cup
 // is one body with its toppers on it (its lid, a milk-foam cream, a cheese cream): between two paper-cup flavours it
-// stays and only the topper changes (cupParts); the clear PP cup of the fruit teas takes the paper cup's place whole.
+// stays and only the topper changes (cupParts); the clear PP cup of the fruit teas and the clear PET cup of the
+// coffees (toon/pet-cup.ts) take the paper cup's place whole.
 
 /** How far (metres) a topper lifts off as it goes, or drops from as it comes. */
 const TOPPER_LIFT = 0.035;
@@ -17,6 +18,7 @@ const KINDS: Readonly<Record<FlavorCup, CupKind>> = {
   "paper-cream": { body: "paper", topper: "cream" },
   "paper-cheese": { body: "paper", topper: "cheese" },
   pp: { body: "pp", topper: "none" },
+  pet: { body: "pet", topper: "none" },
 };
 
 export interface FlavorRig {
@@ -65,9 +67,9 @@ function cream(seed: number): Group {
 
 /**
  * `paper` and `pp` are the stage's prepared models (toon materials, the PP cup's tea and what stands in it added);
- * they are cloned, sharing geometry and materials.
+ * they are cloned, sharing geometry and materials. `pet` is the carousel's own PET cup (used as it is).
  */
-export function createFlavorRig(paper: Object3D, pp: Object3D, flavors: readonly Flavor[]): FlavorRig {
+export function createFlavorRig(paper: Object3D, pp: Object3D, pet: Object3D, flavors: readonly Flavor[]): FlavorRig {
   const paperBody = paper.clone(true);
   const lid = required(paperBody, "lid");
   const toppers: Record<Exclude<CupTopper, "none">, { object: Object3D; restY: number }> = {
@@ -77,7 +79,7 @@ export function createFlavorRig(paper: Object3D, pp: Object3D, flavors: readonly
   };
   paperBody.add(toppers.cream.object, toppers.cheese.object);
   const ppCup = pp.clone(true);
-  const bodies: Record<CupBody, Object3D> = { paper: holder(paperBody), pp: holder(ppCup) };
+  const bodies: Record<CupBody, Object3D> = { paper: holder(paperBody), pp: holder(ppCup), pet: holder(pet) };
   const spinner = new Group(); // turns the cup about its axis
   for (const body of Object.values(bodies)) spinner.add(body);
   const group = new Group();
@@ -102,7 +104,7 @@ export function createFlavorRig(paper: Object3D, pp: Object3D, flavors: readonly
     update(state, time, drift) {
       spinner.rotation.y = state.turn;
       const parts = cupParts(state, kinds);
-      for (const body of ["paper", "pp"] as const) showBody(bodies[body], parts.bodies[body]);
+      for (const body of ["paper", "pp", "pet"] as const) showBody(bodies[body], parts.bodies[body]);
       for (const [name, topper] of Object.entries(toppers) as [keyof typeof toppers, (typeof toppers)["lid"]][]) {
         const { size, lift } = parts.toppers[name];
         show(topper.object, size);

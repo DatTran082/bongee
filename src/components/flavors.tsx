@@ -7,27 +7,26 @@ import { flavors } from "@/data/flavors";
 import { setFlavorScroll } from "@/lib/cup-scene/flavor-scroll";
 import { flavorState, restProgress } from "@/lib/cup-scene/flavor-track";
 
-/** Where the background tone starts to come in before the pin, and goes out after it (ScrollTrigger positions). */
-const PRESENCE = { enter: ["top 70%", "top top"], leave: ["bottom bottom", "bottom 30%"] } as const;
-/** Scrub smoothing (s): the cup and the words follow the scroll with a little weight, so wheel steps glide. */
-const SCRUB = 1;
-/**
- * The snap to the nearest flavour: it waits until the scroll has really stopped (not between two wheel steps), then
- * glides there, easing in and out, so it never snatches the page from the reader.
- */
-const SNAP = { delay: 0.35, duration: { min: 0.5, max: 1.2 }, ease: "power2.inOut" } as const;
+/** Viewports of scroll per change of flavour (globals.css, `.flavors[data-live]`): unhurried, a flick does not skip one. */
+const STEP_VH = 1.7;
+/** The background tone comes in over the last 70 % of a viewport before the pin and goes out over as much after it. */
+const PRESENCE_VH = 0.7;
+
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
 /**
  * Flavour carousel: one flavour per menu category. With script, the section gives each change of flavour 1.7
- * viewports of scroll (globals.css) and its inside stays pinned (CSS sticky) while GSAP's ScrollTrigger turns the scroll into the carousel's progress:
- * the 3D cup (the stage's `flavor` actor, src/lib/cup-scene/flavor-rig.ts) turns once round its axis per flavour
- * and changes for the next flavour's cup, its toppings fade from one flavour's to the next, the stage's ground
- * moves through the brand's pinks and creams, the words cross-fade, and the scroll snaps to each flavour. Without
- * script the flavours are a plain list. The dots jump to a flavour (keyboard too).
+ * viewports of scroll and its inside stays on screen (CSS sticky). The scroll handler only reads the page's place
+ * and stores the carousel's progress (flavor-scroll.ts); the 3D stage glides the cup there (index.ts, FLAVOR_TAU):
+ * it turns once round its axis per flavour and changes for the next flavour's cup, its toppings fade from one
+ * flavour's to the next, the ground moves through the brand's creams. The words change by a CSS fade when the
+ * nearest flavour changes (the only re-render). The browser's own scroll snapping (proximity, on invisible marks at
+ * each flavour) settles the page on a flavour, so a phone keeps its native, momentum scroll: no script animates the
+ * page, nothing is pinned by script (owner, 22/10/2026: the GSAP pin and snap lagged on phones). Without script the
+ * flavours are a plain list. The dots jump to a flavour (keyboard too).
  */
 export function Flavors() {
   const sectionRef = useRef<HTMLElement>(null);
-  const panelRefs = useRef<HTMLDivElement[]>([]);
   const jumpRef = useRef<((index: number) => void) | null>(null);
   const [live, setLive] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -35,88 +34,48 @@ export function Flavors() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
-    let disposed = false;
-    let cleanup = () => {};
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    Promise.all([import("gsap"), import("gsap/ScrollTrigger")])
-      .then(([{ gsap }, { ScrollTrigger }]) => {
-        if (disposed) return;
-        gsap.registerPlugin(ScrollTrigger);
-        setLive(true);
-        const reduced = motion.matches;
-        const count = flavors.length;
-        let shown = 0;
-        const ctx = gsap.context(() => {
-          const panels = panelRefs.current;
-          gsap.set(panels.slice(1), { autoAlpha: 0, y: 32 });
-          const timeline = gsap.timeline({
-            defaults: { ease: "power2.out", duration: reduced ? 0.01 : 0.3 },
-            scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: "bottom bottom",
-              scrub: reduced ? true : SCRUB,
-              snap: reduced
-                ? undefined
-                : {
-                    snapTo: 1 / Math.max(1, count - 1),
-                    inertia: false, // the nearest flavour, not where the scroll's momentum would carry it
-                    ...SNAP,
-                  },
-            },
-            onUpdate() {
-              const progress = timeline.progress();
-              setFlavorScroll({ progress });
-              const next = flavorState(progress, count, reduced).current;
-              if (next !== shown) setCurrent((shown = next)); // re-render only when the flavour changes
-            },
-          });
-          timeline.to({}, { duration: count - 1 }, 0); // one unit of the timeline per flavour change
-          panels.forEach((panel, i) => {
-            if (i > 0) timeline.to(panel, { autoAlpha: 1, y: 0 }, i - 0.45);
-            if (i < count - 1) timeline.to(panel, { autoAlpha: 0, y: -32 }, i + 0.15);
-          });
-          const presence = { value: 0 };
-          const writePresence = () => setFlavorScroll({ presence: presence.value });
-          const enter = ScrollTrigger.create({
-            trigger: section,
-            start: PRESENCE.enter[0],
-            end: PRESENCE.enter[1],
-            onUpdate: (self) => {
-              presence.value = self.progress * (1 - leave.progress);
-              writePresence();
-            },
-          });
-          const leave = ScrollTrigger.create({
-            trigger: section,
-            start: PRESENCE.leave[0],
-            end: PRESENCE.leave[1],
-            onUpdate: (self) => {
-              presence.value = enter.progress * (1 - self.progress);
-              writePresence();
-            },
-          });
-          jumpRef.current = (index) => {
-            const st = timeline.scrollTrigger;
-            if (!st) return;
-            const top = st.start + restProgress(index, count) * (st.end - st.start);
-            window.scrollTo({ top, behavior: reduced ? "auto" : "smooth" });
-          };
-        }, section);
-        // the page's height changes when a font lands or an answer opens: measure again
-        const observer = new ResizeObserver(() => ScrollTrigger.refresh());
-        observer.observe(document.body);
-        cleanup = () => {
-          observer.disconnect();
-          ctx.revert();
-          jumpRef.current = null;
-          setFlavorScroll({ progress: 0, presence: 0 });
-        };
-      })
-      .catch((error: unknown) => console.warn("Không tải được hiệu ứng cuộn hương vị.", error));
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const count = flavors.length;
+    const root = document.documentElement;
+    setLive(true);
+    if (!reduced) root.classList.add("flavor-snap"); // lang-may: scroll-snap-type on the page, proximity
+    // the section's place on the page, measured only when the layout changes (a read per scroll would force layouts)
+    let top = 0;
+    let height = 1;
+    let vh = 1;
+    let shown = 0;
+    const update = () => {
+      const y = window.scrollY;
+      const progress = clamp01((y - top) / Math.max(1, height - vh));
+      const enter = clamp01((y - (top - PRESENCE_VH * vh)) / (PRESENCE_VH * vh));
+      const leave = clamp01((y + vh - (top + height)) / (PRESENCE_VH * vh));
+      setFlavorScroll({ progress, presence: enter * (1 - leave) });
+      const next = flavorState(progress, count, true).current; // the nearest flavour (reduced: no blend)
+      if (next !== shown) setCurrent((shown = next));
+    };
+    const measure = () => {
+      vh = window.innerHeight;
+      height = section.offsetHeight;
+      top = section.getBoundingClientRect().top + window.scrollY;
+      update();
+    };
+    const listeners = new AbortController();
+    window.addEventListener("scroll", update, { passive: true, signal: listeners.signal });
+    window.addEventListener("resize", measure, { signal: listeners.signal });
+    // the page's height changes when a font lands, a picture loads or an answer opens: measure again
+    const observer = new ResizeObserver(measure);
+    observer.observe(document.body);
+    measure();
+    jumpRef.current = (index) => {
+      const at = top + restProgress(index, count) * (height - vh);
+      window.scrollTo({ top: at, behavior: reduced ? "auto" : "smooth" });
+    };
     return () => {
-      disposed = true;
-      cleanup();
+      listeners.abort();
+      observer.disconnect();
+      root.classList.remove("flavor-snap");
+      jumpRef.current = null;
+      setFlavorScroll({ progress: 0, presence: 0 });
     };
   }, []);
 
@@ -129,6 +88,10 @@ export function Flavors() {
       style={{ "--flavor-count": flavors.length } as React.CSSProperties}
       className="flavors"
     >
+      {live &&
+        flavors.map((flavor, i) => (
+          <span key={flavor.id} aria-hidden className="flavor-snap-mark" style={{ top: `${i * STEP_VH * 100}svh` }} />
+        ))}
       <div className="flavors-pin mx-auto max-w-7xl px-4 sm:px-6">
         <div className="pt-20 pb-2 text-center md:pt-24 md:pb-6">
           <p className="text-sm font-semibold tracking-[0.2em] text-brand-pink-800 uppercase">{flavorsIntro.tagline}</p>
@@ -142,9 +105,7 @@ export function Flavors() {
             {flavors.map((flavor, i) => (
               <div
                 key={flavor.id}
-                ref={(element) => {
-                  if (element) panelRefs.current[i] = element;
-                }}
+                data-current={i === current}
                 className="flavor-panel text-center lg:text-left"
                 aria-hidden={live && i !== current ? true : undefined}
               >

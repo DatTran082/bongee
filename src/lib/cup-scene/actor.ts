@@ -39,11 +39,6 @@ export interface ActorSpec {
   readonly spin: number;
   /** a drag (or the arrow keys) turns it; false: it holds still and only its lid takes a tap */
   readonly turnable: boolean;
-  /**
-   * How it answers the pointer (Frame.pointer): radians it turns and leans toward it, px it shifts with it (a still
-   * picture with depth, as the hero's set); null: not at all.
-   */
-  readonly parallax: { readonly yaw: number; readonly pitch: number; readonly shift: number } | null;
 }
 
 export interface ActorHooks {
@@ -65,8 +60,6 @@ export interface Frame {
   readonly lean: number;
   readonly width: number;
   readonly height: number;
-  /** the pointer over the viewport, smoothed: −1 … 1 left to right, top to bottom (0, 0 with reduced motion) */
-  readonly pointer: { readonly x: number; readonly y: number };
 }
 
 export interface CupPlacement {
@@ -200,19 +193,12 @@ export class Actor {
     const sway = frame.reduced ? 0 : spec.sway * Math.sin(idle * 0.41);
     const roll = frame.reduced ? 0 : spec.roll * Math.sin(idle * 0.29);
     const liftM = current.lid * spec.lidLift; // the lid off the cup, metres
-    const look = spec.parallax ?? { yaw: 0, pitch: 0, shift: 0 }; // toward the pointer
-    const shiftX = frame.pointer.x * look.shift;
-    const shiftY = frame.pointer.y * look.shift * 0.6;
-    const world = toWorld(current.x + shiftX, current.y - lift - bob + shiftY, frame.width, frame.height);
+    const world = toWorld(current.x, current.y - lift - bob, frame.width, frame.height);
     // keep the whole composition on the slot's centre: the lifted lid adds height
     this.root.position.set(world.x, world.y - (liftM * scale) / 2, 0);
     this.root.scale.setScalar(scale);
     const turned = spec.turnable ? this.table.angle : 0;
-    this.pivot.rotation.set(
-      current.tilt - frame.lean + frame.pointer.y * look.pitch,
-      current.turn + turned + target.flight * spec.spin + sway + frame.pointer.x * look.yaw,
-      roll,
-    );
+    this.pivot.rotation.set(current.tilt - frame.lean, current.turn + turned + target.flight * spec.spin + sway, roll);
     if (spec.lid) {
       spec.lid.position.set(liftM * LID.shift, this.lidRest + liftM, 0);
       spec.lid.rotation.z = liftM * LID.tip;

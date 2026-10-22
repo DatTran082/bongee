@@ -1,4 +1,4 @@
-import { type Material, Mesh, MeshStandardMaterial, type Object3D } from "three";
+import { type Material, Mesh, MeshStandardMaterial, type Object3D, type Texture } from "three";
 import tokens from "@/data/brand-tokens.json";
 import { outlineColour, toonMaterial } from "./material";
 import { addOutlines } from "./outline";
@@ -19,7 +19,7 @@ const ORDER: Readonly<Record<string, number>> = {
 };
 
 /** Opacity of the clear PP parts and of the tea. */
-const CLEAR = { body: 0.28, lid: 0.34, tea: 0.88 };
+export const CLEAR = { body: 0.28, lid: 0.34, tea: 0.88 };
 
 export interface ToonCup {
   /** the drink's material: its colours can change with what the cup holds */
@@ -41,6 +41,35 @@ function clear<T extends Material>(material: T): T {
   return material;
 }
 
+/** Clear plastic (the PP and PET walls, their lids): sky-tinted, by alpha, its edge line drawn in the shader. */
+export function clearPlastic(name: string, opacity: number): Material {
+  return clear(toonMaterial({ name, color: tokens["sky-200"], opacity, doubleSided: true, edge: CLEAR_EDGE }));
+}
+
+/** A cup's white print on clear plastic: cut out by its alpha, no hull (it would show through the wall as a band). */
+export function clearPrint(name: string, map: Texture | null): Material {
+  return clear(toonMaterial({ name, color: tokens.cloud, map, alphaTest: 0.5, highlight: 0 }));
+}
+
+/** A poured drink in a clear cup: its layers foot to surface between y0 and y1 (its mesh's own space). */
+export function pouredDrink(
+  name: string,
+  colours: readonly [string, string, string],
+  y0: number,
+  y1: number,
+): Material {
+  return drinkOutline(
+    toonMaterial({
+      name,
+      color: "#ffffff",
+      opacity: CLEAR.tea,
+      layers: { colours, y0, y1, axis: [0, 0] },
+      highlight: 0.6,
+    }),
+    colours[0],
+  );
+}
+
 function swap(material: Material, tea: DrinkName, drink: DrinkShape): Material {
   const source = material instanceof MeshStandardMaterial ? material : null;
   const name = material.name;
@@ -56,17 +85,12 @@ function swap(material: Material, tea: DrinkName, drink: DrinkShape): Material {
     // clear plastic: no outline hull (it would show through the wall as a solid band); its edge line is drawn in
     // the shader instead
     case "pp-frosted":
-      return clear(
-        toonMaterial({ name, color: tokens["sky-200"], opacity: CLEAR.body, doubleSided: true, edge: CLEAR_EDGE }),
-      );
+      return clearPlastic(name, CLEAR.body);
     case "lid-clear":
     case "lid-clear-plain":
-      return clear(
-        toonMaterial({ name, color: tokens["sky-200"], opacity: CLEAR.lid, doubleSided: true, edge: CLEAR_EDGE }),
-      );
+      return clearPlastic(name, CLEAR.lid);
     case "ink-white":
-      // the PP cup's white print lies on its clear wall: no hull (it would show through the wall as a band)
-      return clear(toonMaterial({ name, color: tokens.cloud, map: source?.map ?? null, alphaTest: 0.5, highlight: 0 }));
+      return clearPrint(name, source?.map ?? null);
     case "milk-tea":
       return drinkOutline(
         toonMaterial({

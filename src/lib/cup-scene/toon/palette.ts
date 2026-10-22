@@ -9,6 +9,7 @@ import tokens from "@/data/brand-tokens.json";
 export const DRINKS = {
   grapeTea: ["#78A93C", "#A8D05A", "#DDF1A4"],
   milkTea: ["#9C6B47", "#C99A6E", "#EBCDA6"],
+  coldbrew: ["#3E1D0C", "#5A2C12", "#7A4019"], // the menu's Coldbrew Bưởi (brandkit/scripts/blender_ly_menu.py)
 } as const;
 export type DrinkName = keyof typeof DRINKS;
 

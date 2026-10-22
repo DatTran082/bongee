@@ -96,6 +96,17 @@ describe("cupParts", () => {
     }
   });
 
+  it("swaps the paper cup for the coffee's PET cup whole", () => {
+    const coffee = [...kinds.slice(0, 4), { body: "pet", topper: "none" }] as const;
+    const rest = cupParts(flavorState(1, 5, false), coffee);
+    close(rest.bodies.pet, 1);
+    close(rest.bodies.paper, 0);
+    for (let p = 0.75; p <= 1; p += 0.005) {
+      const { bodies } = cupParts(flavorState(p, 5, false), coffee);
+      assert.ok(Math.min(bodies.paper, bodies.pet) < 0.2, `both cups big at ${p}`);
+    }
+  });
+
   it("changes smoothly: no part jumps between two close scroll positions", () => {
     let last = at(0);
     for (let p = 0.002; p <= 1; p += 0.002) {

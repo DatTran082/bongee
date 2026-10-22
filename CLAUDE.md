@@ -47,9 +47,9 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   in front of them, and they pass behind the white cards. Three actors (`ACTORS`, one `Actor` each, `actor.ts`): `set`, the cover photo rebuilt in 3D
   (`set/`: the brand kit's paper cup twice, one under a smooth, plump cream cap with rose petals, one lidded, on a smooth
   boulder and two sawn logs, two clouds behind (hung with `decorate`, so they do not count in the set's size); no
-  plants or flowers; with shadows from a key light that follows it; it does not float or turn: it holds still and
-  leans toward the mouse (`SET_MOTION.parallax`, `turnable: false`), while the page's cloud bank slips
-  against it through `--pointer-x / -y` on the root (lang-may.css), a still picture with depth); `pp`, the 700 ml PP cup,
+  plants or flowers; with shadows from a key light that follows it; it does not float, turn or follow the mouse: a
+  still picture (`SET_MOTION`, `turnable: false`; no parallax anywhere on the page since 22/10/2026, the owner: it
+  made phones lag)); `pp`, the 700 ml PP cup,
   clear plastic by alpha, holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
   standing in it and drifting round it (`splash.ts`), sparkles about it; `paper`, the lidded paper cup alone; `flavor`,
   the carousel's cup (below). Both GLBs (`brandkit/in-an/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
@@ -61,8 +61,8 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   may be `sticky`; two slots side by side (`cup-row`) put two actors together (none does now: the offers show their
   printed pieces instead). A hit element per actor
   takes the pointer while it rests on screen (drag turns, a tap on the lid flips the strap; arrows / Enter / Home on
-  the keyboard). No flowers drift behind (removed 22/10/2026); section headings and cards use the CSS scroll-driven `parallax-near` /
-  `parallax-rise` (globals.css, only where supported). No WebGL 2, data saver or no model: `<html class="cup-failed">`,
+  the keyboard). No flowers drift behind (removed 22/10/2026); headings and cards hold still (the scroll-driven
+  parallax was removed, 22/10/2026). No WebGL 2, data saver or no model: `<html class="cup-failed">`,
   the other slots and the `cup-grid` / `cup-row` wrappers collapse and the hero's slot shows the cover photo (a
   `<noscript>` copy is there without script). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
@@ -93,19 +93,27 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   counter. The pictures carry the words, so every `alt` says them in full and the terms are also set as text.
 - **The flavour carousel** (`src/components/flavors.tsx`, section `#huong-vi` after the story): one flavour per
   menu category (`src/data/flavors.ts`: its cup, its toppings, its background tone; titles and item names from the
-  menu, never written by hand). With script the section gives each change 1.7 viewports of scroll and its inside sticks;
-  GSAP ScrollTrigger (loaded on demand, `gsap` dependency) scrubs a timeline that cross-fades the words, snaps to
-  each flavour (`inertia: false`, so a dot jumps to its own flavour, not past it; it waits 0.35 s for the scroll to
-  stop and glides 0.5–1.2 s, so it never snatches the page; scrub 1 s) and writes the progress to `src/lib/cup-scene/flavor-scroll.ts`. The stage's `flavor` actor
+  menu, never written by hand). With script the section gives each change 1.7 viewports of scroll and its inside sticks
+  (CSS). No script animates or pins the page (GSAP was removed, 22/10/2026: its pin, scrub and snap lagged on
+  phones): a passive scroll handler reads `scrollY` (the section's place is measured only on resize / ResizeObserver)
+  and stores the progress and the tone's presence in `src/lib/cup-scene/flavor-scroll.ts`; the stage glides the cup
+  there (`FLAVOR_TAU` in index.ts); the words change by a CSS fade (`data-current`, the only re-render); the page
+  settles on a flavour by the browser's own scroll snapping (`html.flavor-snap`, `scroll-snap-type: y proximity`, an
+  invisible `.flavor-snap-mark` per flavour with `scroll-snap-stop: always`), so a phone keeps its native momentum
+  scroll. The stage's `flavor` actor
   (`flavor-rig.ts`) reads it every frame through `flavor-track.ts` (pure, tested): the cup turns once per flavour;
   `cupParts` keeps one paper cup between two paper-cup flavours and swaps only its topper (the lid lifts off and
-  shrinks, the milk-foam or cheese cream drops in and settles), and swaps the whole cup only between paper and the
-  clear PP cup of the fruit teas (about its middle, never below half size, never both at once); the toppings' shaders compile when they are made, not mid-scroll; the
+  shrinks, the milk-foam or cheese cream drops in and settles), and swaps the whole cup only between paper and a
+  clear cup: the PP cup of the fruit teas, or the 350 ml PET cup of the coffees (owner, 22/10/2026; `toon/pet-cup.ts`:
+  no GLB, turned from its sizes in `src/data/pet-cup.json` and wrapped with its white print by the print fan, both
+  written by sync-brand from `brandkit/thuc-don/ly/src`; coldbrew poured in it, no lid) (about its middle, never below
+  half size, never both at once); every shader, hidden cups too (`compileAll`), compiles before the first frame and
+  the PET print is uploaded then, not mid-scroll; the
   toppings (`toppings.ts`) fade from one flavour's set to the next, and the canvas's clear colour moves through the
   flavours' tones. **Tones stay in the brand's creams and whites** (`bg`, `bg-alt`, `grey-100`); flavour colours live
   only in the drink and the toppings. While the section has the viewport the `pp` and `paper` actors shrink away.
   Without script it is a plain list; dots jump to a flavour; reduced motion keeps the pin but drops the turn,
-  the snap and the smoothing.
+  the snap and the gliding.
 - **The 3D look is a smooth stylized drink game asset** (owner's choice of 21/10/2026, over the earlier realistic
   scans, which are in `git stash` "snapshot: 3D tả thực…", and then over a faceted low-poly pass the owner found too
   coarse), after the Làng Mây edition's toon rules
@@ -147,14 +155,14 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
 - **Performance (phones first, 22/10/2026).** The 3D stage starts only after `load` and an idle moment
   (`whenSettled` in cup-stage.tsx, ≤ 1.5 s), so three.js and the models never compete with first paint; WebGL 2 is
   checked by API, not by a throwaway context. Each device gets a quality (`quality.ts`, tested): phones and weak
-  machines draw at ≤ 1.5× pixel ratio, without the shadow pass, with fewer petals, and at 30 fps while only the idle
+  machines draw at ≤ 1.5× pixel ratio, without the shadow pass, and at 30 fps while only the idle
   float moves (`needsRedraw` with `idleFrameMs`; scroll, input and changes still draw at once). Toppings and creams
   are built in idle steps after the stage shows, then their shaders compiled. Per frame the stage never writes to
-  the root's style (a custom property there restyles the whole page): `--pointer-x / -y` go on `.bank-parallax`
-  only, when changed, and the scroll comes from the scroll event (reading `window.scrollY` after a style write
-  forces a layout). sync-brand keeps only the cups' print textures, ≤ 2048 px (the toon look uses nothing else; a
+  the page's style, and the scroll comes from the scroll event (reading `window.scrollY` after a style write forces
+  a layout). sync-brand keeps only the cups' print textures, ≤ 2048 px (the toon look uses nothing else; a
   4096 px print is ~32 MB of GPU memory). Fraunces loads `opsz` only, latin + vietnamese. The header blurs its
-  backdrop from md up only. Measured on an emulated phone (4× CPU, real GPU): the whole page scrolls at 60 fps;
+  backdrop from md up only. Measured on an emulated phone (4× CPU, real GPU; after the flavour section's rewrite, 22/10/2026): the whole page
+  scrolls at 60 fps, p99 16.8 ms, no frame over 50 ms in the flavour section;
   Lighthouse mobile ≈ 0.8, CLS 0, 824 KiB.
 - **Type**: Fraunces is the only typeface (`next/font/google` in `src/app/layout.tsx`, `vietnamese` subset).
 - `cacheComponents` is on (scaffold default): keep prerendering static, avoid `new Date()` / request APIs in server

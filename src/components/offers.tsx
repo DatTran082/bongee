@@ -20,7 +20,7 @@ export function Offers() {
     <section id={sections.offers} className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24">
       <SectionHeading tagline={offersIntro.tagline} title={offersIntro.title} />
       <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
-        <figure className="parallax-rise">
+        <figure>
           <Image
             src={piece("bai-dang-uu-dai-tuan_vuong.png")}
             alt={`${weeklyOffer.eyebrow.toLowerCase()}: giảm ${weeklyOffer.value.replace("-", "")} ${weeklyOffer.offer.toLowerCase()}, ${weeklyOffer.detail.replaceAll(" · ", ", ").toLowerCase()}`}
@@ -40,13 +40,12 @@ export function Offers() {
               alt: `Thẻ tích điểm Boongee: ${loyalty.headline}. Mười ô đóng dấu, ô thứ ${loyalty.stamps}: ${loyalty.reward.toLowerCase()}`,
             }}
             back={{ src: piece("the-tich-diem_sau.png"), alt: `Mặt sau thẻ tích điểm: ${loyalty.terms}` }}
-            className="parallax-rise"
           />
         </div>
       </div>
       <div className="mt-12 grid gap-10 md:grid-cols-2">
         {vouchers.map((v) => (
-          <div key={v.slug} className="parallax-rise">
+          <div key={v.slug}>
             <FlipCard
               label={`voucher ${v.label.toLowerCase()} ${v.value}`}
               width={1200}

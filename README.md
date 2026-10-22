@@ -73,7 +73,7 @@ của riêng mình:
   - ảnh lookbook;
   - dải topping, đường, đá ở cuối.
 
-  Nhóm món nào đang ở giữa màn hình (hoặc dưới chuột) thì dấu hoa của nhóm đó xoay chậm. Bấm một món, một ly hay một
+  Rê chuột vào nhóm món nào thì chỉ dấu hoa của nhóm đó xoay chậm. Bấm một món, một ly hay một
   lựa chọn chỉ đánh dấu nó, không có thanh bật lên. Không đặt món trên web. Ảnh ly và ảnh lookbook chép từ bộ DNA bằng `npm run sync-brand`.
 
 - **Xoay ly đổi hương vị** (`#huong-vi`, `src/components/flavors.tsx`): section ghim cố định khi cuộn, mỗi nhóm

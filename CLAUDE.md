@@ -71,9 +71,9 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   `brandkit-ghibli/thuc-don/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
   monogram mark, `public/menu/mark/*.<hash>.svg`, group → mark in menu-featured.json → marks, an upper-case heading over a rule, each drink's plain line in italics, M / L prices in small
   size discs, a honey sparkle on the featured drink), the lookbook photo (`public/menu/poster.jpg`, when the board has
-  one), and the topping / sugar / ice strips at the foot. It is alive: a group crossing the viewport's middle band
-  (or under the pointer) is active (`data-active`, one IntersectionObserver, no re-render) and its mark turns slowly
-  (`.mark-spin` in lang-may.css: paused, not reset, when the group leaves; none with reduced motion); picking a drink
+  one), and the topping / sugar / ice strips at the foot. It is alive: a group's mark turns slowly only while the
+  pointer is on that group (or a drink in it has keyboard focus; `.mark-spin` in lang-may.css: paused, not reset,
+  when it leaves; none with reduced motion; owner, 22/10/2026: not every mark at once); picking a drink
   (a row or a cup) or a strip's choice only marks it. No pop-up bar (the "Ly của bạn" bar was removed, owner,
   22/10/2026). Nothing is ordered on the site. No 3D actor rests in the menu (lighter on phones).
 - **Delivery apps** (`src/components/delivery-apps.tsx`, in the visit section): Boongee is on GrabFood and ShopeeFood

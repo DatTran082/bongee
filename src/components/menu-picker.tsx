@@ -2,7 +2,7 @@
 
 import { IconCheck } from "@tabler/icons-react";
 import Image from "next/image";
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 import { menuIntro } from "@/data/boongee";
 import board from "@/data/menu-featured.json";
 import { categories, customisation, formatPrice, type MenuCategory, type MenuCategoryId, sizes } from "@/data/menu";
@@ -10,7 +10,7 @@ import { categories, customisation, formatPrice, type MenuCategory, type MenuCat
 // The menu as the printed menu board (brandkit-ghibli/thuc-don/thuc-don.pdf), alive. The same layout: the featured
 // cups (Blender toon renders, public/menu/ly) in a column, the drink groups under a painted monogram mark with their
 // plain lines and M / L prices in small size discs, the lookbook poster, the topping / sugar / ice strips at the foot.
-// A group is active while it crosses the middle of the viewport (data-active): its mark turns (lang-may.css,
+// A group's mark turns only while the pointer is on the group (or a drink in it has focus: lang-may.css,
 // .mark-spin). Picking a drink (a row, or a cup) or a strip's choice only marks it. Nothing is ordered here.
 
 /** Each group's heading mark's URL: its painted monogram mark (as the board; brandkit-ghibli → public/menu/mark). */
@@ -155,25 +155,11 @@ export function MenuPicker() {
   const [sugar, setSugar] = useState(sugarLevels.includes(DEFAULT_SUGAR) ? DEFAULT_SUGAR : sugarLevels[0]);
   const [ice, setIce] = useState(iceLevels[iceLevels.length - 1]);
   const [extra, setExtra] = useState<string[]>([]);
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  // a group is active while it crosses the viewport's middle band; written straight to the DOM, no re-render
-  useEffect(() => {
-    const groups = rootRef.current?.querySelectorAll(".menu-group");
-    if (!groups?.length) return;
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => entry.target.toggleAttribute("data-active", entry.isIntersecting)),
-      { rootMargin: "-30% 0px -30% 0px" },
-    );
-    groups.forEach((g) => observer.observe(g));
-    return () => observer.disconnect();
-  }, []);
-
   const toggleTopping = (name: string) =>
     setExtra((list) => (list.includes(name) ? list.filter((n) => n !== name) : [...list, name]));
 
   return (
-    <div ref={rootRef}>
+    <div>
       <div className="lg:grid lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[19rem_minmax(0,1fr)]">
         <div className="mb-8 lg:mb-0 lg:border-r-2 lg:border-brand-pink-700/40 lg:pr-8">
           <ul

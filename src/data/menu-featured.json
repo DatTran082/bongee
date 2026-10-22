@@ -1,0 +1,42 @@
+{
+  "cups": [
+    {
+      "file": "giay-nap.png",
+      "name": "Bạch Lan Hoa",
+      "badge": "Nên thử"
+    },
+    {
+      "file": "giay-kem-bong.png",
+      "name": "Bông Lan",
+      "badge": null
+    },
+    {
+      "file": "giay-kem-cheese.png",
+      "name": "Lài Cheese",
+      "badge": null
+    },
+    {
+      "file": "nhua-nho-thanh-truc.png",
+      "name": "Nho Thanh Trúc",
+      "badge": null
+    },
+    {
+      "file": "nhua-xoai-ha-tuyet.png",
+      "name": "Xoài Hạ Tuyết",
+      "badge": null
+    },
+    {
+      "file": "nhua-xoai-xanh-hong-bi.png",
+      "name": "Xoài Xanh Hồng Bì",
+      "badge": null
+    }
+  ],
+  "marks": {
+    "Trà sữa hương hoa": "hoa-dac_hong.svg",
+    "Trà sữa kem bông": "hoa-tron_troi.svg",
+    "Trà trái cây": "sao-hoa_reu.svg",
+    "Kem cheese": "dia-hoa_mat-ong.svg",
+    "Cà phê phin · Coldbrew": "dia-hoa_go.svg"
+  },
+  "poster": true
+}

@@ -66,10 +66,16 @@ của riêng mình:
   và lơ lửng xoay quanh ly, kèm đốm lấp lánh; không có giọt nước, không mô phỏng chất lỏng. Ô ở câu chuyện (nắp nhấc lên, nhìn xuống mặt trà) và ưu đãi.
 - **Ly giấy** đậy nắp: ô ở ưu đãi (đứng cạnh ly nhựa: **hai ly** vì giảm giá cho đơn từ 2 ly) và ghé quán.
 
-- **Thực đơn tương tác** (`#thuc-don`, `src/components/menu-picker.tsx`), bố cục theo kiểu thực đơn in: mỗi nhóm có
-  dấu tròn, giá M/L trong vòng tròn nhỏ, dải topping, đường, đá ở cuối. Bấm một món thì ly 3D ở cột trái (chính ly của
-  phần Hương vị) xoay sang ly của nhóm đó, thẻ **Ly của bạn** cộng size, topping và giá tạm tính (giá tại quầy, từ
-  Odoo). Không đặt món trên web. Trên điện thoại, món đang chọn hiện ở thanh cuối màn hình khi đang xem thực đơn.
+- **Thực đơn tương tác** (`#thuc-don`, `src/components/menu-picker.tsx`) có cùng bố cục và thiết kế với bảng menu in
+  (`../brandkit-ghibli/thuc-don/thuc-don.pdf`):
+  - cột ly nổi bật (ảnh ly render bằng Blender);
+  - các nhóm món có dấu hoa tròn, mỗi món có dòng mô tả và giá M/L trong vòng tròn nhỏ;
+  - ảnh lookbook;
+  - dải topping, đường, đá ở cuối.
+
+  Bấm một món hoặc một ly thì thanh **Ly của bạn** ở cuối màn hình hiện món đó, chọn size và cộng giá tạm tính (giá tại
+  quầy, từ Odoo). Không đặt món trên web. Ảnh ly và ảnh lookbook chép từ bộ DNA bằng `npm run sync-brand`.
+
 - **Xoay ly đổi hương vị** (`#huong-vi`, `src/components/flavors.tsx`): section ghim cố định khi cuộn, mỗi nhóm
   thực đơn một vị (hương hoa, kem bông, trái cây, kem cheese, cà phê). Cuộn tới đâu ly xoay một vòng và đổi sang ly
   của vị kế tiếp (ly giấy đậy nắp, ly giấy kem bông, ly nhựa trà trái cây, ly giấy kem cheese), topping quanh ly

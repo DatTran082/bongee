@@ -65,14 +65,15 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   the other slots and the `cup-grid` / `cup-row` wrappers collapse and the hero's slot shows the cover photo (a
   `<noscript>` copy is there without script). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
-- **The menu is a picker** (`src/components/menu-picker.tsx`, client; `menu.tsx` keeps the heading): groups as
-  sticker cards with a round tinted mark, M / L prices in small size discs, a sticky row of group chips, topping /
-  sugar / ice strips at the foot (sugar and ice levels from ShanMay's options, default sugar the promise's 50 %), and
-  "Ly của bạn" (size switch, choices, a running total of counter prices). Picking a drink turns the carousel's cup
-  (the `flavor` actor, whose second slot is the menu's left column, sticky from lg) to its group: the menu holds the
-  cup while it is on screen (`claimFlavor`, `glideFlavorTo` in flavor-scroll.ts; the carousel's writes wait
-  meanwhile). Phones: the column dissolves (`contents`): cup first, card last, and the pick rides in a fixed bar at
-  the screen's foot while the menu is in view. Nothing is ordered on the site. The PP cup no longer has a menu slot.
+- **The menu is laid out as the printed menu board** (`src/components/menu-picker.tsx`, client; `menu.tsx` keeps the
+  heading), after `../brandkit-ghibli/thuc-don/thuc-don.pdf`: a column of featured cups (the board's Blender toon
+  renders, `public/menu/ly/*.png`, list in `src/data/menu-featured.json`, both written by sync-brand from
+  `brandkit-ghibli/thuc-don/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
+  monogram mark, `public/menu/mark/*.svg`, group → mark in menu-featured.json → marks, an upper-case heading over a rule, each drink's plain line in italics, M / L prices in small
+  size discs, a honey sparkle on the featured drink), the lookbook photo (`public/menu/poster.jpg`, when the board has
+  one), and the topping / sugar / ice strips at the foot. It is alive: picking a drink (a row or a cup) and the strips
+  feed the "Ly của bạn" bar fixed at the screen's foot while the menu is in view (size switch, choices, a running
+  total at counter prices). Nothing is ordered on the site. No 3D actor rests in the menu (lighter on phones).
 - **The flavour carousel** (`src/components/flavors.tsx`, section `#huong-vi` after the story): one flavour per
   menu category (`src/data/flavors.ts`: its cup, its toppings, its background tone; titles and item names from the
   menu, never written by hand). With script the section gives each change 1.7 viewports of scroll and its inside sticks;

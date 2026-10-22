@@ -13,6 +13,9 @@
 //   color/tokens.json → toon                           → src/data/brand-toon.json   bands, shade, outline, highlight
 //   nhan-dien/logo-ngang_hong.svg                      → src/assets/lang-may/logo-ngang.svg   the header's logo
 //   nhan-dien/hoa-low-poly_hong.svg, hoa-ve-tay_hong.svg → src/assets/lang-may/hoa*.svg      headings, bullets
+//   thuc-don/ly/*.png, featured.json, lookbook/poster.* → public/menu/ly/*.png, public/menu/poster.jpg, src/data/menu-featured.json
+//   nhan-dien/monogram/*.svg (the groups' marks)       → public/menu/mark/*.svg
+//                                                        the menu section's cups and lookbook photo (as the menu board)
 //   nhan-dien/bien-may.svg, doi-che.svg                → src/assets/lang-may/   cloud bank, tea hills (the page's
 //                                                        scenery, src/components/lang-may/)
 //   nhan-dien/01-logo/bieu-tuong-hoa_den.svg           → src/assets/brand/hoa.svg (the floating marks of the 3D stage),
@@ -226,6 +229,42 @@ async function cupModel({ name: CUP, nodes: CUP_NODES }, io) {
   return `/models/${CUP}.${hash}.glb`;
 }
 
+/**
+ * The menu board's pieces for the landing's menu section (the same look as brandkit-ghibli/thuc-don/thuc-don.pdf):
+ * the featured cups (Blender toon renders, resized to 450 px wide WebP-ready PNGs) with their list, and the poster's
+ * lookbook photo when there is one (as JPEG; some AI-made PNGs do not decode everywhere).
+ */
+async function menuBoard() {
+  const { cups: featured, marks } = JSON.parse(readFileSync(langMay("thuc-don/featured.json"), "utf8"));
+  rmSync(path.join(ROOT, "public/menu"), { recursive: true, force: true });
+  for (const cup of featured) {
+    await sharp(langMay(`thuc-don/ly/${cup.file}`))
+      .resize({ width: 450 })
+      .png({ compressionLevel: 9, palette: false })
+      .toFile(out(`public/menu/ly/${cup.file}`));
+    done(`public/menu/ly/${cup.file}`);
+  }
+  const poster = ["jpg", "jpeg", "png", "webp"]
+    .map((ext) => path.join(LANGMAY, `thuc-don/lookbook/poster.${ext}`))
+    .find(existsSync);
+  if (poster) {
+    await sharp(poster)
+      .resize({ width: 1400, withoutEnlargement: true })
+      .jpeg({ quality: 82, mozjpeg: true })
+      .toFile(out("public/menu/poster.jpg"));
+    done("public/menu/poster.jpg");
+  }
+  // each group's heading mark: a painted monogram mark (brandkit-ghibli/scripts/monogram.py)
+  for (const file of new Set(Object.values(marks))) {
+    copyFileSync(langMay(`nhan-dien/monogram/${file}`), out(`public/menu/mark/${file}`));
+    done(`public/menu/mark/${file}`);
+  }
+  write(
+    "src/data/menu-featured.json",
+    JSON.stringify({ cups: featured, marks, poster: Boolean(poster) }, null, 2) + "\n",
+  );
+}
+
 async function cupModels() {
   await Promise.all([MeshoptEncoder.ready, MeshoptDecoder.ready]);
   const io = new NodeIO()
@@ -249,6 +288,7 @@ for (const [from, to] of [
   copyFileSync(langMay(`nhan-dien/${from}`), out(`src/assets/lang-may/${to}`));
   done(`src/assets/lang-may/${to}`);
 }
+await menuBoard();
 await icons(hex);
 await photos();
 await cupModels();

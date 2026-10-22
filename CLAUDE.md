@@ -71,9 +71,17 @@ npm run sync-brand   # brand assets from ../brandkit, accents + toon rules from 
   `brandkit-ghibli/thuc-don/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
   monogram mark, `public/menu/mark/*.<hash>.svg`, group → mark in menu-featured.json → marks, an upper-case heading over a rule, each drink's plain line in italics, M / L prices in small
   size discs, a honey sparkle on the featured drink), the lookbook photo (`public/menu/poster.jpg`, when the board has
-  one), and the topping / sugar / ice strips at the foot. It is alive: picking a drink (a row or a cup) and the strips
-  feed the "Ly của bạn" bar fixed at the screen's foot while the menu is in view (size switch, choices, a running
-  total at counter prices). Nothing is ordered on the site. No 3D actor rests in the menu (lighter on phones).
+  one), and the topping / sugar / ice strips at the foot. It is alive: a group crossing the viewport's middle band
+  (or under the pointer) is active (`data-active`, one IntersectionObserver, no re-render) and its mark turns slowly
+  (`.mark-spin` in lang-may.css: paused, not reset, when the group leaves; none with reduced motion); picking a drink
+  (a row or a cup) or a strip's choice only marks it. No pop-up bar (the "Ly của bạn" bar was removed, owner,
+  22/10/2026). Nothing is ordered on the site. No 3D actor rests in the menu (lighter on phones).
+- **Delivery apps** (`src/components/delivery-apps.tsx`, in the visit section): Boongee is on GrabFood and ShopeeFood
+  (owner, 22/10/2026; `delivery` in `src/data/boongee.ts`), each shown with its painted badge from the Làng Mây edition
+  (`giao_hang.py` → `nhan-dien/giao-hang/` → sync-brand → `src/assets/lang-may/{grabfood,shopeefood}.svg`: each app's
+  real mark redrawn by hand, owner's request: GrabFood's green disc with the take-away box and crossed spoon and fork,
+  ShopeeFood's orange bag-box with a fork and a spoon; no words in them, their names are text). The shop's page in each app is `href` (`TODO(boongee)`); while it is `null` the card asks to search
+  "Boongee" in the app instead of linking.
 - **The offers are their printed pieces** (`src/components/offers.tsx`, `flip-card.tsx`): the Làng Mây collateral
   built by `../brandkit-ghibli/scripts/build_an_pham.py` from the same `collateral.json` (vouchers front and back, the
   loyalty card front and back, the weekly-offer post, an A4 poster, a story, a cup sticker), copied by sync-brand to

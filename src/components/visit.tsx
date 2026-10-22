@@ -1,5 +1,6 @@
 import { IconClock, IconExternalLink, IconMapPin, IconPhone } from "@tabler/icons-react";
 import { CupAnchor } from "@/components/cup-anchor";
+import { DeliveryApps } from "@/components/delivery-apps";
 import { SectionHeading } from "@/components/section-heading";
 import { SocialIcon } from "@/components/social-icon";
 import { PENDING, sections, socials, visit } from "@/data/boongee";
@@ -70,6 +71,7 @@ export function Visit() {
               </div>
             ))}
           </dl>
+          <DeliveryApps />
           {links.length > 0 && (
             <ul className="mt-10 flex flex-wrap justify-center gap-3">
               {links.map((s) => (

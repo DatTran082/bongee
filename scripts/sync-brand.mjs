@@ -19,6 +19,7 @@
 //                                                        the menu section's cups and lookbook photo (as the menu board)
 //   nhan-dien/bien-may.svg, doi-che.svg                → src/assets/lang-may/   cloud bank, tea hills (the page's
 //                                                        scenery, src/components/lang-may/)
+//   nhan-dien/giao-hang/{grabfood,shopeefood}.svg      → src/assets/lang-may/   the delivery apps' badges (visit)
 //   nhan-dien/01-logo/bieu-tuong-hoa_den.svg           → src/app/icon.svg, favicon.ico, apple-icon.png
 //   nhan-dien/03-hoa-tiet/monogram_hong.png            → src/assets/images/monogram-hong.png
 //   lookbook/anh-bia/facebook.png                      → src/assets/images/hero.jpg   shown only when the 3D cup cannot
@@ -322,6 +323,8 @@ for (const [from, to] of [
   ["hoa-ve-tay_hong.svg", "hoa-ve-tay.svg"],
   ["bien-may.svg", "bien-may.svg"],
   ["doi-che.svg", "doi-che.svg"],
+  ["giao-hang/grabfood.svg", "grabfood.svg"],
+  ["giao-hang/shopeefood.svg", "shopeefood.svg"],
 ]) {
   copyFileSync(langMay(`nhan-dien/${from}`), out(`src/assets/lang-may/${to}`));
   done(`src/assets/lang-may/${to}`);

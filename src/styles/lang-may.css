@@ -127,6 +127,32 @@
 }
 
 /*
+ * The menu's group marks (the painted monogram flowers): a flower turns slowly while its group is active (in the
+ * middle band of the viewport, set by menu-picker.tsx as data-active, or under the pointer) and stops where it is
+ * when the group leaves, without snapping back. It swells a little while it turns.
+ */
+.mark-spin {
+  transition: scale 0.4s ease-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mark-spin {
+    animation: mark-spin 7s linear infinite paused;
+  }
+
+  .menu-group:is([data-active], :hover) .mark-spin {
+    animation-play-state: running;
+    scale: 1.12;
+  }
+}
+
+@keyframes mark-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/*
  * A card that turns over (the offers' vouchers and loyalty card): the front and the back stacked in one cell, the
  * back turned away; [data-flipped] turns the whole card. With reduced motion it swaps at once.
  */

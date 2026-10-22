@@ -8,7 +8,7 @@ const sizeLine = sizes.map((s) => `${s.label} ${s.volume.replace("ml", " ml")}`)
 /**
  * The menu (the shop's Odoo, src/data/menu.ts): its heading, then the picker (src/components/menu-picker.tsx), laid
  * out as the printed menu board: featured cups, groups with their prices, the lookbook poster, the topping, sugar and
- * ice strips, and the "Ly của bạn" bar.
+ * ice strips; each group's mark turns while the group is active.
  */
 export function Menu() {
   return (

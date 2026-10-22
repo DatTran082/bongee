@@ -5,28 +5,19 @@ import Image from "next/image";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { menuIntro } from "@/data/boongee";
 import board from "@/data/menu-featured.json";
-import {
-  categories,
-  customisation,
-  formatPrice,
-  type MenuCategory,
-  type MenuCategoryId,
-  type MenuItem,
-  sizes,
-} from "@/data/menu";
+import { categories, customisation, formatPrice, type MenuCategory, type MenuCategoryId, sizes } from "@/data/menu";
 
 // The menu as the printed menu board (brandkit-ghibli/thuc-don/thuc-don.pdf), alive. The same layout: the featured
 // cups (Blender toon renders, public/menu/ly) in a column, the drink groups under a painted monogram mark with their
 // plain lines and M / L prices in small size discs, the lookbook poster, the topping / sugar / ice strips at the foot.
-// Picking a drink (a row, or a cup) shows it in the "Ly của bạn" bar at the foot of the screen, which adds up the size
-// and the toppings at the counter prices (the shop's Odoo). Nothing is ordered here.
+// A group is active while it crosses the middle of the viewport (data-active): its mark turns (lang-may.css,
+// .mark-spin). Picking a drink (a row, or a cup) or a strip's choice only marks it. Nothing is ordered here.
 
 /** Each group's heading mark's URL: its painted monogram mark (as the board; brandkit-ghibli → public/menu/mark). */
 const MARKS: Readonly<Record<string, string>> = board.marks;
 /** The default sugar level: the promise's 50 % (src/data/boongee.ts, promises). */
 const DEFAULT_SUGAR = "50%";
 
-type Size = "M" | "L";
 interface Pick {
   readonly group: MenuCategoryId;
   readonly name: string;
@@ -34,9 +25,6 @@ interface Pick {
 
 /** "0 · 30 · 50 · 70 · 100%" → ["0%", "30%", "50%", "70%", "100%"] */
 const levels = (options: string) => options.split("·").map((o) => `${o.replace("%", "").trim()}%`);
-
-const priceFor = (item: MenuItem, size: Size) =>
-  item.prices.length > 1 && size === "L" ? item.prices[1] : item.prices[0];
 
 /** A four-pointed sparkle, the featured drink's mark (as the board). */
 function Sparkle({ className }: { className: string }) {
@@ -50,25 +38,17 @@ function Sparkle({ className }: { className: string }) {
 function Mark({ title }: { title: string }) {
   const src = MARKS[title];
   if (!src) return null;
-  return <Image src={src} alt="" aria-hidden width={40} height={40} unoptimized className="size-10 shrink-0" />;
+  return (
+    <Image src={src} alt="" aria-hidden width={40} height={40} unoptimized className="mark-spin size-10 shrink-0" />
+  );
 }
 
-function Group({
-  group,
-  pick,
-  size,
-  onPick,
-}: {
-  group: MenuCategory;
-  pick: Pick;
-  size: Size;
-  onPick: (pick: Pick) => void;
-}) {
+function Group({ group, pick, onPick }: { group: MenuCategory; pick: Pick; onPick: (pick: Pick) => void }) {
   return (
     <section
       id={`mon-${group.id}`}
       aria-labelledby={`mon-${group.id}-title`}
-      className="mb-10 scroll-mt-28 break-inside-avoid"
+      className="menu-group mb-10 scroll-mt-28 break-inside-avoid"
     >
       <h3
         id={`mon-${group.id}-title`}
@@ -108,11 +88,10 @@ function Group({
                 </span>
                 {item.prices.map((price, i) => {
                   const label = item.prices.length > 1 ? sizes[i]?.label : null;
-                  const strong = picked && (!label || label === size);
                   return (
                     <span
                       key={i}
-                      className={`mt-0.5 flex w-[4.2rem] shrink-0 items-center justify-end gap-1.5 tabular-nums ${strong ? "font-bold" : ""}`}
+                      className={`mt-0.5 flex w-[4.2rem] shrink-0 items-center justify-end gap-1.5 tabular-nums ${picked ? "font-bold" : ""}`}
                     >
                       {label && (
                         <span
@@ -173,25 +152,20 @@ export function MenuPicker() {
     group: start.id,
     name: start.items.find((i) => i.name === menuIntro.featured)?.name ?? start.items[0].name,
   });
-  const [size, setSize] = useState<Size>("M");
   const [sugar, setSugar] = useState(sugarLevels.includes(DEFAULT_SUGAR) ? DEFAULT_SUGAR : sugarLevels[0]);
   const [ice, setIce] = useState(iceLevels[iceLevels.length - 1]);
   const [extra, setExtra] = useState<string[]>([]);
-  const [inView, setInView] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const group = drinks.find((g) => g.id === pick.group) ?? drinks[0];
-  const item = group.items.find((i) => i.name === pick.name) ?? group.items[0];
-  const sized = item.prices.length > 1;
-  const toppingTotal = toppings.filter((t) => extra.includes(t.name)).reduce((sum, t) => sum + t.prices[0], 0);
-  const total = priceFor(item, sized ? size : "M") + toppingTotal;
-
-  // the "Ly của bạn" bar shows while the menu is on screen
+  // a group is active while it crosses the viewport's middle band; written straight to the DOM, no re-render
   useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.05 });
-    observer.observe(root);
+    const groups = rootRef.current?.querySelectorAll(".menu-group");
+    if (!groups?.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => entry.target.toggleAttribute("data-active", entry.isIntersecting)),
+      { rootMargin: "-30% 0px -30% 0px" },
+    );
+    groups.forEach((g) => observer.observe(g));
     return () => observer.disconnect();
   }, []);
 
@@ -199,7 +173,7 @@ export function MenuPicker() {
     setExtra((list) => (list.includes(name) ? list.filter((n) => n !== name) : [...list, name]));
 
   return (
-    <div ref={rootRef} className="pb-24">
+    <div ref={rootRef}>
       <div className="lg:grid lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[19rem_minmax(0,1fr)]">
         <div className="mb-8 lg:mb-0 lg:border-r-2 lg:border-brand-pink-700/40 lg:pr-8">
           <ul
@@ -239,7 +213,7 @@ export function MenuPicker() {
         </div>
         <div className="md:columns-2 md:gap-10">
           {drinks.map((g) => (
-            <Group key={g.id} group={g} pick={pick} size={size} onPick={setPick} />
+            <Group key={g.id} group={g} pick={pick} onPick={setPick} />
           ))}
           {board.poster && (
             <figure className="mb-10 break-inside-avoid overflow-hidden rounded-[2rem] shadow-sticker">
@@ -280,44 +254,6 @@ export function MenuPicker() {
               </Cell>
             ))}
           </Strip>
-        </div>
-      </div>
-
-      {/* "Ly của bạn": the pick at the foot of the screen while the menu is in view */}
-      <div
-        aria-hidden={!inView}
-        className={`fixed inset-x-3 bottom-3 z-40 mx-auto max-w-2xl transition-[translate,opacity] duration-300 motion-reduce:transition-none ${inView ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"}`}
-      >
-        <div className="card-sticker flex items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-5">
-          <div className="min-w-0 flex-1">
-            <p className="text-[0.65rem] tracking-[0.2em] text-brand-pink-800 uppercase">Ly của bạn</p>
-            <p className="truncate leading-tight" aria-live="polite">
-              {item.name}
-            </p>
-            <p className="truncate text-xs text-brand-ink-muted">
-              {sugar} đường · {ice} đá{extra.length ? ` · ${extra.join(", ")}` : ""}
-            </p>
-          </div>
-          {sized && (
-            <div role="radiogroup" aria-label="Cỡ ly" className="flex gap-1">
-              {(["M", "L"] as const).map((label) => (
-                <button
-                  key={label}
-                  type="button"
-                  role="radio"
-                  aria-checked={size === label}
-                  tabIndex={inView ? 0 : -1}
-                  onClick={() => setSize(label)}
-                  className="grid size-8 place-items-center rounded-full border border-brand-line bg-brand-bg-alt text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-brand-ink aria-checked:border-brand-ink aria-checked:bg-brand-ink aria-checked:text-white"
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          )}
-          <p className="text-2xl tabular-nums sm:text-3xl" aria-live="polite">
-            {formatPrice(total)}
-          </p>
         </div>
       </div>
     </div>

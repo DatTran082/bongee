@@ -39,15 +39,15 @@ của quán (`npm run sync-menu`, qua MCP của Odoo). Phần còn lại lấy t
 `menu-posm/print-ready/menu-data.json`, ưu đãi từ `collateral/collateral.json`. Câu chữ viết đơn giản, không bay
 bổng; phần câu chuyện mở đầu bằng một bài thơ ngắn.
 
-| Phần                     | Mã nguồn                      | Nội dung                                                                       |
-| ------------------------ | ----------------------------- | ------------------------------------------------------------------------------ |
-| Hero                     | `src/components/hero.tsx`     | slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất) bên bộ ảnh bìa dựng 3D   |
-| Câu chuyện `#cau-chuyen` | `src/components/story.tsx`    | Gốc · Nghi thức · Cảm xúc, hoạ tiết monogram                                   |
-| Ba điều Boongee giữ      | `src/components/promises.tsx` | hoa thật, ngọt tuỳ bạn (mặc định 50%), vị thanh                                |
-| Thực đơn `#thuc-don`     | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá       |
-| Ưu đãi `#uu-dai`         | `src/components/offers.tsx`   | ấn phẩm Làng Mây: bài đăng ưu đãi tuần, thẻ tích điểm, 2 voucher (lật, tải về) |
-| Hỏi đáp `#hoi-dap`       | `src/components/faq.tsx`      | 7 câu, trả lời ghép từ dữ liệu thực đơn, ưu đãi, địa chỉ                       |
-| Ghé quán `#ghe-quan`     | `src/components/visit.tsx`    | 14B ngách 7/72 phố Hoa Bằng, Cầu Giấy, Hà Nội, bản đồ, giờ mở cửa, điện thoại  |
+| Phần                     | Mã nguồn                      | Nội dung                                                                                                                  |
+| ------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Hero                     | `src/components/hero.tsx`     | slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất) bên bộ ảnh bìa dựng 3D                                              |
+| Câu chuyện `#cau-chuyen` | `src/components/story.tsx`    | Gốc · Nghi thức · Cảm xúc, hoạ tiết monogram                                                                              |
+| Ba điều Boongee giữ      | `src/components/promises.tsx` | hoa thật, ngọt tuỳ bạn (mặc định 50%), vị thanh                                                                           |
+| Thực đơn `#thuc-don`     | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá                                                  |
+| Ưu đãi `#uu-dai`         | `src/components/offers.tsx`   | ấn phẩm Làng Mây: bài đăng ưu đãi tuần, thẻ tích điểm, 2 voucher (lật, tải về)                                            |
+| Hỏi đáp `#hoi-dap`       | `src/components/faq.tsx`      | 7 câu, trả lời ghép từ dữ liệu thực đơn, ưu đãi, địa chỉ                                                                  |
+| Ghé quán `#ghe-quan`     | `src/components/visit.tsx`    | 14B ngách 7/72 phố Hoa Bằng, Cầu Giấy, Hà Nội, bản đồ, giờ mở cửa, điện thoại, GrabFood và ShopeeFood (biểu tượng vẽ tay) |
 
 Kèm theo: header dính đầu trang có menu cho điện thoại, footer, trang 404 tiếng Việt, `sitemap.xml`, `robots.txt`,
 dữ liệu có cấu trúc (JSON-LD: WebSite, CafeOrCoffeeShop, FAQPage), favicon, icon iOS và ảnh chia sẻ.
@@ -73,8 +73,8 @@ của riêng mình:
   - ảnh lookbook;
   - dải topping, đường, đá ở cuối.
 
-  Bấm một món hoặc một ly thì thanh **Ly của bạn** ở cuối màn hình hiện món đó, chọn size và cộng giá tạm tính (giá tại
-  quầy, từ Odoo). Không đặt món trên web. Ảnh ly và ảnh lookbook chép từ bộ DNA bằng `npm run sync-brand`.
+  Nhóm món nào đang ở giữa màn hình (hoặc dưới chuột) thì dấu hoa của nhóm đó xoay chậm. Bấm một món, một ly hay một
+  lựa chọn chỉ đánh dấu nó, không có thanh bật lên. Không đặt món trên web. Ảnh ly và ảnh lookbook chép từ bộ DNA bằng `npm run sync-brand`.
 
 - **Xoay ly đổi hương vị** (`#huong-vi`, `src/components/flavors.tsx`): section ghim cố định khi cuộn, mỗi nhóm
   thực đơn một vị (hương hoa, kem bông, trái cây, kem cheese, cà phê). Cuộn tới đâu ly xoay một vòng và đổi sang ly

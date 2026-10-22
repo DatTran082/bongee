@@ -161,8 +161,23 @@ export const visit = {
   )}`,
   hours: null as string | null, // TODO(boongee): giờ mở cửa, ví dụ "7:00 – 22:00 mỗi ngày"
   phone: null as string | null, // TODO(boongee): số điện thoại / Zalo đặt món
-  services: "Uống tại quán và mang đi.", // collateral.json → promos.sale.detail ("tại quán và mang đi")
+  services: "Uống tại quán, mang đi, hoặc đặt giao qua GrabFood, ShopeeFood.", // collateral.json → promos.sale.detail ("tại quán và mang đi"); the apps: owner, 22/10/2026
 };
+
+/**
+ * The delivery apps Boongee is on (owner, 22/10/2026), shown in the visit section with their painted badges
+ * (brandkit-ghibli giao_hang.py → src/assets/lang-may/). A `null` href shows the app without a link: the page then
+ * asks to search the shop's name in the app.
+ */
+export const delivery = {
+  title: "Đặt giao tận nơi",
+  line: "Boongee đã có mặt trên GrabFood và ShopeeFood.",
+  search: "Tìm “Boongee” trên app",
+  apps: [
+    { name: "GrabFood", badge: "grabfood", href: null as string | null }, // TODO(boongee): link quán trên GrabFood
+    { name: "ShopeeFood", badge: "shopeefood", href: null as string | null }, // TODO(boongee): link quán trên ShopeeFood
+  ],
+} as const;
 
 export type SocialIcon = "facebook" | "instagram" | "tiktok" | "zalo";
 

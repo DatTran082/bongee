@@ -44,7 +44,7 @@ bổng; phần câu chuyện mở đầu bằng một bài thơ ngắn.
 | Hero                     | `src/components/hero.tsx`     | slogan **Trà hương / thanh vị** (thẻ `<h1>` duy nhất) bên bộ ảnh bìa dựng 3D                                              |
 | Câu chuyện `#cau-chuyen` | `src/components/story.tsx`    | Gốc · Nghi thức · Cảm xúc, hoạ tiết monogram                                                                              |
 | Ba điều Boongee giữ      | `src/components/promises.tsx` | hoa thật, ngọt tuỳ bạn (mặc định 50%), vị thanh                                                                           |
-| Thực đơn `#thuc-don`     | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá                                                  |
+| Menu `#menu`             | `src/components/menu.tsx`     | 6 nhóm, 23 món + topping, giá M 500 ml / L 700 ml, tuỳ chỉnh đường và đá                                                  |
 | Ưu đãi `#uu-dai`         | `src/components/offers.tsx`   | ấn phẩm Làng Mây: bài đăng ưu đãi tuần, thẻ tích điểm, 2 voucher (lật, tải về)                                            |
 | Hỏi đáp `#hoi-dap`       | `src/components/faq.tsx`      | 7 câu, trả lời ghép từ dữ liệu thực đơn, ưu đãi, địa chỉ                                                                  |
 | Ghé quán `#ghe-quan`     | `src/components/visit.tsx`    | 14B ngách 7/72 phố Hoa Bằng, Cầu Giấy, Hà Nội, bản đồ, giờ mở cửa, điện thoại, GrabFood và ShopeeFood (biểu tượng vẽ tay) |
@@ -66,7 +66,7 @@ của riêng mình:
   và lơ lửng xoay quanh ly, kèm đốm lấp lánh; không có giọt nước, không mô phỏng chất lỏng. Ô ở câu chuyện (nắp nhấc lên, nhìn xuống mặt trà).
 - **Ly giấy** đậy nắp: ô ở ghé quán.
 
-- **Thực đơn tương tác** (`#thuc-don`, `src/components/menu-picker.tsx`) có cùng bố cục và thiết kế với bảng menu in
+- **Menu tương tác** (`#menu`, `src/components/menu-picker.tsx`) có cùng bố cục và thiết kế với bảng menu in
   (`../brandkit-ghibli/thuc-don/thuc-don.pdf`):
   - cột ly nổi bật (ảnh ly render bằng Blender);
   - các nhóm món có dấu hoa tròn, mỗi món có dòng mô tả và giá M/L trong vòng tròn nhỏ;

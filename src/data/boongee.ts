@@ -24,7 +24,7 @@ export const brand = {
 export const sections = {
   story: "cau-chuyen",
   flavors: "huong-vi",
-  menu: "thuc-don",
+  menu: "menu",
   offers: "uu-dai",
   faq: "hoi-dap",
   visit: "ghe-quan",

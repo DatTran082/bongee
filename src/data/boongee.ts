@@ -32,7 +32,7 @@ export const sections = {
 
 export const nav = [
   { label: "Câu chuyện", id: sections.story },
-  { label: "Thực đơn", id: sections.menu },
+  { label: "Menu", id: sections.menu },
   { label: "Ưu đãi", id: sections.offers },
   { label: "Ghé quán", id: sections.visit },
 ];
@@ -81,7 +81,7 @@ export const flavorsIntro = {
   nav: "Chọn hương vị",
   counter: (index: number, count: number) =>
     `${String(index + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}`,
-  more: "Xem thực đơn",
+  more: "Xem menu",
 };
 
 /**
@@ -130,7 +130,7 @@ export const promises = {
 };
 
 export const menuIntro = {
-  tagline: "Thực đơn",
+  tagline: "Menu",
   title: "Món ở quán",
   // TODO(boongee): ShanMay menu_data.py → HERO is a *sample* featured drink ("món nổi bật mẫu"); confirm or change.
   featured: "Bạch Lan Hoa",

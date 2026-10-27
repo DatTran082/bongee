@@ -1,9 +1,8 @@
 import { FlowerMark } from "@/components/lang-may/flower-mark";
-import { Sparkle } from "@/components/lang-may/sparkle";
 
 /**
- * Centred section heading: small tracked tagline between two low-poly flowers, the section's <h2> with a sparkle on
- * it (Làng Mây), optional subtitle; still, as the page (no parallax).
+ * Centred section heading: small tracked tagline between two low-poly flowers (Làng Mây), the section's <h2>,
+ * optional subtitle; still, as the page (no parallax).
  */
 export function SectionHeading({
   tagline,
@@ -25,10 +24,7 @@ export function SectionHeading({
         <FlowerMark className="size-5" />
       </p>
       <h2 id={id} className="mt-2 text-3xl font-bold tracking-tight text-balance text-brand-ink md:text-5xl">
-        <span className="relative">
-          {title}
-          <Sparkle className="absolute -top-2 -right-5 size-4 text-brand-honey-400 md:-top-3 md:-right-7 md:size-6" />
-        </span>
+        {title}
       </h2>
       {subtitle && <p className="mt-4 text-lg md:text-xl">{subtitle}</p>}
     </div>

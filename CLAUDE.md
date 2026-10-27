@@ -51,7 +51,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   still picture (`SET_MOTION`, `turnable: false`; no parallax anywhere on the page since 22/10/2026, the owner: it
   made phones lag)); `pp`, the 700 ml PP cup,
   clear plastic by alpha, holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
-  standing in it and drifting round it (`splash.ts`), sparkles about it; `paper`, the lidded paper cup alone; `flavor`,
+  standing in it and drifting round it (`splash.ts`); `paper`, the lidded paper cup alone; `flavor`,
   the carousel's cup (below). Both GLBs (`brandkit/in-an/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
   meshopt + WebP to `public/models/<name>.<hash>.glb`, URLs in `src/data/cup-model.json`, cached immutable by
   `next.config.ts`. Sections lay out empty slots with `<CupAnchor name actor turn tilt lid fill>`; `track.ts`
@@ -61,7 +61,8 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   may be `sticky`; two slots side by side (`cup-row`) put two actors together (none does now: the offers show their
   printed pieces instead). A hit element per actor
   takes the pointer while it rests on screen (drag turns, a tap on the lid flips the strap; arrows / Enter / Home on
-  the keyboard). No flowers drift behind (removed 22/10/2026); headings and cards hold still (the scroll-driven
+  the keyboard). No flowers drift behind (removed 22/10/2026) and no sparkles twinkle anywhere on the page, 2D or
+  3D (removed, owner, 27/10/2026: no sparkle stars in any design); headings and cards hold still (the scroll-driven
   parallax was removed, 22/10/2026). No WebGL 2, data saver or no model: `<html class="cup-failed">`,
   the other slots and the `cup-grid` / `cup-row` wrappers collapse and the hero's slot shows the cover photo (a
   `<noscript>` copy is there without script). The pure maths (`track`, `fit`, `motion`) has `node --test`
@@ -71,7 +72,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   renders, `public/menu/ly/*.<hash>.png`, list and URLs in `src/data/menu-featured.json`, both written by sync-brand from
   `brandkit/thuc-don/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
   monogram mark, `public/menu/mark/*.<hash>.svg`, group → mark in menu-featured.json → marks, an upper-case heading over a rule, each drink's plain line in italics, M / L prices in small
-  size discs, a honey sparkle on the featured drink), the lookbook photo (`public/menu/poster.jpg`, when the board has
+  size discs, a plain honey disc by the featured drink), the lookbook photo (`public/menu/poster.jpg`, when the board has
   one), and the topping / sugar / ice strips at the foot. It is alive: a group's mark turns slowly only while the
   pointer is on that group (or a drink in it has keyboard focus; `.mark-spin` in lang-may.css: paused, not reset,
   when it leaves; none with reduced motion; owner, 22/10/2026: not every mark at once); picking a drink
@@ -134,7 +135,6 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   `shapes.ts` draws every prop (grapes, mango, ice, beans, cheese, berries, the five-petalled flower, foam puffs,
   petal flakes, boulder, logs) smooth and rounded (icospheres of detail 3–4, rounded boxes, bevelled extrusions,
   lathes; smooth normals); `foam.ts` the cream cap, one design for both creams (owner, 22/10/2026): a thin swell inside the rim (`FOAM_RIM`), cream colour, rose petals and osmanthus;
-  `sparkles.ts` the twinkling stars;
   `palette.ts` the drinks' and props' own colours. No downloaded models: shapes drawn here keep one style and cost
   no requests. The toppings and the PP cup's splash are made after the stage shows (`loadExtras` in index.ts).
 - **Colours** are Tailwind theme variables `--color-brand-<token>` (`bg-brand-pink-500`, `text-brand-ink`,
@@ -147,11 +147,11 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   look follows `../brandkit` as the 3D does. `src/styles/lang-may.css` (imported by globals.css): `.card-sticker`
   (white card, sticker edge: a cloud-white band and a thin lilac-rose line, a soft lilac shadow) for every panel;
   `.badge-sticker` (round icon badge on an accent tint, icon in ink); `.button-game` with `data-variant="primary" |
-"outline"` (pill on a lip it presses onto) for every button and button-like link; `.sky` (sky-200 into cream);
-  `.sparkle-twinkle` animation (off with reduced motion). `src/components/lang-may/`: `<Sky>` (the
+"outline"` (pill on a lip it presses onto) for every button and button-like link; `.sky` (sky-200 into cream).
+  `src/components/lang-may/`: `<Sky>` (the
   hero's sky, a plain gradient: no clouds in it, the owner's choice), `<CloudBank>` (the hero's foot), `<TeaHills>` (the
-  footer's top, melting into the cream), `<FlowerMark>` (the low-poly logo flower: tagline marks, story bullets),
-  `<Sparkle>`. The header and footer use the Làng Mây logo (`<Logo>`). Accents (sky, moss, honey, cloud) only
+  footer's top, melting into the cream), `<FlowerMark>` (the low-poly logo flower: tagline marks, story bullets).
+  The header and footer use the Làng Mây logo (`<Logo>`). Accents (sky, moss, honey, cloud) only
   decorate: never text, never a ground under text.
 - **Performance (phones first, 22/10/2026).** The 3D stage starts only after `load` and an idle moment
   (`whenSettled` in cup-stage.tsx, ≤ 1.5 s), so three.js and the models never compete with first paint; WebGL 2 is

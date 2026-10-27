@@ -97,25 +97,6 @@
   );
 }
 
-/* A twinkle for the sparkles. */
-@media (prefers-reduced-motion: no-preference) {
-  .sparkle-twinkle {
-    animation: sparkle-twinkle var(--twinkle-time, 2.8s) ease-in-out var(--twinkle-delay, 0s) infinite;
-  }
-}
-
-@keyframes sparkle-twinkle {
-  0%,
-  100% {
-    transform: scale(0.55) rotate(0deg);
-    opacity: 0.55;
-  }
-  50% {
-    transform: scale(1) rotate(12deg);
-    opacity: 1;
-  }
-}
-
 /*
  * The menu's group marks (the painted monogram flowers): a flower turns slowly only while its group is hovered (or a
  * drink in it has keyboard focus), and stops where it is when the pointer leaves, without snapping back (owner,

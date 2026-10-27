@@ -26,15 +26,6 @@ interface Pick {
 /** "0 · 30 · 50 · 70 · 100%" → ["0%", "30%", "50%", "70%", "100%"] */
 const levels = (options: string) => options.split("·").map((o) => `${o.replace("%", "").trim()}%`);
 
-/** A four-pointed sparkle, the featured drink's mark (as the board). */
-function Sparkle({ className }: { className: string }) {
-  return (
-    <svg aria-hidden viewBox="0 0 24 24" className={className}>
-      <path d="M12 0Q13.4 10.6 24 12Q13.4 13.4 12 24Q10.6 13.4 0 12Q10.6 10.6 12 0Z" fill="currentColor" />
-    </svg>
-  );
-}
-
 function Mark({ title }: { title: string }) {
   const src = MARKS[title];
   if (!src) return null;
@@ -73,12 +64,9 @@ function Group({ group, pick, onPick }: { group: MenuCategory; pick: Pick; onPic
                 onClick={() => onPick({ group: group.id, name: item.name })}
                 className="-mx-2 flex w-[calc(100%+1rem)] items-start gap-2 rounded-2xl px-2 py-2.5 text-left transition-colors hover:bg-brand-pink-100 focus-visible:outline-2 focus-visible:outline-brand-ink aria-pressed:bg-brand-pink-100"
               >
+                {/* the featured drink's mark: a plain honey disc (no sparkle in it since 27/10/2026, the owner) */}
                 <span className="mt-1 grid size-5 shrink-0 place-items-center">
-                  {featured && (
-                    <span className="grid size-5 place-items-center rounded-full bg-brand-honey-400">
-                      <Sparkle className="size-3 text-brand-ink" />
-                    </span>
-                  )}
+                  {featured && <span className="size-5 rounded-full bg-brand-honey-400" />}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-[1.08rem] leading-snug font-medium">{item.name}</span>

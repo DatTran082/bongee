@@ -30,7 +30,6 @@ import { createToppings } from "./toppings";
 import { toonCup } from "./toon/cups";
 import { setOutlineSize } from "./toon/outline";
 import { createPetCup, PET_PRINT_URL } from "./toon/pet-cup";
-import { createSparkles, type Sparkles } from "./toon/sparkles";
 import { flavors } from "@/data/flavors";
 import { createFlavorRig, type FlavorRig } from "./flavor-rig";
 import { flavorScroll } from "./flavor-scroll";
@@ -42,8 +41,8 @@ import type { CupTarget } from "./track";
 // page scrolls (track.ts, actor.ts): the cover photo's set (set/), which floats in the hero; the flavour carousel's
 // cup (flavor-rig.ts: paper, the PP cup of the fruit teas, the PET cup of the coffees); the clear PP cup of grape tea with grapes and ice in it and floating round it (splash.ts);
 // the lidded paper cup. Everything is drawn as a smooth stylized game asset (toon/: the Làng Mây edition's toon
-// rules): soft cel bands, sticker outlines, flat white highlights, sparkles. No flowers drift behind them (the owner
-// took them out, 22/10/2026). The canvas is transparent, so the page's painted scenery (sky, clouds)
+// rules): soft cel bands, sticker outlines, flat white highlights. No flowers drift behind them (the owner took them
+// out, 22/10/2026), and no sparkles twinkle round them (the owner, 27/10/2026). The canvas is transparent, so the page's painted scenery (sky, clouds)
 // stays behind the actors; it takes the flavour section's tone only while that section has the viewport. A drag turns an actor, a tap on a lid flips its strap,
 // the keyboard does both. With reduced motion nothing moves on its own: everything sits in its slot, follows the
 // scroll, and frames are drawn only when something changed.
@@ -56,7 +55,6 @@ const MAX_STEP = 250;
 const LEAN = { perSpeed: 0.05, max: 0.14, tau: 90 };
 const SPLASH_SEED = 19;
 const TOPPING_SEED = 43;
-const SPARKLES = { seed: 61, count: 7 };
 const CLEAR = new Color(tokens["bg"]); // the page's cream ground
 /** Idle motion and flight of the cups: they float, and a drag turns them. */
 const CUP_MOTION = { bob: 0.016, sway: 0.08, roll: 0.02, hz: 0.24, spin: 1.1, turnable: true };
@@ -199,7 +197,6 @@ export async function createCupScene(
   let toppingsDispose: (() => void) | null = null;
   let rig: FlavorRig | null = null;
   let renderer: WebGLRenderer | null = null;
-  const sparkles: Sparkles[] = [];
   let frame = 0;
 
   function dispose(): void {
@@ -210,7 +207,6 @@ export async function createCupScene(
     splash?.dispose();
     toppingsDispose?.();
     rig?.dispose();
-    for (const s of sparkles) s.dispose();
     disposeScene(scene);
     renderer?.dispose();
     renderer?.forceContextLoss(); // free the context now, not when the GC gets to it (dev reloads pile them up)
@@ -279,11 +275,6 @@ export async function createCupScene(
       pp: hire("pp"),
       paper: hire("paper"),
     };
-    for (const name of ["pp", "flavor"] as const) {
-      const made = createSparkles(seeded(SPARKLES.seed + sparkles.length), SPARKLES.count);
-      sparkles.push(made);
-      cast[name].decorate(made.group);
-    }
 
     /**
      * The toppings and what floats round the PP cup are not seen at first: they are made after the stage shows (their
@@ -425,7 +416,6 @@ export async function createCupScene(
       followSet();
       key.castShadow = quality.shadows && cast.set.root.visible; // the shadow pass serves the set alone
       splash?.update(time, reduced ? 0 : dt / 1000);
-      for (const s of sparkles) s.update(time, reduced);
       const sinceDraw = now - lastDraw;
       if (
         needsRedraw({ reduced, moving: moving || flavorMoved, dirty, scrolled, targetChanged, sinceDraw, idleFrameMs })

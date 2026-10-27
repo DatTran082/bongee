@@ -1,7 +1,7 @@
 @import "tailwindcss";
 /* Brand colours as --color-brand-* (bg-brand-pink-500, text-brand-ink…), generated from the brand kit. */
 @import "../styles/brand-tokens.css";
-/* The Làng Mây look (brandkit): sticker cards, game buttons, the painted sky, drifting clouds, sparkles. */
+/* The Làng Mây look (brandkit): sticker cards, game buttons, the painted sky, drifting clouds. */
 @import "../styles/lang-may.css";
 
 /* Fraunces is the brand's only typeface (next/font in layout.tsx exposes it as --font-fraunces). */

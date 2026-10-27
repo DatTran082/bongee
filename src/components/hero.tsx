@@ -5,7 +5,6 @@ import { CupAnchor } from "@/components/cup-anchor";
 import { CloudBank } from "@/components/lang-may/cloud-bank";
 import { FlowerMark } from "@/components/lang-may/flower-mark";
 import { Sky } from "@/components/lang-may/sky";
-import { Sparkle } from "@/components/lang-may/sparkle";
 import { brand, hero, sections } from "@/data/boongee";
 
 /**
@@ -26,7 +25,6 @@ export function Hero() {
           <p className="flex items-center justify-center gap-3 text-sm tracking-[0.35em] uppercase xl:justify-start xl:text-base">
             <FlowerMark className="size-6" />
             {brand.name}
-            <Sparkle className="size-4 text-brand-honey-400" delay="-1.2s" />
           </p>
           <h1 className="mt-4 text-4xl leading-[1.25] font-normal tracking-[0.15em] uppercase sm:text-5xl xl:text-6xl">
             {brand.sloganLines.map((line, i) => (

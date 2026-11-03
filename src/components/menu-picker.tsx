@@ -205,14 +205,16 @@ export function MenuPicker() {
       </div>
 
       <div id="mon-topping" className="mt-2 scroll-mt-28 border-t-2 border-brand-pink-700/40">
-        <Strip label="Topping thêm">
-          {toppings.map((t) => (
-            <Cell key={t.name} on={extra.includes(t.name)} onClick={() => toggleTopping(t.name)}>
-              {t.name}
-              <span className="opacity-80">+{formatPrice(t.prices[0])}</span>
-            </Cell>
-          ))}
-        </Strip>
+        {toppings.length > 0 && (
+          <Strip label="Topping thêm">
+            {toppings.map((t) => (
+              <Cell key={t.name} on={extra.includes(t.name)} onClick={() => toggleTopping(t.name)}>
+                {t.name}
+                <span className="opacity-80">+{formatPrice(t.prices[0])}</span>
+              </Cell>
+            ))}
+          </Strip>
+        )}
         <div className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6">
           <Strip label="Đường">
             {sugarLevels.map((level) => (

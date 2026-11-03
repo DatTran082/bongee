@@ -34,9 +34,6 @@ export interface MenuCategory {
   items: MenuItem[];
 }
 
-/** Sizes in menu order, e.g. { label: "M", volume: "500ml" }. */
-export const sizes = Object.entries(data.sizes).map(([label, volume]) => ({ label, volume }));
-
 /** The till's groups in its order; a group the page has no id for is left out (a new one needs an id above). */
 export const categories: MenuCategory[] = odoo.groups.flatMap((group) => {
   const id = GROUP_IDS[group.title as keyof typeof GROUP_IDS];
@@ -48,6 +45,12 @@ export const categories: MenuCategory[] = odoo.groups.flatMap((group) => {
   }));
   return [{ id, title: group.title, sized: items.every((item) => item.prices.length > 1), items }];
 });
+
+/** The sizes the till sells, in menu order, e.g. { label: "M", volume: "500ml" }: all of ShanMay's when a drink comes
+ * in sizes, else only the first (one cup for every drink, as on the cost sheet of 03/11/2026). */
+export const sizes = Object.entries(data.sizes)
+  .map(([label, volume]) => ({ label, volume }))
+  .slice(0, categories.some((c) => c.sized) ? undefined : 1);
 
 /** The day the menu was last copied from Odoo (YYYY-MM-DD). */
 export const menuSyncedOn = odoo.syncedOn;

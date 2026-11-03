@@ -111,8 +111,8 @@ export const promises = {
   items: [
     {
       title: "Hoa thật",
-      // the teas in the till's recipes (Odoo): cốt trà dành dành, bạch lan hoa, quế hoa, hoa nhài
-      text: "Cốt trà ướp cùng hoa dành dành, bạch lan, quế hoa và hoa nhài.",
+      // the flower teas in the till's recipes (Odoo, cost sheet of 03/11/2026): cốt trà dành dành, bạch lan hoa, hoa nhài
+      text: "Cốt trà ướp cùng hoa dành dành, bạch lan và hoa nhài.",
       icon: "flower",
     },
     {

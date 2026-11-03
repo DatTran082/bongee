@@ -76,16 +76,28 @@
           "note": "Trà trúc, nho tươi, nho xanh, tắc"
         },
         {
+          "name": "Nho Tằm",
+          "kind": "do-uong",
+          "prices": [52],
+          "note": "Trà hoa nhài, nho tím, dâu tằm"
+        },
+        {
           "name": "Xoài Hạ Tuyết",
           "kind": "do-uong",
           "prices": [59],
-          "note": "Trà sữa hoa nhài, thạch trà, xoài tươi, xoài tanong"
+          "note": "Trà sữa hoa nhài, xoài tươi, xoài tanong"
         }
       ]
     },
     {
       "title": "Kem cheese",
       "items": [
+        {
+          "name": "Dâu Cheese",
+          "kind": "do-uong",
+          "prices": [55],
+          "note": "Trà olong bạch đào, dâu tằm, kem cheese"
+        },
         {
           "name": "Lài Cheese",
           "kind": "do-uong",
@@ -97,12 +109,6 @@
           "kind": "do-uong",
           "prices": [59],
           "note": "Trà trúc, nho tím, nho xanh, nho tươi"
-        },
-        {
-          "name": "Đào Cheese",
-          "kind": "do-uong",
-          "prices": [59],
-          "note": "Trà olong bạch đào, đào hồng, kem cheese"
         }
       ]
     },
@@ -165,6 +171,47 @@
           "name": "Kem Cheese",
           "kind": "topping",
           "prices": [15]
+        }
+      ]
+    },
+    {
+      "title": "Combo",
+      "items": [
+        {
+          "name": "Combo Bộ Ba Làng Mây",
+          "kind": "do-uong",
+          "prices": [119],
+          "note": "Trà sữa bạch lan hoa, trà sữa olong bạch đào, trà sữa trúc, kem bông"
+        },
+        {
+          "name": "Combo Cặp Đôi Đối Lập",
+          "kind": "do-uong",
+          "prices": [76],
+          "note": "Trà sữa olong bạch đào, cà phê phin, sữa, kem muối"
+        },
+        {
+          "name": "Combo Song Hoa Tinh Túy",
+          "kind": "do-uong",
+          "prices": [79],
+          "note": "Trà sữa bạch lan hoa, trà sữa olong bạch đào, kem bông, vụn hoa"
+        },
+        {
+          "name": "Combo Thanh Mát Làng Mây",
+          "kind": "do-uong",
+          "prices": [79],
+          "note": "Trà sữa bạch lan hoa, trà sữa trúc, nho tươi, nho xanh"
+        },
+        {
+          "name": "Combo Trái Cây & Kem Cheese",
+          "kind": "do-uong",
+          "prices": [87],
+          "note": "Trà trúc, trà hoa nhài, nho tươi, nho xanh"
+        },
+        {
+          "name": "Combo Tỉnh Táo & Thanh Lọc",
+          "kind": "do-uong",
+          "prices": [71],
+          "note": "Trà sữa bạch lan hoa, coldbrew, chanh vàng tươi"
         }
       ]
     }

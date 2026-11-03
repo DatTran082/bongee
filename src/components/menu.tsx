@@ -3,7 +3,10 @@ import { SectionHeading } from "@/components/section-heading";
 import { menuIntro, sections } from "@/data/boongee";
 import { formatPrice, itemCount, priceRange, sizes } from "@/data/menu";
 
-const sizeLine = sizes.map((s) => `${s.label} ${s.volume.replace("ml", " ml")}`).join(" · ");
+const sizeLine =
+  sizes.length > 1
+    ? `Cỡ ly ${sizes.map((s) => `${s.label} ${s.volume.replace("ml", " ml")}`).join(" · ")}`
+    : `Một cỡ ly ${sizes[0].volume.replace("ml", " ml")}`;
 
 /**
  * The menu (the shop's Odoo, src/data/menu.ts): its heading, then the picker (src/components/menu-picker.tsx), laid
@@ -16,7 +19,7 @@ export function Menu() {
       <SectionHeading
         tagline={menuIntro.tagline}
         title={menuIntro.title}
-        subtitle={`${itemCount} món, từ ${formatPrice(priceRange.min)} đến ${formatPrice(priceRange.max)}. Cỡ ly ${sizeLine}.`}
+        subtitle={`${itemCount} món, từ ${formatPrice(priceRange.min)} đến ${formatPrice(priceRange.max)}. ${sizeLine}.`}
       />
       <MenuPicker />
     </section>

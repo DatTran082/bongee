@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MenuPicker } from "@/components/menu-picker";
 import { SectionHeading } from "@/components/section-heading";
 import { menuIntro, sections } from "@/data/boongee";
@@ -9,9 +10,9 @@ const sizeLine =
     : `Một cỡ ly ${sizes[0].volume.replace("ml", " ml")}`;
 
 /**
- * The menu (the shop's Odoo, src/data/menu.ts): its heading, then the picker (src/components/menu-picker.tsx), laid
- * out as the printed menu board: featured cups, groups with their prices, the lookbook poster, the topping, sugar and
- * ice strips; each group's mark turns while the pointer is on it.
+ * The menu section: the shop's Odoo menu laid out as the printed menu board (brandkit/thuc-don/thuc-don.pdf):
+ * featured cups, groups with their prices, lookbook poster, topping, sugar and ice strips.
+ * Includes an editorial link to the dedicated /preview route for full lookbook photography.
  */
 export function Menu() {
   return (
@@ -19,8 +20,22 @@ export function Menu() {
       <SectionHeading
         tagline={menuIntro.tagline}
         title={menuIntro.title}
-        subtitle={`${itemCount} món, từ ${formatPrice(priceRange.min)} đến ${formatPrice(priceRange.max)}. ${sizeLine}.`}
+        subtitle={`${itemCount} món chính thức, từ ${formatPrice(priceRange.min)} đến ${formatPrice(priceRange.max)}. ${sizeLine}.`}
       />
+
+      {/* Direct editorial link to the full photo preview route */}
+      <div className="mb-10 text-center">
+        <Link
+          href="/preview"
+          className="inline-flex items-center gap-2 border-b border-brand-ink/40 pb-1 text-sm font-medium text-brand-ink transition-colors hover:border-brand-ink hover:text-brand-ink"
+        >
+          <span>Xem trọn bộ 33 ảnh món & combo (Lookbook Studio)</span>
+          <span aria-hidden="true" className="font-serif">
+            →
+          </span>
+        </Link>
+      </div>
+
       <MenuPicker />
     </section>
   );

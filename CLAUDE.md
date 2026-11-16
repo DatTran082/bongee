@@ -78,6 +78,23 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   when it leaves; none with reduced motion; owner, 22/10/2026: not every mark at once); picking a drink
   (a row or a cup) or a strip's choice only marks it. No pop-up bar (the "Ly của bạn" bar was removed, owner,
   22/10/2026). Nothing is ordered on the site. No 3D actor rests in the menu (lighter on phones).
+- **The /menu page** (`src/app/menu/page.tsx`, `src/components/lookbook-gallery.tsx`; 16/11/2026, it replaced the
+  old `/preview` and `/thuc-don`, which held invented copy and hard-coded prices): every dish on the till, combos
+  included, group by group in the till's order, each with its lookbook studio photo (4:5) and its name, price and
+  plain line from Odoo only (`src/data/lookbook.ts` joins them, `src/lib/lookbook/join.ts`, tested). A photo opens in a
+  modal `<dialog>` (arrows go through the dishes; Esc or the backdrop closes). A dish with no photo shows "Ảnh đang
+  cập nhật"; a photo whose dish is not on the till is not shown. The photos are AI-made, so the page says "Ảnh minh
+  hoạ". `npm run sync-lookbook` (`scripts/sync-lookbook.mjs`; sync-brand runs it too, right after it wipes
+  `public/menu`) writes `public/menu/lookbook/*.<hash>.webp` and `src/data/lookbook.json` from
+  `../brandkit/lookbook`: Odoo dish name → photo stem in `PHOTOS`, a v3 photo (`assets-v3/<stem>.png`) for the stems
+  in `V3`, else the v2 one (`assets/<stem>.jpg`). The home page's menu links to it; it is in the sitemap.
+  `next.config.ts` caches `/menu/:path+` immutable, not the page itself.
+  The page opens with a hand-drawn Lottie (`src/components/menu-hero-lottie.tsx`, lottie-web's light SVG player,
+  loaded in the browser only): a pink cup is set down, a flower drifts into it, its scent rises; intro frames 0–24
+  once, then the loop 24–48; paused off screen; frame 24 still with reduced motion. Its source is
+  `../brandkit/lottie/menu-hero.scene.mjs` (skill `hand-drawn-lottie`: 12 fps, ink Đen Than + one colour Hồng phấn,
+  no sparkles, not the logo), built to `menu-hero.json` there and copied by sync-lookbook as
+  `public/menu/lookbook/menu-hero.<hash>.json` (`animation` in lookbook.json).
 - **Delivery apps** (`src/components/delivery-apps.tsx`, in the visit section): Boongee is on GrabFood and ShopeeFood
   (owner, 22/10/2026; `delivery` in `src/data/boongee.ts`), each shown with its painted badge from the Làng Mây edition
   (`giao_hang.py` → `identity/delivery/` → sync-brand → `src/assets/lang-may/{grabfood,shopeefood}.svg`: each app's

@@ -4,3 +4,6 @@ node_modules/
 package-lock.json
 next-env.d.ts
 public/models/
+
+# hand-drawn Lottie copied as built by the brand kit (named after its content)
+public/menu/lookbook/*.json

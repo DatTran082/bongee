@@ -47,6 +47,7 @@ import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import { dedup, meshopt, prune, textureCompress } from "@gltf-transform/functions";
 import { MeshoptDecoder, MeshoptEncoder } from "meshoptimizer";
 import sharp from "sharp";
+import { syncLookbook } from "./sync-lookbook.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 /** The brand kit (Làng Mây) and, inside it, its print kit (packaging prints, logo sources, the 3D cups). */
@@ -354,6 +355,8 @@ for (const [from, to] of [
   done(`src/assets/lang-may/${to}`);
 }
 await menuBoard();
+// menuBoard wipes public/menu, so the /menu page's photos are written again right after it
+await syncLookbook();
 await collateralSet();
 await icons(hex);
 await photos();

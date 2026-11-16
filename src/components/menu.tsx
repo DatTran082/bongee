@@ -12,7 +12,7 @@ const sizeLine =
 /**
  * The menu section: the shop's Odoo menu laid out as the printed menu board (brandkit/menu-board/thuc-don.pdf):
  * featured cups, groups with their prices, lookbook poster, topping, sugar and ice strips.
- * Includes an editorial link to the dedicated /preview route for full lookbook photography.
+ * Links to /menu, the same menu with a photo per dish.
  */
 export function Menu() {
   return (
@@ -23,13 +23,13 @@ export function Menu() {
         subtitle={`${itemCount} món chính thức, từ ${formatPrice(priceRange.min)} đến ${formatPrice(priceRange.max)}. ${sizeLine}.`}
       />
 
-      {/* Direct editorial link to the full photo preview route */}
+      {/* the same menu with a photo per dish */}
       <div className="mb-10 text-center">
         <Link
-          href="/preview"
+          href="/menu"
           className="inline-flex items-center gap-2 border-b border-brand-ink/40 pb-1 text-sm font-medium text-brand-ink transition-colors hover:border-brand-ink hover:text-brand-ink"
         >
-          <span>Xem trọn bộ 33 ảnh món & combo (Lookbook Studio)</span>
+          <span>Xem ảnh từng món và combo</span>
           <span aria-hidden="true" className="font-serif">
             →
           </span>

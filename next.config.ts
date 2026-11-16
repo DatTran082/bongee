@@ -10,7 +10,8 @@ const nextConfig: NextConfig = {
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
       // the menu's and the offers' pictures too (sync-brand names them after their content)
-      ...["/menu/:path*", "/uu-dai/:path*"].map((source) => ({
+      // `:path+` (not `*`): the /menu page itself must not be cached for good
+      ...["/menu/:path+", "/uu-dai/:path+"].map((source) => ({
         source,
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       })),

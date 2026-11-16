@@ -6,6 +6,12 @@
 // (JavaScript's \b knows only ASCII letters: "đá" needs an explicit end, (\s|$).)
 /** Components every drink has: they say nothing about this one. */
 const COMMON = /^(đường|đá(\s|$)|nước( lọc| sôi| nóng)?$|rich(\s|$)|bột kem|sữa đặc)/i;
+/**
+ * What the drink is served in, never what it is made of. The shop's Odoo marks most of it as packaging
+ * (`is_packaging`, the "Bao bì" category), but straws and carrier bags sit under "Nguyên liệu" there, so the line
+ * would read "Trà sữa hoa nhài, ống hút, túi đơn mang đi". Nothing a visitor drinks is in this list.
+ */
+const PACKAGING = /^(ly|cốc|nắp|ống hút|túi|băng keo|giấy chống tràn|tem|màng seal)(\s|$)/i;
 /** Milk: it is what makes "trà" "trà sữa" (or adds "sữa" after a coffee). */
 const MILK = /^sữa(\s|$)/i;
 /** Words that say how a part is made, not what it is: "mứt nho xanh" → "nho xanh". */
@@ -20,7 +26,7 @@ const upper = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 /** The line for a dish from its recipe's component names (packaging left out), or null when they say nothing. */
 export function describeDish(components: readonly string[]): string | null {
-  const names = components.map((c) => c.trim()).filter(Boolean);
+  const names = components.map((c) => c.trim()).filter((name) => name && !PACKAGING.test(name));
   const milk = names.some((n) => MILK.test(n));
   const parts: string[] = [];
   const add = (part: string) => {

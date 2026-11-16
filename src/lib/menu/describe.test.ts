@@ -61,4 +61,17 @@ describe("describeDish cleans stock names for a menu", () => {
     assert.equal(describeDish(["Coldbrew", "Bưởi hồng", "Bưởi Boduo"]), "Coldbrew, bưởi hồng");
     assert.equal(describeDish(["Coldbrew", "Puree khế", "Tép bưởi lon"]), "Coldbrew, khế, bưởi");
   });
+
+  it("leaves out what the drink is served in, even when Odoo files it under ingredients", () => {
+    // straws and carrier bags are in the shop's "Nguyên liệu" category, so they reach this function unflagged
+    assert.equal(
+      describeDish(["Cốt trà hoa nhài", "Kem cheese", "Ống hút", "Túi đơn mang đi"]),
+      "Trà hoa nhài, kem cheese",
+    );
+    assert.equal(
+      describeDish(["Ly giấy 16oz", "Nắp nhựa nút bật rời", "Coldbrew", "Túi đôi mang đi", "Giấy chống tràn"]),
+      "Coldbrew",
+    );
+    assert.equal(describeDish(["Ống hút", "Túi đơn mang đi"]), null);
+  });
 });

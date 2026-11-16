@@ -15,7 +15,7 @@ import { CLEAR, clearPlastic, clearPrint, pouredDrink } from "./cups";
 import { addOutlines } from "./outline";
 import { DRINKS } from "./palette";
 
-// The 350 ml clear PET cup (Ø84 / Ø49 × 120 mm, brandkit/in-an: line pet-trong), the coffee flavour's cup in the
+// The 350 ml clear PET cup (Ø84 / Ø49 × 120 mm, brandkit/print: line pet-trong), the coffee flavour's cup in the
 // carousel. It has no GLB: it is turned here from its sizes (src/data/pet-cup.json, written by sync-brand), drawn
 // as the PP cup is (clear plastic by alpha, its edge line in the shader), with its white print (the column of four
 // marks and the name) wrapped on by the print file's own fan, as brandkit's blender_cups.py does for the GLB cups,

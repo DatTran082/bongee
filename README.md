@@ -15,7 +15,7 @@ npm run start        # chạy bản đã dựng
 npm run check        # ESLint + TypeScript + Prettier + test
 npm run test         # test phần toán của ly 3D (node --test)
 npm run format       # định dạng lại mã (Prettier, có sắp xếp class Tailwind)
-npm run sync-brand   # chép lại tài sản thương hiệu từ ../brandkit (Làng Mây) và phần in ấn ../brandkit/in-an (xem dưới)
+npm run sync-brand   # chép lại tài sản thương hiệu từ ../brandkit (Làng Mây) và phần in ấn ../brandkit/print (xem dưới)
 ```
 
 ## Phong cách giao diện: Làng Mây
@@ -54,7 +54,7 @@ dữ liệu có cấu trúc (JSON-LD: WebSite, CafeOrCoffeeShop, FAQPage), favic
 
 ### Cảnh 3D bay theo trang
 
-Hai mô hình ly của brand kit (`brandkit/in-an/3d/boongee-paper-16oz.glb` ≈ 510 kB và `boongee-pp-700ml.glb` ≈ 360 kB sau
+Hai mô hình ly của brand kit (`brandkit/print/3d/boongee-paper-16oz.glb` ≈ 510 kB và `boongee-pp-700ml.glb` ≈ 360 kB sau
 nén, tên file theo nội dung trong `public/models/`) được vẽ bằng **three.js** trên một canvas trong suốt cố định phía
 sau nội dung (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`). Có ba "diễn viên", mỗi diễn viên bay theo các ô
 của riêng mình:
@@ -67,7 +67,7 @@ của riêng mình:
 - **Ly giấy** đậy nắp: ô ở ghé quán.
 
 - **Menu tương tác** (`#menu`, `src/components/menu-picker.tsx`) có cùng bố cục và thiết kế với bảng menu in
-  (`../brandkit/thuc-don/thuc-don.pdf`):
+  (`../brandkit/menu-board/thuc-don.pdf`):
   - cột ly nổi bật (ảnh ly render bằng Blender);
   - các nhóm món có dấu hoa tròn, mỗi món có dòng mô tả và giá M/L trong vòng tròn nhỏ;
   - ảnh lookbook;
@@ -141,7 +141,7 @@ không đọc khoá). Ở mạng văn phòng (chặn sslip.io), mở SSH tunnel 
 
 ## Bộ nhận diện
 
-- **Màu** sinh từ `brandkit/in-an/color/tokens.json` (cộng màu phụ của `brandkit/color/tokens.json`) thành `src/styles/brand-tokens.css` (lớp Tailwind `bg-brand-pink-500`,
+- **Màu** sinh từ `brandkit/print/color/tokens.json` (cộng màu phụ của `brandkit/color/tokens.json`) thành `src/styles/brand-tokens.css` (lớp Tailwind `bg-brand-pink-500`,
   `text-brand-ink`, `border-brand-line`…) và `src/data/brand-tokens.json`. Không gõ mã màu trong component. Chữ luôn là
   Đen Than trên nền hồng hoặc trắng; chữ trắng chỉ trên nền Đen Than.
 - **Nền** cả trang là hồng phấn `pink-500` như hero; các khối (thực đơn, ưu đãi, địa chỉ…) là thẻ trắng. Chữ xám
@@ -156,16 +156,16 @@ Tài sản thương hiệu được chép vào repo (dựng và deploy không c�
 `brand-kit`). Ngoài các file dưới, script chép `menu-data.json` và `collateral.json` của ShanMay vào
 `src/data/shanmay/`:
 
-| Từ `brandkit/in-an/`                                   | Sang                                                                                                                                          |
+| Từ `brandkit/print/`                                   | Sang                                                                                                                                          |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | `color/tokens.json`                                    | `src/styles/brand-tokens.css`, `src/data/brand-tokens.json`                                                                                   |
-| `nhan-dien/01-logo/logo-ngang-khong-slogan_den.svg`    | `src/assets/brand/logo-ngang.svg`                                                                                                             |
-| `nhan-dien/01-logo/bieu-tuong-hoa_den.svg`             | `src/app/icon.svg`, `favicon.ico`, `apple-icon.png`                                                                                           |
-| `nhan-dien/03-hoa-tiet/monogram_hong.png`              | `src/assets/images/monogram-hong.png`                                                                                                         |
-| `nhan-dien/01-logo/bieu-tuong-hoa_den.svg`             | `src/assets/brand/hoa.svg` (hoa trôi sau ly 3D)                                                                                               |
-| `lookbook/anh-bia/facebook.png`                        | `src/assets/images/hero.jpg` (ảnh hero dự phòng khi không có ly 3D)                                                                           |
+| `identity/01-logo/logo-ngang-khong-slogan_den.svg`    | `src/assets/brand/logo-ngang.svg`                                                                                                             |
+| `identity/01-logo/bieu-tuong-hoa_den.svg`             | `src/app/icon.svg`, `favicon.ico`, `apple-icon.png`                                                                                           |
+| `identity/03-pattern/monogram_hong.png`              | `src/assets/images/monogram-hong.png`                                                                                                         |
+| `identity/01-logo/bieu-tuong-hoa_den.svg`             | `src/assets/brand/hoa.svg` (hoa trôi sau ly 3D)                                                                                               |
+| `lookbook/cover/facebook.png`                        | `src/assets/images/hero.jpg` (ảnh hero dự phòng khi không có ly 3D)                                                                           |
 | `3d/boongee-pp-700ml.glb`, `3d/boongee-paper-16oz.glb` | `public/models/<tên>.<hash>.glb` (hai ly 3D, nén meshopt + WebP; tên theo nội dung, cache vĩnh viễn) và `src/data/cup-model.json` (đường dẫn) |
-| `nhan-dien/04-anh-bia/facebook-slogan-den.png`         | `src/app/opengraph-image.jpg`, `twitter-image.jpg` (1200 × 628)                                                                               |
+| `identity/04-cover/facebook-slogan-den.png`         | `src/app/opengraph-image.jpg`, `twitter-image.jpg` (1200 × 628)                                                                               |
 
 ## Deploy
 

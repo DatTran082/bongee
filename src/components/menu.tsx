@@ -10,7 +10,7 @@ const sizeLine =
     : `Một cỡ ly ${sizes[0].volume.replace("ml", " ml")}`;
 
 /**
- * The menu section: the shop's Odoo menu laid out as the printed menu board (brandkit/thuc-don/thuc-don.pdf):
+ * The menu section: the shop's Odoo menu laid out as the printed menu board (brandkit/menu-board/thuc-don.pdf):
  * featured cups, groups with their prices, lookbook poster, topping, sugar and ice strips.
  * Includes an editorial link to the dedicated /preview route for full lookbook photography.
  */

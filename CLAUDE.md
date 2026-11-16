@@ -15,7 +15,7 @@ npm run check        # eslint + tsc --noEmit + prettier --check (must pass)
 npm run format       # prettier --write (with prettier-plugin-tailwindcss)
 npm run sync-menu    # the menu (dishes, groups, counter prices) from the shop's Odoo through its MCP server → src/data/odoo/
                      # (BOONGEE_MCP: the server command; default ../odoo/mcp-boongee/run.sh prod; the office blocks sslip.io)
-npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and its print kit ../brandkit/in-an, sizes/offers
+npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and its print kit ../brandkit/print, sizes/offers
                      # from ShanMay (BOONGEE_BRANDKIT, BOONGEE_SHANMAY)
 ```
 
@@ -35,7 +35,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   social URLs or testimonials. The domain is not in it: `src/lib/site-url.ts` (server-only, may throw) reads
   `NEXT_PUBLIC_SITE_URL`, then Vercel's production domain, then localhost in dev; a production build with none fails.
 - **Brand assets come from the sibling brand kit** (`../brandkit`, Boongee · Làng Mây, the only official kit since
-  22/10/2026; tokens, the logo sources, favicon, cover photos and the 3D cups from its print kit `../brandkit/in-an`; the Làng Mây look:
+  22/10/2026; tokens, the logo sources, favicon, cover photos and the 3D cups from its print kit `../brandkit/print`; the Làng Mây look:
   its logo, flower marks, clouds, cloud bank and tea hills into `src/assets/lang-may/`, its accents and toon rules)
   through `scripts/sync-brand.mjs` and are committed.
   Do not hand-edit what it writes (`src/styles/brand-tokens.css`, `src/data/brand-tokens.json`, `src/assets/`,
@@ -52,7 +52,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   made phones lag)); `pp`, the 700 ml PP cup,
   clear plastic by alpha, holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
   standing in it and drifting round it (`splash.ts`); `paper`, the lidded paper cup alone; `flavor`,
-  the carousel's cup (below). Both GLBs (`brandkit/in-an/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
+  the carousel's cup (below). Both GLBs (`brandkit/print/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
   meshopt + WebP to `public/models/<name>.<hash>.glb`, URLs in `src/data/cup-model.json`, cached immutable by
   `next.config.ts`. Sections lay out empty slots with `<CupAnchor name actor turn tilt lid fill>`; `track.ts`
   rests each actor in its own slot nearest above the viewport's middle and flies it to its next (dwell 12 % at
@@ -68,9 +68,9 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   `<noscript>` copy is there without script). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
 - **The menu is laid out as the printed menu board** (`src/components/menu-picker.tsx`, client; `menu.tsx` keeps the
-  heading), after `../brandkit/thuc-don/thuc-don.pdf`: a column of featured cups (the board's Blender toon
+  heading), after `../brandkit/menu-board/thuc-don.pdf`: a column of featured cups (the board's Blender toon
   renders, `public/menu/ly/*.<hash>.png`, list and URLs in `src/data/menu-featured.json`, both written by sync-brand from
-  `brandkit/thuc-don/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
+  `brandkit/menu-board/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
   monogram mark, `public/menu/mark/*.<hash>.svg`, group → mark in menu-featured.json → marks, an upper-case heading over a rule, each drink's plain line in italics, M / L prices in small
   size discs, a plain honey disc by the featured drink), the lookbook photo (`public/menu/poster.jpg`, when the board has
   one), and the topping / sugar / ice strips at the foot. It is alive: a group's mark turns slowly only while the
@@ -80,7 +80,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   22/10/2026). Nothing is ordered on the site. No 3D actor rests in the menu (lighter on phones).
 - **Delivery apps** (`src/components/delivery-apps.tsx`, in the visit section): Boongee is on GrabFood and ShopeeFood
   (owner, 22/10/2026; `delivery` in `src/data/boongee.ts`), each shown with its painted badge from the Làng Mây edition
-  (`giao_hang.py` → `nhan-dien/giao-hang/` → sync-brand → `src/assets/lang-may/{grabfood,shopeefood}.svg`: each app's
+  (`giao_hang.py` → `identity/delivery/` → sync-brand → `src/assets/lang-may/{grabfood,shopeefood}.svg`: each app's
   real mark redrawn by hand, owner's request: GrabFood's green disc with the take-away box and crossed spoon and fork,
   ShopeeFood's orange bag-box with a fork and a spoon; no words in them, their names are text). The shop's page in each app is `href` (`TODO(boongee)`); while it is `null` the card asks to search
   "Boongee" in the app instead of linking.
@@ -108,7 +108,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   clear cup: the PP cup of the fruit teas (about its middle, never below half size, never both at once). The coffees
   are in the lidded paper cup (the owner tried the 350 ml PET cup and went back, 22/10/2026). The PET cup stays ready
   (`cup: "pet"` in flavors.ts; `toon/pet-cup.ts`: no GLB, turned from its sizes in `src/data/pet-cup.json` and wrapped
-  with its white print by the print fan, both written by sync-brand from `brandkit/thuc-don/ly/src`; coldbrew in it,
+  with its white print by the print fan, both written by sync-brand from `brandkit/menu-board/cups/src`; coldbrew in it,
   no lid); the stage builds it and fetches its print only when a flavour uses it. Every shader, hidden cups too
   (`compileAll`), compiles before the first frame and the PET print (when used) is uploaded then, not mid-scroll; the
   toppings (`toppings.ts`) fade from one flavour's set to the next, and the canvas's clear colour moves through the

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Copies the Boongee brand assets this site uses from the brand kit (../brandkit, or BOONGEE_BRANDKIT: the Làng Mây
-// kit, official since 22/10/2026, with its print kit in brandkit/in-an) and derives the web-only files from them. Run after the brand kit changes: `npm run sync-brand`. Everything it writes is
+// kit, official since 22/10/2026, with its print kit in brandkit/print) and derives the web-only files from them. Run after the brand kit changes: `npm run sync-brand`. Everything it writes is
 // committed, so building and deploying the site never needs the brand kit.
 //
-// From the print kit (in-an/):
+// From the print kit (print/):
 //
 //   color/tokens.json                                  → src/styles/brand-tokens.css   Tailwind colours bg-brand-*…
 //                                                        src/data/brand-tokens.json    the same, for TypeScript
@@ -13,21 +13,21 @@
 //   color/tokens.json, its `use: illustration` colours → added to the two token files above (sky, cloud, moss, …;
 //                                                        for the 3D and decoration only, never text or print)
 //   color/tokens.json → toon                           → src/data/brand-toon.json   bands, shade, outline, highlight
-//   nhan-dien/logo-ngang_hong.svg                      → src/assets/lang-may/logo-ngang.svg   the header's logo
-//   nhan-dien/hoa-low-poly_hong.svg, hoa-ve-tay_hong.svg → src/assets/lang-may/hoa*.svg      headings, bullets
-//   thuc-don/ly/src/pet-350ml{.json,_print.png}         → src/data/pet-cup.json, public/models/pet-350ml_print.<hash>.png
+//   identity/logo-ngang_hong.svg                      → src/assets/lang-may/logo-ngang.svg   the header's logo
+//   identity/hoa-low-poly_hong.svg, hoa-ve-tay_hong.svg → src/assets/lang-may/hoa*.svg      headings, bullets
+//   menu-board/cups/src/pet-350ml{.json,_print.png}         → src/data/pet-cup.json, public/models/pet-350ml_print.<hash>.png
 //                                                        the coffee flavour's PET cup (sizes, print fan, print)
-//   thuc-don/ly/*.png, featured.json, lookbook/poster.* → public/menu/{ly/,}*.<hash>.*, URLs in src/data/menu-featured.json
-//   nhan-dien/monogram/*.svg (the groups' marks)       → public/menu/mark/*.<hash>.svg
-//   an-pham/*.png (vouchers, loyalty card, posts)      → public/uu-dai/*.<hash>.png, URLs in src/data/uu-dai.json
+//   menu-board/cups/*.png, featured.json, lookbook/poster.* → public/menu/{ly/,}*.<hash>.*, URLs in src/data/menu-featured.json
+//   identity/monogram/*.svg (the groups' marks)       → public/menu/mark/*.<hash>.svg
+//   collateral/*.png (vouchers, loyalty card, posts)      → public/uu-dai/*.<hash>.png, URLs in src/data/uu-dai.json
 //                                                        the menu section's cups and lookbook photo (as the menu board)
-//   nhan-dien/bien-may.svg, doi-che.svg                → src/assets/lang-may/   cloud bank, tea hills (the page's
+//   identity/bien-may.svg, doi-che.svg                → src/assets/lang-may/   cloud bank, tea hills (the page's
 //                                                        scenery, src/components/lang-may/)
-//   nhan-dien/giao-hang/{grabfood,shopeefood}.svg      → src/assets/lang-may/   the delivery apps' badges (visit)
-//   nhan-dien/01-logo/bieu-tuong-hoa_den.svg           → src/app/icon.svg, favicon.ico, apple-icon.png
-//   nhan-dien/03-hoa-tiet/monogram_hong.png            → src/assets/images/monogram-hong.png
-//   lookbook/anh-bia/facebook.png                      → src/assets/images/hero.jpg   shown only when the 3D cup cannot
-//   nhan-dien/04-anh-bia/facebook-slogan-den.png       → src/app/opengraph-image.jpg, twitter-image.jpg (1200 × 628)
+//   identity/delivery/{grabfood,shopeefood}.svg      → src/assets/lang-may/   the delivery apps' badges (visit)
+//   identity/01-logo/bieu-tuong-hoa_den.svg           → src/app/icon.svg, favicon.ico, apple-icon.png
+//   identity/03-pattern/monogram_hong.png            → src/assets/images/monogram-hong.png
+//   lookbook/cover/facebook.png                      → src/assets/images/hero.jpg   shown only when the 3D cup cannot
+//   identity/04-cover/facebook-slogan-den.png       → src/app/opengraph-image.jpg, twitter-image.jpg (1200 × 628)
 //   3d/boongee-pp-700ml.glb, 3d/boongee-paper-16oz.glb → public/models/<name>.<hash>.glb   the 3D cups, compressed,
 //                                                        prints only (≤ 2048 px), no normal or metal maps
 //                                                        src/data/cup-model.json          their URLs
@@ -51,7 +51,7 @@ import sharp from "sharp";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 /** The brand kit (Làng Mây) and, inside it, its print kit (packaging prints, logo sources, the 3D cups). */
 const LANGMAY = path.resolve(process.env.BOONGEE_BRANDKIT ?? path.join(ROOT, "..", "brandkit"));
-const KIT = path.join(LANGMAY, "in-an");
+const KIT = path.join(LANGMAY, "print");
 const SHANMAY = path.resolve(process.env.BOONGEE_SHANMAY ?? path.join(ROOT, "..", "..", "ShanMay", "brand-kit"));
 const OG = { width: 1200, height: 628 };
 const OG_ALT = "Boongee — Trà hương thanh vị: hai ly Boongee in hoa monogram màu bạc trên nền hồng";
@@ -77,7 +77,7 @@ const langMay = (rel) => {
 const kit = (rel) => {
   const file = path.join(KIT, rel);
   if (!existsSync(file))
-    throw new Error(`Thiếu ${file}: dựng lại brandkit/in-an trước (xem CLAUDE.md ở thư mục Boongee).`);
+    throw new Error(`Thiếu ${file}: dựng lại brandkit/print trước (xem CLAUDE.md ở thư mục Boongee).`);
   return file;
 };
 const shanmay = (rel) => {
@@ -119,7 +119,7 @@ function tokens() {
   const lines = Object.entries(hex).map(([name, value]) => `  --color-brand-${name}: ${value.toLowerCase()};`); // as Prettier writes hex
   write(
     "src/styles/brand-tokens.css",
-    "/* Generated by scripts/sync-brand.mjs from brandkit/in-an/ and brandkit/color/tokens.json. Do not edit. */\n" +
+    "/* Generated by scripts/sync-brand.mjs from brandkit/print/ and brandkit/color/tokens.json. Do not edit. */\n" +
       `@theme {\n${lines.join("\n")}\n}\n`,
   );
   write("src/data/brand-tokens.json", JSON.stringify(hex, null, 2) + "\n");
@@ -144,7 +144,7 @@ function ico(png, size) {
 /** The logo flower on the brand pink, square, with a margin (iOS home screen, browser tabs). */
 async function flowerIcon(size, ground, margin) {
   const inner = Math.round(size * (1 - 2 * margin));
-  const flower = await sharp(kit("nhan-dien/01-logo/bieu-tuong-hoa_den.svg"), { density: 600 })
+  const flower = await sharp(kit("identity/01-logo/bieu-tuong-hoa_den.svg"), { density: 600 })
     .resize(inner, inner, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toBuffer();
@@ -155,20 +155,20 @@ async function flowerIcon(size, ground, margin) {
 }
 
 async function icons(hex) {
-  copy("nhan-dien/01-logo/bieu-tuong-hoa_den.svg", "src/app/icon.svg");
+  copy("identity/01-logo/bieu-tuong-hoa_den.svg", "src/app/icon.svg");
   write("src/app/apple-icon.png", await flowerIcon(TOUCH_ICON, hex["pink-500"], 0.16));
   write("src/app/favicon.ico", ico(await flowerIcon(FAVICON, hex["pink-500"], 0.08), FAVICON));
 }
 
 async function photos() {
   // flatten: the AI photo is opaque, but never let a stray alpha channel turn black in the JPEG
-  await sharp(kit("lookbook/anh-bia/facebook.png"))
+  await sharp(kit("lookbook/cover/facebook.png"))
     .flatten({ background: "#ffffff" })
     .jpeg({ quality: 90, mozjpeg: true })
     .toFile(out("src/assets/images/hero.jpg"));
   done("src/assets/images/hero.jpg");
   // Share image: the cover with the slogan, cut to 1.91 : 1 round the slogan and the cups.
-  const cover = sharp(kit("nhan-dien/04-anh-bia/facebook-slogan-den.png"));
+  const cover = sharp(kit("identity/04-cover/facebook-slogan-den.png"));
   const { width, height } = await cover.metadata();
   const cropW = Math.round((height * OG.width) / OG.height);
   const left = Math.round(Math.min(width - cropW, width * 0.12));
@@ -238,12 +238,12 @@ async function cupModel({ name: CUP, nodes: CUP_NODES }, io) {
 /**
  * The 350 ml PET cup (the coffee flavour's cup in the carousel): it has no GLB, the stage turns it from its sizes
  * (toon/pet-cup.ts) and wraps its white print on it by the print fan. Both come from the brand kit's
- * thuc-don/ly/src (scripts/pet_texture.py, from in-an/designs/pet-trong-350ml): the print, ≤ 2048 px, to
+ * menu-board/cups/src (scripts/pet_texture.py, from print/designs/pet-trong-350ml): the print, ≤ 2048 px, to
  * public/models/pet-350ml_print.<hash>.png; the sizes (mm) and the fan to src/data/pet-cup.json.
  */
 async function petCup() {
-  const spec = JSON.parse(readFileSync(langMay("thuc-don/ly/src/pet-350ml.json"), "utf8"));
-  const png = await sharp(langMay("thuc-don/ly/src/pet-350ml_print.png"))
+  const spec = JSON.parse(readFileSync(langMay("menu-board/cups/src/pet-350ml.json"), "utf8"));
+  const png = await sharp(langMay("menu-board/cups/src/pet-350ml_print.png"))
     .resize({ width: 2048 })
     .png({ compressionLevel: 9 })
     .toBuffer();
@@ -255,7 +255,7 @@ async function petCup() {
 }
 
 /**
- * The menu board's pieces for the landing's menu section (the same look as brandkit/thuc-don/thuc-don.pdf):
+ * The menu board's pieces for the landing's menu section (the same look as brandkit/menu-board/thuc-don.pdf):
  * the featured cups (Blender toon renders, resized to 450 px wide WebP-ready PNGs) with their list, and the poster's
  * lookbook photo when there is one (as JPEG; some AI-made PNGs do not decode everywhere).
  */
@@ -272,24 +272,24 @@ function hashed(dir, file, buffer) {
 }
 
 /**
- * The menu board's pieces for the landing's menu section (the same look as brandkit/thuc-don/thuc-don.pdf):
+ * The menu board's pieces for the landing's menu section (the same look as brandkit/menu-board/thuc-don.pdf):
  * the featured cups (Blender toon renders, 450 px wide), the groups' painted monogram marks, the poster's lookbook
  * photo when there is one (as JPEG; some AI-made PNGs do not decode everywhere); their URLs in
  * src/data/menu-featured.json.
  */
 async function menuBoard() {
-  const { cups, marks } = JSON.parse(readFileSync(langMay("thuc-don/featured.json"), "utf8"));
+  const { cups, marks } = JSON.parse(readFileSync(langMay("menu-board/featured.json"), "utf8"));
   rmSync(path.join(ROOT, "public/menu"), { recursive: true, force: true });
   const featured = [];
   for (const cup of cups) {
-    const png = await sharp(langMay(`thuc-don/ly/${cup.file}`))
+    const png = await sharp(langMay(`menu-board/cups/${cup.file}`))
       .resize({ width: 450 })
       .png({ compressionLevel: 9, palette: false })
       .toBuffer();
     featured.push({ ...cup, src: hashed("menu/ly", cup.file, png) });
   }
   const source = ["jpg", "jpeg", "png", "webp"]
-    .map((ext) => path.join(LANGMAY, `thuc-don/lookbook/poster.${ext}`))
+    .map((ext) => path.join(LANGMAY, `menu-board/lookbook/poster.${ext}`))
     .find(existsSync);
   const poster = source
     ? hashed(
@@ -304,23 +304,23 @@ async function menuBoard() {
   // each group's heading mark: a painted monogram mark (brandkit/scripts/monogram.py)
   const markUrls = {};
   for (const [group, file] of Object.entries(marks)) {
-    markUrls[group] = hashed("menu/mark", file, readFileSync(langMay(`nhan-dien/monogram/${file}`)));
+    markUrls[group] = hashed("menu/mark", file, readFileSync(langMay(`identity/monogram/${file}`)));
   }
   write("src/data/menu-featured.json", JSON.stringify({ cups: featured, marks: markUrls, poster }, null, 2) + "\n");
 }
 
 /**
- * The Làng Mây collateral (brandkit/an-pham, built by build_an_pham.py from the same collateral.json): the
+ * The Làng Mây collateral (brandkit/collateral, built by build_an_pham.py from the same collateral.json): the
  * vouchers, the loyalty card and the offer posts, for the offers section, resized for the web (the print PNGs are up
  * to A4 at 300 dpi); their URLs in src/data/uu-dai.json by source name.
  */
 async function collateralSet() {
   rmSync(path.join(ROOT, "public/uu-dai"), { recursive: true, force: true });
-  const files = JSON.parse(readFileSync(langMay("an-pham/danh-sach.json"), "utf8"));
+  const files = JSON.parse(readFileSync(langMay("collateral/danh-sach.json"), "utf8"));
   const urls = {};
   for (const file of files) {
     const web = file.startsWith("voucher") || file.startsWith("the-tich-diem") ? 1200 : 1080;
-    const png = await sharp(langMay(`an-pham/${file}`))
+    const png = await sharp(langMay(`collateral/${file}`))
       .resize({ width: web, withoutEnlargement: true })
       .png({ compressionLevel: 9 })
       .toBuffer();
@@ -340,17 +340,17 @@ async function cupModels() {
 }
 
 const hex = tokens();
-copy("nhan-dien/03-hoa-tiet/monogram_hong.png", "src/assets/images/monogram-hong.png");
+copy("identity/03-pattern/monogram_hong.png", "src/assets/images/monogram-hong.png");
 for (const [from, to] of [
   ["logo-ngang_hong.svg", "logo-ngang.svg"],
   ["hoa-low-poly_hong.svg", "hoa.svg"],
   ["hoa-ve-tay_hong.svg", "hoa-ve-tay.svg"],
   ["bien-may.svg", "bien-may.svg"],
   ["doi-che.svg", "doi-che.svg"],
-  ["giao-hang/grabfood.svg", "grabfood.svg"],
-  ["giao-hang/shopeefood.svg", "shopeefood.svg"],
+  ["delivery/grabfood.svg", "grabfood.svg"],
+  ["delivery/shopeefood.svg", "shopeefood.svg"],
 ]) {
-  copyFileSync(langMay(`nhan-dien/${from}`), out(`src/assets/lang-may/${to}`));
+  copyFileSync(langMay(`identity/${from}`), out(`src/assets/lang-may/${to}`));
   done(`src/assets/lang-may/${to}`);
 }
 await menuBoard();

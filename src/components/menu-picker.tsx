@@ -7,7 +7,7 @@ import { menuIntro } from "@/data/boongee";
 import board from "@/data/menu-featured.json";
 import { categories, customisation, formatPrice, type MenuCategory, type MenuCategoryId, sizes } from "@/data/menu";
 
-// The menu as the printed menu board (brandkit/thuc-don/thuc-don.pdf), alive. The same layout: the featured
+// The menu as the printed menu board (brandkit/menu-board/thuc-don.pdf), alive. The same layout: the featured
 // cups (Blender toon renders, public/menu/ly) in a column, the drink groups under a painted monogram mark with their
 // plain lines and M / L prices in small size discs, the lookbook poster, the topping / sugar / ice strips at the foot.
 // A group's mark turns only while the pointer is on the group (or a drink in it has focus: lang-may.css,

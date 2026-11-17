@@ -17,62 +17,75 @@ export const intro = {
 
 export const essence = {
   slogan: "Trà hương thanh vị",
+  /** the picture of the whole brand (design-dna.md §1) */
+  image: "Bạc trên trắng: một ly giấy trắng in hoa nhũ bạc. Trắng là khoảng thở, bạc ánh kim là hương.",
   pillars: [
-    { word: "Hương", line: "Mùi hoa là thứ khách nhớ trước tiên. Hoa là chữ ký của mọi thiết kế." },
-    { word: "Thanh", line: "Vị nhẹ, uống dễ. Thiết kế cũng nhẹ: ít chi tiết, nhiều khoảng thở." },
-    { word: "Vị", line: "Đồ uống thật, giá thật, ảnh ghi rõ là minh hoạ. Không thổi phồng." },
+    { word: "Hương", line: "Mùi hoa là thứ khách nhớ trước tiên. Hoa là chữ ký của mọi thiết kế, in bạc." },
+    { word: "Thanh", line: "Vị nhẹ, uống dễ. Thiết kế cũng nhẹ: nền trắng, nhiều khoảng thở, ít chi tiết." },
+    { word: "Vị", line: "Đồ uống thật, giá thật, ảnh món ghi rõ là minh hoạ. Màu đậm đến từ chính ly nước." },
   ],
   personality: [
-    ["Thanh nhã, tinh tế", "Sang chảnh, phô trương"],
+    ["Thanh nhã, tinh tế", "Sang chảnh, phô trương, dát kim loại"],
+    ["Sáng, sạch, nhẹ", "Lạnh lẽo như phòng thí nghiệm"],
     ["Dịu, mềm", "Ngọt sến, trẻ con"],
     ["Mộc, thật thà", "Quảng cáo dồn dập"],
-    ["Gọn, rõ ràng", "Nhiều chữ, nhiều hiệu ứng"],
     ["Có chút thơ", "Hoa mỹ, sáo rỗng"],
   ] as const,
 };
 
 export const principles = [
   {
+    title: "Trắng là nền, bạc là dấu",
+    line: "70 % trắng, 20 % bạc, 8 % đen than cho chữ, tối đa 2 % màu nhấn. Màu đậm chỉ đến từ đồ uống và ảnh.",
+  },
+  {
     title: "Một màu hoạ tiết trên một màu nền",
-    line: "Đen trên hồng, hồng trên đen, đen trên trắng, bạc trên trắng. Không trắng trên hồng hay hồng trên trắng cho chữ.",
+    line: "Bạc trên trắng, đen trên trắng, đen trên bạc nhạt. Không trắng trên hồng hay hồng trên trắng cho chữ.",
+  },
+  {
+    title: "Bạc cho dấu, đen cho chữ",
+    line: "Bạc ánh kim (3,3 : 1) chỉ cho hoa, logo, chữ Boongee cỡ lớn và vạch kẻ; chữ đọc được là đen than hoặc bạc đậm.",
   },
   { title: "Khoảng thở hơn trang trí", line: "Bỏ bớt trước khi thêm. Một màn hình, một ý." },
   {
     title: "Hoa là chữ ký",
-    line: "Hoa 5 cánh của logo và bốn dấu monogram là hình nhận diện. Không thêm biểu tượng cạnh tranh.",
+    line: "Hoa 5 cánh của logo và bốn dấu monogram, in bạc, là hình nhận diện. Không thêm biểu tượng cạnh tranh.",
   },
   {
     title: "Thật trước đẹp",
     line: "Không bịa địa chỉ, giá, số điện thoại, lời khen. Ảnh món làm bằng AI ghi “Ảnh minh hoạ”, thông tin chưa có ghi “Đang cập nhật”.",
   },
-  { title: "Mềm mà rõ", line: "Khối bo tròn, bóng mềm; mép sắc bằng nét mảnh cùng tông; chữ luôn đủ tương phản." },
-  { title: "Không lấp lánh", line: "Không sao lấp lánh, hạt sáng hay glitter, ở 2D lẫn 3D." },
+  {
+    title: "Ánh kim, không lấp lánh",
+    line: "Bạc được có một dải sáng mềm, nhưng không sao lấp lánh, hạt sáng hay glitter, ở 2D lẫn 3D.",
+  },
 ];
 
 export const surfaces = [
   {
     name: "In ấn, bao bì",
-    since: "12/10/2026",
-    palette: "Hồng phấn, Đen Than, trắng giấy; bạc 877 C chỉ trên trắng; xanh blue-700 chỉ túi giấy bản Xanh",
-    look: "Ba màu phẳng, chặt chẽ",
+    since: "18/11/2026",
+    palette:
+      "Mặc định: bạc 877 C trên giấy trắng, chữ nhỏ đen. Bản hồng phấn và túi bản Xanh là bản cũ, dùng tới lần in lại",
+    look: "Phẳng, chặt chẽ, ánh nhũ",
   },
   {
     name: "Website",
-    since: "17/11/2026",
-    palette: "Trắng, bạc, xanh pastel; chữ đen than; không hồng trong giao diện",
-    look: "Tinh tế, tối giản; cốc 3D cel-shading",
+    since: "18/11/2026",
+    palette: "Trắng, dải bạc, ánh kim cho vạch kẻ; chữ đen than; không hồng, không xanh trong giao diện",
+    look: "Tinh tế, tối giản; ảnh hero sương sớm; cốc 3D cel-shading",
   },
   {
     name: "Minh hoạ, mạng xã hội, ưu đãi (Làng Mây)",
     since: "21/10/2026",
-    palette: "Màu lõi + màu thiên nhiên ≤ 30 % khung hình, không cho chữ và logo",
+    palette: "Trắng và bạc làm nền, màu thiên nhiên ≤ 30 % khung hình, không cho chữ và logo",
     look: "Hoạt hình vẽ tay, cảm hứng anime thập niên 90",
   },
   {
-    name: "Ảnh món (lookbook)",
+    name: "Ảnh món, ảnh hero",
     since: "16/11/2026",
-    palette: "Màu nền riêng từng món, tông-trên-tông",
-    look: "Ảnh studio; tên chỉ in trên ly",
+    palette: "Ly trắng in bạc là nhân vật chính; màu nền riêng từng món; sương trắng bạc ở hero",
+    look: "Ảnh studio, ảnh không khí; tên chỉ in trên ly",
   },
 ];
 
@@ -94,9 +107,9 @@ export const voice = {
 export const toonRules = [
   "Khối mượt, bo tròn; cốc không cắt mặt.",
   "Ba dải sáng mềm (0,62 · 0,84 · 1), không tone mapping, không khúc xạ.",
-  "Một nét viền 1,5 px cùng tông đậm hơn; vật gần trắng viền xanh bạc. Không viền đen.",
+  "Một nét viền 1,5 px cùng tông đậm hơn; vật gần trắng viền bạc. Không viền đen.",
   "Vệt sáng trắng phẳng, hẹp; không ánh viền.",
-  "Nắng ấm từ trên trái, mặt khuất ngả xanh bạc.",
+  "Nắng ấm từ trên trái, mặt khuất ngả bạc trung tính.",
   "Nhựa trong bằng alpha 0,25–0,4; đồ uống 2–3 lớp, ranh giới lượn sóng.",
   "Asset ngoài chỉ CC0 hoặc license rõ; nhuộm lại bằng toonMaterial({ tint }).",
 ];
@@ -112,14 +125,17 @@ export const motion = [
   { what: "Chuyển trạng thái giao diện", value: "120–250 ms" },
   { what: "Ảnh món khi rê chuột", value: "phóng 1,04 trong 700 ms, ease-out" },
   { what: "Lật thẻ ưu đãi", value: "600 ms" },
-  { what: "Lottie vẽ tay", value: "12 fps, mực + một màu, intro rồi lặp, đứng yên khi giảm chuyển động" },
+  { what: "Lottie vẽ tay", value: "12 fps, mực + một màu bạc, intro rồi lặp, đứng yên khi giảm chuyển động" },
+  { what: "Ánh kim", value: "đứng yên: không chạy, không nhấp nháy" },
   { what: "Cốc 3D", value: "lơ lửng 1,6 cm, 0,24 Hz; bộ ảnh bìa đứng yên" },
 ];
 
 export const checklist = [
   "Chỉ Fraunces.",
   "Mỗi mặt một màu hoạ tiết trên một màu nền.",
-  "Đúng bảng màu của bề mặt, không trộn.",
+  "Trắng là nền, bạc là dấu; màu nhấn ≤ 2 %.",
+  "Bạc không dùng cho chữ đọc.",
+  "Đúng bề mặt, không trộn.",
   "Không lấp lánh, không chữ đè lên ảnh món.",
   "Không thông tin bịa; ảnh AI ghi “Ảnh minh hoạ”.",
   "Chữ chính ≥ 4,5 : 1.",
@@ -129,6 +145,14 @@ export const checklist = [
 
 /** What changed in the system, newest first. Add a line with every change of rule. */
 export const changelog = [
+  {
+    date: "18/11/2026",
+    lines: [
+      "Design DNA và Design System bản 2: tông chủ đạo là trắng và bạc ánh kim (70 · 20 · 8 · 2).",
+      "Thêm dải bạc 50–800 và ánh kim; hồng phấn lùi thành bao bì cũ và điểm nhấn, xanh pastel chỉ còn trong ảnh.",
+      "Web bỏ xanh pastel khỏi giao diện; 3D và Lottie chuyển sang bạc trung tính.",
+    ],
+  },
   {
     date: "17/11/2026",
     lines: [

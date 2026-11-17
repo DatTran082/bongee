@@ -44,7 +44,7 @@ section[id] {
 }
 
 ::selection {
-  background: var(--color-blue-200);
+  background: var(--color-silver-200);
   color: var(--color-brand-ink);
 }
 

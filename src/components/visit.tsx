@@ -29,7 +29,7 @@ export function Visit() {
           tilt={0.08}
           className="mb-8 h-[40vh] max-h-[24rem] lg:mb-0 lg:h-[60vh] lg:max-h-[40rem]"
         />
-        <div className="card-line bg-gradient-to-b from-blue-50 to-white px-6 py-10 md:px-14 md:py-14">
+        <div className="card-line bg-gradient-to-b from-silver-50 to-white px-6 py-10 md:px-14 md:py-14">
           <address className="not-italic">
             <p className="flex items-center gap-2 text-xs tracking-[0.28em] text-silver-700 uppercase">
               <IconMapPin aria-hidden className="size-4" />

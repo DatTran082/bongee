@@ -3,12 +3,12 @@ import { Logo } from "@/components/logo";
 import { SocialIcon } from "@/components/social-icon";
 import { brand, nav, socials } from "@/data/boongee";
 
-/** Footer on a pale blue: the logo and slogan, the section links, the social pages that are set. */
+/** Footer on pale silver: the logo and slogan, the section links, the social pages that are set. */
 export function SiteFooter() {
   const links = socials.flatMap((s) => (s.href ? [{ ...s, href: s.href }] : []));
 
   return (
-    <footer className="border-t border-silver-200 bg-blue-50">
+    <footer className="border-t border-silver-200 bg-silver-50">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[2fr_1fr_1fr] md:py-14">
         <div>
           <Link href="/" aria-label="Boongee — trang chủ" className="inline-block">

@@ -1,6 +1,13 @@
 {
   "name": "Boongee · Design System tokens",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "base": "white + metallic silver (18/11/2026)",
+  "ratio": {
+    "white": 0.7,
+    "silver": 0.2,
+    "ink": 0.08,
+    "accent": 0.02
+  },
   "sources": {
     "print": "brandkit/print/color/tokens.json",
     "illustration": "brandkit/color/tokens.json",
@@ -75,13 +82,24 @@
       "silver-100": "#EFF1F2",
       "silver-200": "#E2E5E7",
       "silver-300": "#CDD1D4",
+      "silver-400": "#B5BABE",
       "silver-500": "#A3A7AA",
+      "silver-600": "#8A8D8F",
       "silver-700": "#6B6F72",
-      "blue-50": "#F3F9FB",
-      "blue-100": "#E8F3F7",
-      "blue-200": "#D7ECF2",
-      "blue-400": "#A8D3E3",
+      "silver-800": "#4B4F52",
       "ink": "#1E1A1C"
+    },
+    "sheen": "linear-gradient(115deg, #F7F8F9 0%, #CDD1D4 28%, #8A8D8F 50%, #CDD1D4 72%, #F7F8F9 100%)",
+    "accent": {
+      "pink-500": {
+        "hex": "#F5C4C4",
+        "role": "HỒNG PHẤN — màu chủ đạo: nền cốc, nền cover, hoa và logo trên nền đen (CMYK chốt sau in thử 11/10/2026)"
+      },
+      "blue-700": {
+        "hex": "#3F6F8C",
+        "role": "XANH ĐẬM — chỉ cho túi giấy mang đi bản Xanh đậm · Trắng (ngoại lệ do chủ quán chọn 16/11/2026): nền xanh phủ kín, hoa và chữ là giấy trắng để trơn (đục nền). Không dùng cho ly, cover, tem hay logo. CMYK quy đổi từ RGB: in thử để chốt.",
+        "pantone": null
+      }
     },
     "illustration": {
       "sky-200": {
@@ -127,15 +145,19 @@
     },
     "pairs": {
       "allowed": [
-        ["ink", "pink-500"],
-        ["pink-500", "ink"],
         ["ink", "white"],
         ["silver", "white"],
+        ["ink", "silver-200"],
+        ["ink", "silver-400"],
+        ["silver-700", "white"],
+        ["white", "silver-800"],
+        ["ink", "pink-500"],
         ["white", "blue-700"]
       ],
       "forbidden": [
         ["white", "pink-500"],
-        ["pink-500", "white"]
+        ["pink-500", "white"],
+        ["white", "silver"]
       ]
     }
   },
@@ -159,7 +181,8 @@
         "size": "12px",
         "tracking": "0.32em",
         "case": "upper",
-        "color": "silver-700"
+        "color": "silver-700",
+        "rule": "sheen"
       },
       "body": {
         "size": "16–18px",
@@ -235,7 +258,12 @@
       "_readme": "nước chia 2–3 lớp màu, ranh giới lượn sóng xiên; bọt tròn li ti"
     },
     "cream": "kem bông và kem cheese cùng một kiểu: lớp kem mỏng phồng nhẹ ~1 cm trong miệng ly, màu kem, rắc cánh hồng khô và hoa quế",
-    "webShade": "#DCE4EA",
-    "nearWhiteOutline": "#A7B4BE"
+    "webShade": "#DFE2E5",
+    "nearWhiteOutline": "#A3A7AA"
+  },
+  "lottie": {
+    "fps": 12,
+    "ink": "#1E1A1C",
+    "colour": "#CDD1D4"
   }
 }

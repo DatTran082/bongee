@@ -63,7 +63,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   parallax was removed, 22/10/2026). No WebGL 2, data saver or no model: `<html class="cup-failed">`,
   the slots and the `cup-grid` / `cup-row` wrappers collapse (without script too). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
-- **The home page is short and quiet (owner, 17/11/2026: "tinh tế, tối giản", white, silver and pastel blue):**
+- **The home page is short and quiet (owner, 17/11/2026: "tinh tế, tối giản"; white and metallic silver since 18/11/2026):**
   hero (slogan + two buttons, no intro line; a photograph of the two cups in tea-hill fog), Thực đơn · "Thức uống đặc trưng"
   (3D PP cup beside the photos from `lg`), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper
   cup). The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
@@ -90,14 +90,14 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   page's pale blue wash (no frame, no card); the page's name "Thực đơn" is an `sr-only` <h1> (owner: no visible title);
   no dish count, only "Ảnh minh hoạ · Giá tại quầy, cập nhật <date>". Groups are numbered light headings on a hairline.
   The Lottie (`src/components/menu-hero-lottie.tsx`, lottie-web's light SVG player,
-  loaded in the browser only; 6 s since 17/11/2026, "Hương thành hoa"): a teapot pours into a pastel-blue paper
+  loaded in the browser only; 6 s since 17/11/2026, "Hương thành hoa"): a teapot pours into a silver paper
   cup while the four monogram marks grow up its face (a sprout at its foot, each mark budding from the one below
   and rising into the print's column order, edges still), two curls of steam rise and draw a hand-drawn
   five-petalled flower above it (not the logo); the loop: the flower bobs on its scent, the steam sways, the marks
   breathe bottom to top. Earlier versions (monogram on a paper cup, monogram column on the PP
   cup) are in `~/Documents/Boongee-luu-tru/2026-11-17/lottie-menu-hero-*`. Intro frames 0–48 once, then the
   loop 48–72; paused off screen; frame 48 still with reduced motion. Its source is
-  `../brandkit/lottie/menu-hero.scene.mjs` (skill `hand-drawn-lottie`: 12 fps, ink Đen Than + one colour, pastel blue `#A8D3E3` since 17/11/2026,
+  `../brandkit/lottie/menu-hero.scene.mjs` (skill `hand-drawn-lottie`: 12 fps, ink Đen Than + one colour, silver `#CDD1D4` since 18/11/2026 (pastel blue before),
   no sparkles, not the logo), built to `menu-hero.json` there and copied by sync-lookbook as
   `public/menu/lookbook/menu-hero.<hash>.json` (`animation` in lookbook.json).
 - **The /system-design page** (`src/app/system-design/page.tsx`, 17/11/2026, owner: "tham chiếu cho những thiết kế
@@ -144,21 +144,24 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   lathes; smooth normals); `foam.ts` the cream cap, one design for both creams (owner, 22/10/2026): a thin swell inside the rim (`FOAM_RIM`), cream colour, rose petals and osmanthus;
   `palette.ts` the drinks' and props' own colours. No downloaded models: shapes drawn here keep one style and cost
   no requests. The toppings and the PP cup's splash are made after the stage shows (`loadExtras` in index.ts).
-- **Colours and the UI (owner, 17/11/2026: white, silver, pastel blue; "tinh tế, tối giản"; it replaced the
-  Làng Mây sticker UI of 22/10/2026).** Brand tokens are `--color-brand-<token>` (generated); `src/styles/look.css`
-  adds `silver-50 … 700` (from the brand's silver 877 C) and `blue-50 … 400` (the sky), and, in `@layer components`
-  so utilities win, `.card-line` (white panel on a silver hairline), `.eyebrow` (tracked small caps after a short
-  rule), `.btn` with `data-variant="primary" | "outline"` (flat pill: white on ink, or ink on a silver hairline),
-  `.flip`, and `.sky` (the hero's sky). The page stands on white; text is ink, secondary lines
-  `text-silver-700`; headings light (`font-light`), set left (`<SectionHeading tagline title aside>`). No pink in
-  the page's own UI; the colour comes from the photos, the 3D cups and the offers' printed pieces (still the Làng Mây
-  collateral). Light only.
+- **Colours and the UI (owner, 18/11/2026: the brand's base is white and metallic silver; before, 17/11/2026: white,
+  silver, pastel blue; before that the Làng Mây sticker UI).** The rules are `../brandkit/design-system/` (Design DNA
+  and Design System v2: 70 % white · 20 % silver · 8 % ink · ≤ 2 % accent). Brand tokens are `--color-brand-<token>`
+  (generated); `src/styles/look.css` adds the silver scale `silver-50 … 800` (`silver-600` is the print silver, Pantone
+  877 C) and the metallic sheen `bg-sheen` (`--background-image-sheen`), and, in `@layer components` so utilities win,
+  `.card-line` (white panel on a silver hairline), `.eyebrow` (tracked small caps after a short sheen rule),
+  `.rule-sheen` (a short metallic rule), `.btn` with `data-variant="primary" | "outline"` (flat pill: white on ink,
+  hover `silver-800`; or ink on a silver hairline, hover the metallic silver), `.flip`. The page stands on white; text is
+  ink, secondary lines `text-silver-700`; headings light, set left (`<SectionHeading tagline title aside>`); the sheen
+  only on rules and dividers, never on text, never animated. No pink and no blue in the UI (pastel blue lives only in
+  the hero's photograph). Light only.
 - **The hero** (`src/components/hero.tsx`, 17/11/2026, owner's direction B "Sương sớm trên núi"): a photograph,
   AI-made from `../brandkit/lookbook/prompts-hero-web.md` (refs `ref-01…05`; files in
   `../brandkit/lookbook/hero-web/`, copied as JPEG to `src/assets/images/hero-suong-som-{16x9,4x5}.jpg`): the two
   cups in tea-hill fog, prints checked against ref-04; since 17/11/2026 evening the GPT Image version (owner's
   prompt `../brandkit/lookbook/hero-web/ref-gptimage/PROMPT.md`): porcelain pebble stands, the PP cup a purple Nho
-  Cheese with its cheese cap spilling over the rim; 1672 × 941, the 4:5 is a crop of it. From `lg` the 16:9 picture fills the
+  Cheese with its cheese cap spilling over the rim; re-rendered at 2K with agy (2560 × 1440,
+  `hero-web/b4-hero-2k_16x9.png`), the 4:5 (1152 × 1440) is a crop of it. From `lg` the 16:9 picture fills the
   section behind the slogan (on its empty left); below `lg` the slogan comes first on the picture's own sky colour
   and the 4:5 picture follows (over its top the text would touch the cups). Each loads only where it shows, at high
   priority; no preload. No "Ảnh minh hoạ" caption on it (owner, 17/11/2026: it is a mood picture, not a

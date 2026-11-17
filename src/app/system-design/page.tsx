@@ -31,29 +31,33 @@ export const metadata: Metadata = {
 };
 
 const core = tokens.color.core as Record<string, { hex: string; role?: string | null; pantone?: string | null }>;
-const swatch = (name: string): Swatch => ({ name, ...core[name] });
-const PRINT = [
-  "pink-500",
-  "ink",
-  "white",
-  "silver",
-  "pink-800",
-  "ink-muted",
-  "pink-100",
-  "pink-300",
-  "pink-700",
-  "blue-700",
-];
-const WEB: Swatch[] = Object.entries(tokens.color.web).map(([name, hex]) => ({ name, hex }));
+const web = tokens.color.web as Record<string, string>;
+/** A token by name: the silver scale first (the base since 18/11/2026), then the print kit's core colours. */
+const swatch = (name: string): Swatch =>
+  web[name] ? { name, hex: web[name], ...pick(core[name]) } : { name, ...core[name] };
+const pick = (c?: { role?: string | null; pantone?: string | null }) => (c ? { role: c.role, pantone: c.pantone } : {});
+const BASE: Swatch[] = Object.keys(web).map((name) => swatch(name === "silver-600" ? "silver" : name));
+const ACCENT = ["pink-500", "blue-700"].map(swatch);
+const LEGACY = ["pink-100", "pink-300", "pink-700", "pink-800", "ink-muted"].map(swatch);
 const ILLUSTRATION: Swatch[] = Object.entries(tokens.color.illustration).map(([name, v]) => ({ name, ...v }));
+const RATIO = [
+  { name: "Trắng", share: tokens.ratio.white, className: "bg-white" },
+  { name: "Bạc", share: tokens.ratio.silver, className: "bg-sheen" },
+  { name: "Đen than", share: tokens.ratio.ink, className: "bg-brand-ink" },
+  { name: "Nhấn", share: tokens.ratio.accent, className: "bg-brand-pink-500" },
+];
 const PAIR_LABEL: Record<string, string> = {
-  "ink/pink-500": "Đen trên hồng phấn",
-  "pink-500/ink": "Hồng phấn trên đen",
-  "ink/white": "Đen trên trắng",
-  "silver/white": "Bạc trên trắng (cỡ lớn)",
-  "white/blue-700": "Trắng trên xanh (túi giấy)",
+  "ink/white": "Đen than trên trắng",
+  "silver/white": "Bạc ánh kim trên trắng (dấu, chữ lớn)",
+  "ink/silver-200": "Đen than trên bạc mờ",
+  "ink/silver-400": "Đen than trên bạc vừa",
+  "silver-700/white": "Bạc đậm trên trắng (chữ phụ)",
+  "white/silver-800": "Trắng trên bạc than",
+  "ink/pink-500": "Đen trên hồng (bao bì cũ)",
+  "white/blue-700": "Trắng trên xanh (túi giấy cũ)",
   "white/pink-500": "Trắng trên hồng: cấm",
   "pink-500/white": "Hồng trên trắng: cấm",
+  "white/silver": "Trắng trên bạc ánh kim: cấm cho chữ",
 };
 const pairs = [
   ...tokens.color.pairs.allowed.map((p) => ({ p, allowed: true })),
@@ -112,6 +116,8 @@ export default function SystemDesignPage() {
         lead="Vì sao Boongee trông như vậy. Mọi quy tắc phía dưới đi ra từ đây."
       >
         <p className="text-3xl font-light tracking-[0.18em] uppercase md:text-5xl">{essence.slogan}</p>
+        <span aria-hidden className="rule-sheen mt-8 w-32" />
+        <p className="mt-6 max-w-2xl text-lg">{essence.image}</p>
         <dl className="mt-10 grid gap-8 md:grid-cols-3">
           {essence.pillars.map((p) => (
             <div key={p.word}>
@@ -120,10 +126,14 @@ export default function SystemDesignPage() {
             </div>
           ))}
         </dl>
-        <h3 className="mt-16 mb-4 text-xl font-light">Sáu nguyên tắc</h3>
+        <h3 className="mt-16 mb-4 text-xl font-light">Bảy nguyên tắc</h3>
         <ol className="grid gap-px overflow-hidden rounded-2xl border border-silver-200 bg-silver-200 md:grid-cols-2 lg:grid-cols-3">
           {principles.map((p, i) => (
-            <li key={p.title} className="bg-white p-6">
+            <li
+              key={p.title}
+              // an odd last item spans the rest of its row, so no empty grey cell shows
+              className={`bg-white p-6 ${i === principles.length - 1 && principles.length % 2 ? "md:col-span-2 lg:col-span-3" : ""}`}
+            >
               <p className="text-xs text-silver-500 tabular-nums">{String(i + 1).padStart(2, "0")}</p>
               <p className="mt-2 text-lg">{p.title}</p>
               <p className="mt-2 text-sm text-silver-700">{p.line}</p>
@@ -161,10 +171,31 @@ export default function SystemDesignPage() {
       </Part>
 
       <Part id="mau" index={2} title="Màu" lead="Giá trị từ tokens.json. Mỗi bề mặt dùng bảng của nó, không trộn.">
-        <h3 className="mb-6 text-xl font-light">In ấn và màu lõi</h3>
-        <Swatches items={PRINT.map(swatch)} />
-        <h3 className="mt-16 mb-6 text-xl font-light">Website: trắng, bạc, xanh pastel</h3>
-        <Swatches items={WEB} />
+        <h3 className="mb-6 text-xl font-light">Tỉ lệ</h3>
+        <div className="flex h-16 overflow-hidden rounded-2xl border border-silver-200">
+          {RATIO.map((r) => (
+            <div key={r.name} className={r.className} style={{ width: `${r.share * 100}%` }} title={r.name} />
+          ))}
+        </div>
+        <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-silver-700">
+          {RATIO.map((r) => (
+            <li key={r.name}>
+              {r.name} {Math.round(r.share * 100)} %
+            </li>
+          ))}
+        </ul>
+        <h3 className="mt-16 mb-6 text-xl font-light">Tông chủ đạo: trắng và bạc ánh kim</h3>
+        <Swatches items={BASE} />
+        <h3 className="mt-16 mb-4 text-xl font-light">Ánh kim</h3>
+        <div className="h-24 rounded-2xl bg-sheen" />
+        <p className="mt-3 max-w-2xl text-sm text-silver-700">
+          Dải sáng mềm trên bạc, cho vạch ngắn, vạch chia mục, viền khung nổi bật. Không cho chữ, không làm nền lớn,
+          không chuyển động. Trên giấy, ánh kim là chính mực nhũ Pantone 877 C.
+        </p>
+        <h3 className="mt-16 mb-6 text-xl font-light">Màu nhấn (≤ 2 %)</h3>
+        <Swatches items={ACCENT} />
+        <h3 className="mt-16 mb-6 text-xl font-light">Bao bì bản hồng cũ (dùng tới lần in lại)</h3>
+        <Swatches items={LEGACY} />
         <h3 className="mt-16 mb-6 text-xl font-light">Minh hoạ Làng Mây (≤ 30 % khung hình, không cho chữ)</h3>
         <Swatches items={ILLUSTRATION} />
         <h3 className="mt-16 mb-6 text-xl font-light">Một màu hoạ tiết trên một màu nền</h3>
@@ -231,7 +262,7 @@ export default function SystemDesignPage() {
               {tokens.space.map((px) => (
                 <li key={px} className="flex items-center gap-4 text-sm tabular-nums">
                   <span className="w-10 text-silver-700">{px}</span>
-                  <span className="h-3 rounded-full bg-blue-200" style={{ width: px * 2 }} />
+                  <span className="h-3 rounded-full bg-sheen" style={{ width: px * 2 }} />
                 </li>
               ))}
             </ul>

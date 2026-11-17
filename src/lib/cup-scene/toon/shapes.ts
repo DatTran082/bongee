@@ -3,7 +3,6 @@ import {
   ExtrudeGeometry,
   Float32BufferAttribute,
   IcosahedronGeometry,
-  LatheGeometry,
   Shape,
   Vector2,
   Vector3,
@@ -61,17 +60,6 @@ function bend(geometry: BufferGeometry, f: (p: Vector3) => void): BufferGeometry
     position.setXYZ(i, p.x, p.y, p.z);
   }
   return geometry;
-}
-
-/** A smooth lumpy field: a few low sine waves with random phases, about ±1. */
-function lumps(random: Random, count: number): (p: Vector3) => number {
-  const waves = Array.from({ length: count }, () => ({
-    k: new Vector3(between(random, -1, 1), between(random, -1, 1), between(random, -1, 1))
-      .normalize()
-      .multiplyScalar(between(random, 2, 4.5)),
-    phase: random() * Math.PI * 2,
-  }));
-  return (p) => waves.reduce((sum, w) => sum + Math.sin(w.k.dot(p) + w.phase), 0) / Math.sqrt(count);
 }
 
 const linear = (hex: string): number[] =>

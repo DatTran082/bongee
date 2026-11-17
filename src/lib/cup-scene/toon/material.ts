@@ -86,8 +86,8 @@ const HIGHLIGHT = { threshold: toon.highlight.threshold, soft: 0.004 };
 const LAYER = { wave: toon.drink.wave, soft: 0.018 };
 /** An outline's most saturation (HSL): its colour stays soft, as the brand kit's outlines are. */
 const OUTLINE_MAX_SATURATION = 0.42;
-/** The outline of anything near white: a soft silver-blue (the site's white, silver and pastel blue, 17/11/2026). */
-const NEAR_WHITE = new Color("#A7B4BE");
+/** The outline of anything near white: a soft neutral silver (the brand's base is white and silver, 18/11/2026). */
+const NEAR_WHITE = new Color("#A3A7AA");
 const RIM = { colour: new Color(tokens.cloud), strength: toon.rim.strength };
 
 /** A toon material for the stage (see the file's head). */
@@ -197,7 +197,7 @@ uniform vec3 uTint;`,
 /**
  * The outline's colour for a surface of colour `base`: the same hue, darker and a little richer (toon.outline), never
  * black. Near-white surfaces (paper, white lids, clouds, clear plastic: their hue means nothing) take a soft
- * silver-blue instead.
+ * neutral silver instead.
  */
 export function outlineColour(base: ColorRepresentation): Color {
   const colour = new Color(base);

@@ -52,8 +52,8 @@ const PP_LID_LIFT = 0.055;
 const KEY = new Vector3(-0.9, 1.3, 1.1);
 /** Light levels (no tone mapping): the key's lit band shows a surface at about its own colour, the shade ~ 70 %. */
 const LIGHT = { key: 2.3, ambient: 1.05 };
-/** The shade side's colour: silver-blue (the site's white, silver and pastel blue, 17/11/2026; lilac before). */
-const SHADE = "#DCE4EA";
+/** The shade side's colour: a neutral silver (the brand's base is white and silver, 18/11/2026; lilac, then blue before). */
+const SHADE = "#DFE2E5";
 
 export type { CupPlacement };
 
@@ -257,7 +257,7 @@ export async function createCupScene(
     }
 
     // lights: warm daylight from the upper left (the toon bands follow it, and so do the highlights); the shade side
-    // takes a cool silver-blue from below
+    // takes a neutral silver from below
     scene.add(new HemisphereLight(tokens.cloud, SHADE, LIGHT.ambient));
     const key = new DirectionalLight("#fff8ee", LIGHT.key);
     key.position.copy(KEY);

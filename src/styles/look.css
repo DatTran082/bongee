@@ -1,21 +1,22 @@
 /*
- * The site's look (owner, 17/11/2026): quiet and refined, white, silver and a pastel blue. Silver is the brand's
- * metallic (Pantone 877 C, tokens "silver") opened into a few light greys; the blue is the Làng Mây sky. Text stays
- * ink. No sticker edges, no game buttons: hairlines, generous space, one flat button style. The colour comes from
- * the 3D cups (the stage) and the menu's photos.
+ * The site's look (owner, 18/11/2026: the brand's base is white and metallic silver; brandkit/design-system/).
+ * White is the ground, silver the marks: a silver scale from the brand's metallic (Pantone 877 C = silver-600), and
+ * a metallic sheen for short rules and dividers only, never for text, never animated. Text stays ink; no pink, no
+ * blue in the UI (pastel blue lives only in the hero's photograph). Hairlines, generous space, one flat button style.
  */
 
 @theme {
+  /* the metallic sheen: a soft band of light across silver, for rules and dividers */
+  --background-image-sheen: linear-gradient(115deg, #f7f8f9 0%, #cdd1d4 28%, #8a8d8f 50%, #cdd1d4 72%, #f7f8f9 100%);
   --color-silver-50: #f7f8f9;
   --color-silver-100: #eff1f2;
   --color-silver-200: #e2e5e7;
   --color-silver-300: #cdd1d4;
+  --color-silver-400: #b5babe;
   --color-silver-500: #a3a7aa;
+  --color-silver-600: #8a8d8f; /* the metallic silver itself: Pantone 877 C */
   --color-silver-700: #6b6f72;
-  --color-blue-50: #f3f9fb;
-  --color-blue-100: #e8f3f7;
-  --color-blue-200: #d7ecf2;
-  --color-blue-400: #a8d3e3;
+  --color-silver-800: #4b4f52;
 }
 
 /* In the components layer, so a utility (hidden, md:inline-flex…) on the same element wins. */
@@ -73,7 +74,8 @@
 
   @media (hover: hover) {
     .btn[data-variant="primary"]:hover {
-      background: color-mix(in oklab, var(--color-brand-ink) 82%, var(--color-blue-400));
+      background: var(--color-silver-800);
+      border-color: var(--color-silver-800);
     }
 
     .btn[data-variant="outline"]:hover {
@@ -113,14 +115,4 @@
   .flip-inner {
     transition: none;
   }
-}
-
-/* The hero's sky: pastel blue at the top into the page's white (no mountains or clouds, owner 17/11/2026). */
-.sky {
-  background: linear-gradient(
-    to bottom,
-    var(--color-blue-200) 0%,
-    var(--color-blue-50) 55%,
-    var(--color-brand-white) 100%
-  );
 }

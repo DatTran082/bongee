@@ -14,12 +14,12 @@ export const metadata: Metadata = {
 
 /**
  * The menu with a photo per dish, from the till (Odoo) and the brand kit's lookbook; linked from the home page's
- * menu. Its header is the hand-drawn Lottie, straight on the page (no frame) on a pale blue wash, and the groups as a
+ * menu. Its header is the hand-drawn Lottie, straight on the page (no frame) on a pale silver wash, and the groups as a
  * quiet index; the page's name is for assistive tech and search only (owner, 17/11/2026).
  */
 export default function MenuPage() {
   return (
-    <div className="bg-gradient-to-b from-blue-50 via-white to-white">
+    <div className="bg-gradient-to-b from-silver-50 via-white to-white">
       <div className="mx-auto max-w-7xl px-4 pt-10 pb-20 sm:px-6 md:pt-16 md:pb-28">
         <header className="mb-16 grid items-center gap-8 md:mb-24 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:gap-16">
           <MenuHeroLottie src={lookbookAnimation} className="mx-auto w-56 md:order-2 md:w-full" />

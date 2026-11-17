@@ -65,6 +65,7 @@ const V3 = new Set([
   "05-studio-lai-cheese",
   "03-studio-hoa-qua-kem-cheese-nho-tam",
   "08-studio-topping-kem-cheese",
+  "05-studio-bong-dao",
 ]);
 
 /** The ASCII slug of a dish name, for its file name ("Cà Phê Đen Đá" → "ca-phe-den-da"). */

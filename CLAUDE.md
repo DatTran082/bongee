@@ -156,10 +156,13 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
 - **The hero** (`src/components/hero.tsx`, 17/11/2026, owner's direction B "Sương sớm trên núi"): a photograph,
   AI-made from `../brandkit/lookbook/prompts-hero-web.md` (refs `ref-01…05`; files in
   `../brandkit/lookbook/hero-web/`, copied as JPEG to `src/assets/images/hero-suong-som-{16x9,4x5}.jpg`): the two
-  cups on river stones, tea hills in morning fog, prints checked against ref-04. From `lg` the 16:9 picture fills the
+  cups in tea-hill fog, prints checked against ref-04; since 17/11/2026 evening the GPT Image version (owner's
+  prompt `../brandkit/lookbook/hero-web/ref-gptimage/PROMPT.md`): porcelain pebble stands, the PP cup a purple Nho
+  Cheese with its cheese cap spilling over the rim; 1672 × 941, the 4:5 is a crop of it. From `lg` the 16:9 picture fills the
   section behind the slogan (on its empty left); below `lg` the slogan comes first on the picture's own sky colour
   and the 4:5 picture follows (over its top the text would touch the cups). Each loads only where it shows, at high
-  priority; no preload. "Ảnh minh hoạ" in its corner. The hero has no 3D since then: the stage's `set` actor
+  priority; no preload. No "Ảnh minh hoạ" caption on it (owner, 17/11/2026: it is a mood picture, not a
+  product photo; the menu's photos keep theirs). The hero has no 3D since then: the stage's `set` actor
   (cups on boulder and logs) and its shadows were removed; before the photo, a 2.5D mountain world and a cel-shaded
   floating garden were tried and removed the same day (CC0 models kept in `../brandkit/3d-nature/`;
   `toonMaterial({ tint })` stays for such assets).

@@ -43,7 +43,7 @@ export const principles = [
   },
   {
     title: "Thật trước đẹp",
-    line: "Không bịa địa chỉ, giá, số điện thoại, lời khen. Ảnh AI ghi “Ảnh minh hoạ”, thông tin chưa có ghi “Đang cập nhật”.",
+    line: "Không bịa địa chỉ, giá, số điện thoại, lời khen. Ảnh món làm bằng AI ghi “Ảnh minh hoạ”, thông tin chưa có ghi “Đang cập nhật”.",
   },
   { title: "Mềm mà rõ", line: "Khối bo tròn, bóng mềm; mép sắc bằng nét mảnh cùng tông; chữ luôn đủ tương phản." },
   { title: "Không lấp lánh", line: "Không sao lấp lánh, hạt sáng hay glitter, ở 2D lẫn 3D." },
@@ -105,7 +105,7 @@ export const photoRules = [
   "Mỗi món một màu nền tông-trên-tông, một đĩa sứ, một bệ thạch cao, một cành ngang phía trên.",
   "Chữ “Boongee” chỉ nằm trên ly, không bao giờ đè lên ảnh.",
   "Tạo mới kèm tờ in mẫu ref-04, không sửa ảnh bằng prompt.",
-  "Nho là nho Shine Muscat. Trên web luôn ghi “Ảnh minh hoạ”.",
+  "Nho Thanh Trúc dùng nho Shine Muscat xanh; Nho Cheese màu tím. Ảnh món trên web ghi “Ảnh minh hoạ”; ảnh hero là ảnh không khí, không cần ghi.",
 ];
 
 export const motion = [
@@ -133,7 +133,7 @@ export const changelog = [
     date: "17/11/2026",
     lines: [
       "Website đổi sang trắng, bạc, xanh pastel; bỏ thẻ sticker và nút “game”.",
-      "Hero: ảnh “Sương sớm trên núi” (hai ly trên phiến đá, đồi chè trong sương); đã thử rồi bỏ núi mây 2.5D và đảo bay cel-shading.",
+      "Hero: ảnh “Sương sớm trên núi” (hai ly trên đế sứ, Nho Cheese tím, đồi chè trong sương), không ghi “Ảnh minh hoạ”; đã thử rồi bỏ núi mây 2.5D và đảo bay cel-shading.",
       "Lottie /menu 6 giây “Hương thành hoa”: ấm trà rót vào ly giấy, bốn hoa monogram mọc dọc thân ly, hơi trà vẽ thành bông hoa, màu xanh pastel.",
       "Lập Design DNA, Design System, tokens.json và trang /system-design.",
     ],

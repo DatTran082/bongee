@@ -42,7 +42,7 @@ export const actions = {
 export const hero = {
   /** the hero's photograph (src/assets/images/hero-suong-som-*.jpg, brandkit/lookbook/hero-web/) */
   imageAlt:
-    "Hai ly Boongee trên phiến đá giữa đồi chè trong sương sớm: ly giấy kem bông rắc cánh hồng khô in hoa monogram màu bạc, ly nhựa trà nho xanh in cột hoa trắng. Ảnh minh hoạ.",
+    "Hai ly Boongee trên đế sứ giữa đồi chè trong sương sớm: ly giấy kem bông rắc cánh hồng khô in hoa monogram màu bạc, ly nhựa Nho Cheese tím phủ cheese tràn miệng ly, in cột hoa trắng.",
 };
 
 /** The 3D stage's actors, floating through the page (src/components/cup-stage.tsx). */

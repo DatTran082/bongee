@@ -1,5 +1,5 @@
 // Boongee: the words and facts the landing page shows. Sources:
-//   - brand tone and the sweetness promise: ShanMay brand-kit docs/01-brand-foundation.md (USP, visual narrative, tone);
+//   - brand tone: ShanMay brand-kit docs/01-brand-foundation.md (USP, visual narrative, tone);
 //   - menu and offers: ShanMay menu-data.json and collateral.json, through src/data/menu.ts and src/data/offers.ts.
 // ShanMay marks some facts as assumptions ([GIẢ ĐỊNH]); they carry a TODO(boongee) here: confirm before launch.
 // Tone (docs/01 §7): short sentences, one idea each, at most two adjectives, no "siêu / đỉnh / mê / tuyệt hảo /
@@ -22,20 +22,24 @@ export const brand = {
 
 /** Section anchors, shared by the page and the navigation. */
 export const sections = {
-  menu: "menu",
+  menu: "thuc-don",
   offers: "uu-dai",
-  faq: "hoi-dap",
-  visit: "ghe-quan",
+  visit: "cua-hang",
 } as const;
 
 export const nav = [
-  { label: "Menu", id: sections.menu },
+  { label: "Thực đơn", id: sections.menu },
   { label: "Ưu đãi", id: sections.offers },
-  { label: "Ghé quán", id: sections.visit },
+  { label: "Cửa hàng", id: sections.visit },
 ];
 
+/** The hero's two calls to action and the header's button. */
+export const actions = {
+  menu: "Xem thực đơn",
+  visit: "Tìm cửa hàng",
+};
+
 export const hero = {
-  intro: "Trà ướp hoa dành dành, bạch lan, hoa trúc. Pha nhẹ, uống dễ.",
   /** the cover photo, shown in the hero's slot only when the 3D cup cannot be */
   imageAlt: "Hai ly Boongee: ly kem bông rắc cánh hồng khô và ly giấy đậy nắp, in hoa monogram màu bạc",
 };
@@ -71,24 +75,15 @@ export const cup = {
   strapClosed: "đã đậy nút nắp.",
 };
 
-/**
- * The default sweetness, quoted by the FAQ (USP proof 3 of docs/01).
- * TODO(boongee): 50 % is the default ShanMay proposes; confirm it at the counter.
- */
-export const sweetness = "Mặc định 50% đường, dặn quầy để đổi.";
-
 export const menuIntro = {
-  tagline: "Menu",
-  title: "Món ở quán",
-  more: "Xem cả thực đơn",
-  // TODO(boongee): ShanMay menu_data.py → HERO is a *sample* featured drink ("món nổi bật mẫu"); confirm or change.
-  // The FAQ suggests it first.
-  featured: "Bạch Lan Hoa",
+  tagline: "Thực đơn",
+  title: "Thức uống đặc trưng",
+  more: "Xem toàn bộ thực đơn",
 };
 
 export const offersIntro = {
   tagline: "Ưu đãi",
-  title: "Giảm giá và tích điểm",
+  title: "Ưu đãi thành viên",
 };
 
 // TODO(boongee): ShanMay places the shop in phố Hoa Bằng, Cầu Giấy, Hà Nội as an assumption; the street address is
@@ -102,8 +97,8 @@ const ADDRESS = {
 };
 
 export const visit = {
-  tagline: "Ghé quán",
-  title: "Đường đến quán",
+  tagline: "Cửa hàng",
+  title: "Ghé thăm Boongee",
   address: ADDRESS,
   addressLine: `${ADDRESS.street}, ${ADDRESS.district}, ${ADDRESS.city}`,
   mapUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -138,10 +133,5 @@ export const socials: Array<{ name: string; icon: SocialIcon; href: string | nul
   { name: "TikTok", icon: "tiktok", href: null }, // TODO(boongee)
   { name: "Zalo", icon: "zalo", href: null }, // TODO(boongee)
 ];
-
-export const faqIntro = {
-  tagline: "Hỏi đáp",
-  title: "Hay được hỏi",
-};
 
 export const PENDING = "Đang cập nhật";

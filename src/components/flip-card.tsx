@@ -25,7 +25,7 @@ export function FlipCard({
   className?: string;
 }) {
   const [flipped, setFlipped] = useState(false);
-  const face = "flip-face h-auto w-full rounded-[1.6rem] drop-shadow-[0_14px_18px_rgb(156_143_176/0.35)]";
+  const face = "flip-face h-auto w-full rounded-2xl drop-shadow-[0_18px_24px_rgb(120_140_155/0.18)]";
   return (
     <div className={className}>
       <div className="flip" data-flipped={flipped}>
@@ -54,7 +54,7 @@ export function FlipCard({
         type="button"
         aria-pressed={flipped}
         onClick={() => setFlipped((f) => !f)}
-        className="mt-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm text-brand-ink-muted underline-offset-4 hover:text-brand-ink hover:underline focus-visible:outline-2 focus-visible:outline-brand-ink"
+        className="mt-2 inline-flex items-center gap-1.5 py-1 text-xs tracking-[0.12em] text-silver-700 uppercase hover:text-brand-ink focus-visible:outline-2 focus-visible:outline-brand-ink"
       >
         <IconRotate2 aria-hidden className="size-4" />
         {flipped ? `Xem mặt trước ${label}` : `Xem mặt sau ${label}`}

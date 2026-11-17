@@ -1,0 +1,126 @@
+/*
+ * The site's look (owner, 17/11/2026): quiet and refined, white, silver and a pastel blue. Silver is the brand's
+ * metallic (Pantone 877 C, tokens "silver") opened into a few light greys; the blue is the Làng Mây sky. Text stays
+ * ink. No sticker edges, no game buttons: hairlines, generous space, one flat button style. The colour comes from
+ * the hero's floating island (the 3D stage) and the menu's photos.
+ */
+
+@theme {
+  --color-silver-50: #f7f8f9;
+  --color-silver-100: #eff1f2;
+  --color-silver-200: #e2e5e7;
+  --color-silver-300: #cdd1d4;
+  --color-silver-500: #a3a7aa;
+  --color-silver-700: #6b6f72;
+  --color-blue-50: #f3f9fb;
+  --color-blue-100: #e8f3f7;
+  --color-blue-200: #d7ecf2;
+  --color-blue-400: #a8d3e3;
+}
+
+/* In the components layer, so a utility (hidden, md:inline-flex…) on the same element wins. */
+@layer components {
+  /* A white panel on a hairline. */
+  .card-line {
+    border-radius: 1.25rem;
+    background: var(--color-brand-white);
+    border: 1px solid var(--color-silver-200);
+  }
+
+  /* A small tracked label above a heading. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--color-silver-700);
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 2rem;
+    height: 1px;
+    background: var(--color-silver-300);
+  }
+
+  /* Buttons: one flat pill. Primary is white on ink; the other a hairline on white. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease;
+  }
+
+  .btn[data-variant="primary"] {
+    background: var(--color-brand-ink);
+    color: var(--color-brand-white);
+    border: 1px solid var(--color-brand-ink);
+  }
+
+  .btn[data-variant="outline"] {
+    background: color-mix(in oklab, var(--color-brand-white) 80%, transparent);
+    color: var(--color-brand-ink);
+    border: 1px solid var(--color-silver-300);
+  }
+
+  @media (hover: hover) {
+    .btn[data-variant="primary"]:hover {
+      background: color-mix(in oklab, var(--color-brand-ink) 82%, var(--color-blue-400));
+    }
+
+    .btn[data-variant="outline"]:hover {
+      border-color: var(--color-brand-ink);
+    }
+  }
+}
+
+/*
+ * A card that turns over (the offers' vouchers and loyalty card): the front and the back stacked in one cell, the
+ * back turned away; [data-flipped] turns the whole card. With reduced motion it swaps at once.
+ */
+.flip {
+  perspective: 1600px;
+}
+
+.flip-inner {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.flip[data-flipped="true"] .flip-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-face {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+}
+
+.flip-back {
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-inner {
+    transition: none;
+  }
+}
+
+/* The hero's sky: pastel blue at the top into the page's white (no mountains or clouds, owner 17/11/2026). */
+.sky {
+  background: linear-gradient(
+    to bottom,
+    var(--color-blue-200) 0%,
+    var(--color-blue-50) 55%,
+    var(--color-brand-white) 100%
+  );
+}

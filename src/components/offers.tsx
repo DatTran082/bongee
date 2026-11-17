@@ -17,7 +17,7 @@ const piece = (file: string) => (pieces as Record<string, string>)[file];
 export function Offers() {
   const terms = voucherTerms.join(". ");
   return (
-    <section id={sections.offers} className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-20">
+    <section id={sections.offers} className="mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28">
       <SectionHeading tagline={offersIntro.tagline} title={offersIntro.title} />
       <div className="grid items-start gap-6 md:grid-cols-2 lg:grid-cols-[minmax(0,4fr)_minmax(0,5fr)_minmax(0,4fr)] lg:gap-8">
         <figure>
@@ -27,7 +27,7 @@ export function Offers() {
             width={1080}
             height={1080}
             sizes="(min-width: 64rem) 26vw, (min-width: 48rem) 46vw, 92vw"
-            className="h-auto w-full rounded-[2rem] shadow-sticker"
+            className="h-auto w-full rounded-2xl border border-silver-200"
           />
         </figure>
         <FlipCard
@@ -56,7 +56,7 @@ export function Offers() {
               <a
                 href={piece(`voucher-${v.slug}_truoc.png`)}
                 download={`boongee-voucher-${v.slug}.png`}
-                className="mt-1 inline-flex items-center gap-1.5 text-sm underline underline-offset-4"
+                className="mt-2 inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-silver-700 uppercase transition-colors hover:text-brand-ink"
               >
                 <IconDownload aria-hidden className="size-4" />
                 Tải voucher
@@ -65,7 +65,7 @@ export function Offers() {
           ))}
         </div>
       </div>
-      <p className="mt-6 text-center text-sm text-brand-ink-muted">{terms}.</p>
+      <p className="mt-8 text-xs leading-relaxed tracking-[0.04em] text-silver-700">{terms}.</p>
     </section>
   );
 }

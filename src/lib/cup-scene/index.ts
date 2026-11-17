@@ -22,6 +22,8 @@ import { needsRedraw } from "./motion";
 import { qualityFor } from "./quality";
 import { seeded } from "./random";
 import { createSet } from "./set";
+import { createGarden } from "./set/garden";
+import nature from "@/data/nature-model.json";
 import { createSplash, type Splash } from "./splash";
 import { toonCup } from "./toon/cups";
 import { setOutlineSize } from "./toon/outline";
@@ -56,6 +58,8 @@ const PP_LID_LIFT = 0.055;
 const KEY = { offset: new Vector3(-0.9, 1.3, 1.1), halfSize: 0.34, mapSize: 1024 };
 /** Light levels (no tone mapping): the key's lit band shows a surface at about its own colour, the shade ~ 70 %. */
 const LIGHT = { key: 2.3, ambient: 1.05 };
+/** The shade side's colour: silver-blue (the site's white, silver and pastel blue, 17/11/2026; lilac before). */
+const SHADE = "#DCE4EA";
 
 export type { CupPlacement };
 
@@ -91,15 +95,19 @@ function required(root: Object3D, name: string, url: string): Object3D {
   return node;
 }
 
-/** Fetches a model (abortable, so an unmount during the download stops it) and parses it. */
-async function loadCup(model: { url: string; root: string }, signal: AbortSignal): Promise<Object3D> {
-  const response = await fetch(model.url, { signal });
-  if (!response.ok) throw new Error(`${model.url}: HTTP ${response.status}`);
+/** Fetches a GLB (abortable, so an unmount during the download stops it) and parses it. */
+async function loadScene(url: string, signal: AbortSignal): Promise<Object3D> {
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
   const buffer = await response.arrayBuffer();
   signal.throwIfAborted();
   const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
   const gltf = await new Promise<GLTF>((resolve, reject) => loader.parse(buffer, "", resolve, reject));
-  return required(gltf.scene, model.root, model.url);
+  return gltf.scene;
+}
+
+async function loadCup(model: { url: string; root: string }, signal: AbortSignal): Promise<Object3D> {
+  return required(await loadScene(model.url, signal), model.root, model.url);
 }
 
 /**
@@ -178,7 +186,7 @@ export async function createCupScene(
     const camera = new PerspectiveCamera(FOV, 1, 0.1, 10);
     camera.position.set(0, 0, DISTANCE);
     camera.lookAt(0, 0, 0);
-    // transparent: the page's scenery (the hero's sky and clouds, src/components/lang-may/) shows behind the actors
+    // transparent: the page's own ground (the hero's sky) shows behind the actors
     renderer = new WebGLRenderer({
       canvas,
       antialias: true,
@@ -248,6 +256,10 @@ export async function createCupScene(
     async function loadExtras(): Promise<void> {
       await breathe(); // after the first frames
       options.signal.throwIfAborted();
+      // the hero garden round the set (set/garden.ts): added after the set's actor measured it, so it does not
+      // shrink the cups in their slot
+      set.group.add(createGarden(await loadScene(nature.url, options.signal)));
+      options.signal.throwIfAborted();
       const made = createSplash(seeded(SPLASH_SEED));
       splash = made;
       pp.add(made.inside); // what stands in the tea, in the cup's space
@@ -260,8 +272,8 @@ export async function createCupScene(
     }
 
     // lights: warm daylight from the upper left (the toon bands follow it, and so do the highlights); the shade side
-    // takes a cool lilac from below, as a painted sky shades its clouds
-    scene.add(new HemisphereLight(tokens.cloud, tokens["cloud-shade"], LIGHT.ambient));
+    // takes a cool silver-blue from below
+    scene.add(new HemisphereLight(tokens.cloud, SHADE, LIGHT.ambient));
     const key = new DirectionalLight("#fff8ee", LIGHT.key);
     key.castShadow = true;
     key.shadow.mapSize.set(KEY.mapSize, KEY.mapSize);

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-// game-UI pills (lang-may.css, .button-game): white on ink is allowed by the brand rules; ink on cloud white else
+// flat pills (look.css, .btn): white on ink, or ink on a silver hairline
 const VARIANTS = { primary: "primary", outline: "outline" } as const;
 
 export function ButtonLink({
@@ -19,7 +19,7 @@ export function ButtonLink({
     <Link
       href={href}
       data-variant={VARIANTS[variant]}
-      className={`button-game inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-ink ${className}`}
+      className={`btn inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-ink ${className}`}
     >
       {children}
     </Link>

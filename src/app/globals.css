@@ -1,8 +1,8 @@
 @import "tailwindcss";
 /* Brand colours as --color-brand-* (bg-brand-pink-500, text-brand-ink…), generated from the brand kit. */
 @import "../styles/brand-tokens.css";
-/* The Làng Mây look (brandkit): sticker cards, game buttons, the painted sky, drifting clouds. */
-@import "../styles/lang-may.css";
+/* The site's look: white, silver, pastel blue; hairline cards, flat buttons. */
+@import "../styles/look.css";
 
 /* Fraunces is the brand's only typeface (next/font in layout.tsx exposes it as --font-fraunces). */
 @theme inline {
@@ -15,8 +15,8 @@
  * white or pink text on a pink or white ground (contrast ≈ 1.5 : 1); pink-700 is for rules and small details, not
  * text. Light only: the brand has no dark theme.
  *
- * The whole page stands on cream white (bg); panels on it are white cards with a hairline border. Text is ink:
- * ink-muted reaches only ≈ 3.8 : 1 there, so it is kept for white cards. Rules on the pink are ink at 15 %.
+ * The whole page stands on white (owner, 17/11/2026: white, silver, pastel blue); panels are white on a silver
+ * hairline. Text is ink; silver-700 for small secondary lines.
  */
 :root {
   color-scheme: light;
@@ -33,7 +33,7 @@ html {
 }
 
 body {
-  background: var(--color-brand-bg);
+  background: var(--color-brand-white);
   color: var(--color-brand-ink);
   font-family: var(--font-sans);
 }
@@ -44,15 +44,15 @@ section[id] {
 }
 
 ::selection {
-  background: var(--color-brand-pink-300);
+  background: var(--color-blue-200);
   color: var(--color-brand-ink);
 }
 
 /*
  * The 3D stage (src/components/cup-stage.tsx, mounted by the home page inside <main>) is a fixed, transparent
- * canvas at z-index −10 in main's own stacking context: it paints over the body's cream and the painted scenery
- * behind it (the hero's sky at −20) and under every section, so the cup passes behind the white cards and never
- * covers a line of text; a cloud bank at z-index auto lies in front of it. The footer
+ * canvas at z-index −10 in main's own stacking context: it paints over the body's white and the hero's sky
+ * behind it (at −20) and under every section, so the cup passes behind the white cards and never
+ * covers a line of text. The footer
  * stacks above main's context too (the header already does, at z-50).
  */
 main {

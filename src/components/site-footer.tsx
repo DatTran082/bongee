@@ -1,25 +1,23 @@
 import Link from "next/link";
-import { TeaHills } from "@/components/lang-may/tea-hills";
 import { Logo } from "@/components/logo";
 import { SocialIcon } from "@/components/social-icon";
 import { brand, nav, socials } from "@/data/boongee";
 
-/** Footer: tea hills across its top (Làng Mây), then the logo and slogan, the section links, the social pages that are set. */
+/** Footer on a pale blue: the logo and slogan, the section links, the social pages that are set. */
 export function SiteFooter() {
   const links = socials.flatMap((s) => (s.href ? [{ ...s, href: s.href }] : []));
 
   return (
-    <footer>
-      <TeaHills className="-mb-px" />
+    <footer className="border-t border-silver-200 bg-blue-50">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[2fr_1fr_1fr] md:py-14">
         <div>
           <Link href="/" aria-label="Boongee — trang chủ" className="inline-block">
-            <Logo className="h-10 w-auto" />
+            <Logo className="h-8 w-auto" />
           </Link>
-          <p className="mt-3 text-sm tracking-[0.2em] uppercase">{brand.slogan}</p>
+          <p className="mt-4 text-xs tracking-[0.32em] text-silver-700 uppercase">{brand.slogan}</p>
         </div>
         <nav aria-label="Liên kết cuối trang">
-          <p className="mb-3 text-sm font-semibold">{brand.name}</p>
+          <p className="mb-4 text-xs tracking-[0.24em] text-silver-700 uppercase">{brand.name}</p>
           <ul className="space-y-2 text-sm">
             {nav.map((item) => (
               <li key={item.id}>
@@ -32,7 +30,7 @@ export function SiteFooter() {
         </nav>
         {links.length > 0 && (
           <div>
-            <p className="mb-3 text-sm font-semibold">Theo dõi</p>
+            <p className="mb-4 text-xs tracking-[0.24em] text-silver-700 uppercase">Theo dõi</p>
             <ul className="flex gap-3">
               {links.map((s) => (
                 <li key={s.name}>
@@ -42,7 +40,7 @@ export function SiteFooter() {
                     rel="noopener noreferrer"
                     aria-label={`${s.name} (mở tab mới)`}
                     data-variant="outline"
-                    className="button-game inline-flex rounded-full p-2"
+                    className="btn p-2"
                   >
                     <SocialIcon name={s.icon} />
                   </a>
@@ -52,7 +50,7 @@ export function SiteFooter() {
           </div>
         )}
       </div>
-      <p className="border-t border-brand-ink/15 px-4 py-5 text-center text-xs">
+      <p className="border-t border-silver-200 px-4 py-6 text-center text-xs tracking-[0.12em] text-silver-700">
         © {brand.name} · {brand.slogan}
       </p>
     </footer>

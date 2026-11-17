@@ -13,20 +13,20 @@ const BADGES = { grabfood, shopeefood } as const;
  */
 export function DeliveryApps() {
   return (
-    <div className="mt-8 border-t border-brand-ink/15 pt-8 text-center">
-      <p className="flex items-center justify-center gap-2 text-sm tracking-[0.2em] uppercase">
-        <IconMotorbike aria-hidden className="size-5" />
+    <div className="mt-8 border-t border-silver-200 pt-8">
+      <p className="flex items-center gap-2 text-xs tracking-[0.28em] text-silver-700 uppercase">
+        <IconMotorbike aria-hidden className="size-4" />
         {delivery.title}
       </p>
-      <p className="mt-2 text-lg">{delivery.line}</p>
+      <p className="mt-3">{delivery.line}</p>
       <ul className="mt-5 grid gap-3 sm:grid-cols-2">
         {delivery.apps.map((app) => {
           const inner = (
             <>
-              <Image src={BADGES[app.badge]} alt="" aria-hidden className="size-12 shrink-0 sm:size-14" />
+              <Image src={BADGES[app.badge]} alt="" aria-hidden className="size-11 shrink-0" />
               <span className="min-w-0 text-left">
-                <span className="block text-lg leading-tight font-semibold">{app.name}</span>
-                <span className="block text-sm whitespace-nowrap text-brand-ink-muted">
+                <span className="block leading-tight">{app.name}</span>
+                <span className="block text-sm whitespace-nowrap text-silver-700">
                   {app.href ? "Đặt món" : delivery.search}
                 </span>
               </span>
@@ -40,14 +40,14 @@ export function DeliveryApps() {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-variant="outline"
-                  className="button-game flex items-center gap-3 rounded-3xl px-4 py-3"
+                  className="btn flex rounded-2xl px-4 py-3"
                 >
                   {inner}
                   <IconExternalLink aria-hidden className="ml-auto size-4 shrink-0" />
                   <span className="sr-only"> (mở tab mới)</span>
                 </a>
               ) : (
-                <div className="flex items-center gap-3 rounded-3xl border border-brand-line bg-brand-bg-alt px-4 py-3">
+                <div className="flex items-center gap-3 rounded-2xl border border-silver-200 bg-white px-4 py-3">
                   {inner}
                 </div>
               )}

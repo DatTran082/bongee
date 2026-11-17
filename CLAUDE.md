@@ -27,23 +27,24 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   (till group title → page id in `GROUP_IDS`). Cup volumes and sugar / ice options still come from ShanMay's
   `menu-data.json`, the offers from its `collateral.json` (`sync-brand`, `src/data/shanmay/`, `offers.ts`). Story,
   tone and promises follow ShanMay's `docs/01-brand-foundation.md`, in plain words (owner, 22/10/2026: no flowery
-  copy; a short poem with small, quiet pictures is welcome; the story section opens with one). The page shows no
+  copy). The page shows no
   instructions ("scroll to…", "drag to…"): the 3D controls are described to assistive tech only (`cup.hint`). Everything else is
-  in `src/data/boongee.ts`; FAQ answers (`src/data/faq.ts`) are composed from that data. Facts ShanMay marks as
+  in `src/data/boongee.ts`. Facts ShanMay marks as
   assumptions or illustrative (prices, address, tea origin, 50% sweetness) carry `TODO(boongee)`. Unknown facts are
   `null`; components render them as "Đang cập nhật" and drop unset links. A drink's only description is its plain line ("Trà sữa dành dành"), written by sync-menu from its Odoo recipe (`src/lib/menu/describe.ts`, tested); no recipe, no line. Never invent addresses, prices, phone numbers,
   social URLs or testimonials. The domain is not in it: `src/lib/site-url.ts` (server-only, may throw) reads
   `NEXT_PUBLIC_SITE_URL`, then Vercel's production domain, then localhost in dev; a production build with none fails.
 - **Brand assets come from the sibling brand kit** (`../brandkit`, Boongee · Làng Mây, the only official kit since
   22/10/2026; tokens, the logo sources, favicon, cover photos and the 3D cups from its print kit `../brandkit/print`; the Làng Mây look:
-  its logo, flower marks, clouds, cloud bank and tea hills into `src/assets/lang-may/`, its accents and toon rules)
+  the delivery badges into `src/assets/lang-may/`, its accents and toon rules; the header's ink logo is the print kit's
+  `logo-ngang-khong-slogan_den.svg`, copied by hand to `src/assets/brand/`)
   through `scripts/sync-brand.mjs` and are committed.
   Do not hand-edit what it writes (`src/styles/brand-tokens.css`, `src/data/brand-tokens.json`, `src/assets/`,
   `public/models/`, `src/app/{icon.svg,favicon.ico,apple-icon.png,opengraph-image.*,twitter-image.*}`): change the
   brand kit, rebuild it, then run `npm run sync-brand`.
 - **The 3D stage** (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`): a fixed three.js canvas at z-index −10
-  inside `main` (mounted by `page.tsx`, after the hero), transparent, so the hero's painted sky (z-index −20) shows behind the actors, a cloud bank (z auto)
-  in front of them, and they pass behind the white cards. Three actors (`ACTORS`, one `Actor` each, `actor.ts`): `set`, the cover photo rebuilt in 3D
+  inside `main` (mounted by `page.tsx`, after the hero), transparent, so the hero's plain sky (`.sky`, z-index −20) shows behind the actors, and they pass behind the
+  white cards. Three actors (`ACTORS`, one `Actor` each, `actor.ts`): `set`, the cover photo rebuilt in 3D
   (`set/`: the brand kit's paper cup twice, one under a smooth, plump cream cap with rose petals, one lidded, on a smooth
   boulder and two sawn logs, two clouds behind (hung with `decorate`, so they do not count in the set's size); no
   plants or flowers; with shadows from a key light that follows it; it does not float, turn or follow the mouse: a
@@ -66,17 +67,19 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   the other slots and the `cup-grid` / `cup-row` wrappers collapse and the hero's slot shows the cover photo (a
   `<noscript>` copy is there without script). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
-- **The home page is short (restyle, 17/11/2026, owner: "bỏ section scroll quá dài, quá nhiều text"):** hero (3D set),
-  story (poem + the three promises as small badges beside the 3D PP cup; the old promises section and the story's
-  beats are gone), menu, offers, FAQ (all answers closed), visit (3D paper cup). 3D and real photos mix: the 3D cups
-  rest in the hero, story and visit; the menu shows the lookbook's real (AI studio) photos. The 7-viewport flavour
+- **The home page is short and quiet (owner, 17/11/2026: "tinh tế, tối giản", white, silver and pastel blue):**
+  hero (slogan + two buttons, no intro line; the 3D set on its floating island over a plain pastel sky: the toon
+  mountains and clouds were removed the same day, owner: "bỏ mây núi, chỉ giữ lại đảo bay"), Thực đơn · "Thức uống đặc trưng"
+  (3D PP cup beside the photos from `lg`), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper
+  cup). The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
+  counts (no "23 món, 32K – 65K", no per-group counts or starting prices). Section ids: `thuc-don`, `uu-dai`,
+  `cua-hang`. The 7-viewport flavour
   carousel and the printed-menu-board picker (`menu-picker.tsx`) were removed; the full menu with a photo and prices
   per dish lives on `/menu`.
 - **The menu section** (`src/components/menu.tsx`, server): one card per drink group of the till (`lookbookGroups`
-  from `src/data/lookbook.ts`, combos and toppings left to /menu), the first dish's lookbook photo, the group's count
-  and starting price, each linking to `/menu#<group>`; a sideways snap strip on phones, five columns from `lg`; a
-  "Xem cả thực đơn" button and "Ảnh minh hoạ.". The structured data's `hasMenu` points to `/menu`. No 3D actor rests
-  in the menu.
+  from `src/data/lookbook.ts`, combos and toppings left to /menu): the first dish's lookbook photo (3:4) and the
+  group's name, linking to `/menu#<group>`; a sideways snap strip on phones, five columns from `lg`, the PP cup's
+  slot beside them; "Xem toàn bộ thực đơn" beside the heading and "Ảnh minh hoạ" under. `hasMenu` points to `/menu`.
 - **The /menu page** (`src/app/menu/page.tsx`, `src/components/lookbook-gallery.tsx`; 16/11/2026, it replaced the
   old `/preview` and `/thuc-don`, which held invented copy and hard-coded prices): every dish on the till, combos
   included, group by group in the till's order, each with its lookbook studio photo (4:5) and its name, price and
@@ -88,10 +91,13 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   `../brandkit/lookbook`: Odoo dish name → photo stem in `PHOTOS`, a v3 photo (`assets-v3/<stem>.png`) for the stems
   in `V3`, else the v2 one (`assets/<stem>.jpg`). The home page's menu links to it; it is in the sitemap.
   `next.config.ts` caches `/menu/:path+` immutable, not the page itself.
-  The page opens with a hand-drawn Lottie (`src/components/menu-hero-lottie.tsx`, lottie-web's light SVG player,
-  loaded in the browser only): a pink cup is set down, a flower drifts into it, its scent rises; intro frames 0–24
+  Its header (17/11/2026): the group index as numbered hairline rows beside the Lottie, which plays straight on the
+  page's pale blue wash (no frame, no card); the page's name "Thực đơn" is an `sr-only` <h1> (owner: no visible title);
+  no dish count, only "Ảnh minh hoạ · Giá tại quầy, cập nhật <date>". Groups are numbered light headings on a hairline.
+  The Lottie (`src/components/menu-hero-lottie.tsx`, lottie-web's light SVG player,
+  loaded in the browser only): a pastel-blue cup is set down, a flower drifts into it, its scent rises; intro frames 0–24
   once, then the loop 24–48; paused off screen; frame 24 still with reduced motion. Its source is
-  `../brandkit/lottie/menu-hero.scene.mjs` (skill `hand-drawn-lottie`: 12 fps, ink Đen Than + one colour Hồng phấn,
+  `../brandkit/lottie/menu-hero.scene.mjs` (skill `hand-drawn-lottie`: 12 fps, ink Đen Than + one colour, pastel blue `#A8D3E3` since 17/11/2026,
   no sparkles, not the logo), built to `menu-hero.json` there and copied by sync-lookbook as
   `public/menu/lookbook/menu-hero.<hash>.json` (`animation` in lookbook.json).
 - **Delivery apps** (`src/components/delivery-apps.tsx`, in the visit section): Boongee is on GrabFood and ShopeeFood
@@ -106,7 +112,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   `public/uu-dai/*.<hash>.png` (resized; URLs in `src/data/uu-dai.json`). Like the models, every picture sync-brand
   writes to `public/menu` and `public/uu-dai` is named after its content and cached immutable (next.config.ts), so a
   re-render is a new URL and no cache shows the old one. The section shows the weekly post, the loyalty card and both vouchers in one row from `lg`; each card
-  turns over (`.flip` in lang-may.css; instant with reduced motion), each voucher can be downloaded to show at the
+  turns over (`.flip` in look.css; instant with reduced motion), each voucher can be downloaded to show at the
   counter. The pictures carry the words, so every `alt` says them in full and the terms are also set as text.
 - **The 3D look is a smooth stylized drink game asset** (owner's choice of 21/10/2026, over the earlier realistic
   scans, which are in `git stash` "snapshot: 3D tả thực…", and then over a faceted low-poly pass the owner found too
@@ -119,7 +125,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   mirrors the key light (an upright stripe on a cup), and for drinks `layers`: three colours with waving borders
   (`toon.drink.wave`); no rim light, no tone mapping, no environment map, no transmission); `outline.ts` is one fine
   line (an inverted hull, `toon.outline.widthPx` screen px) in a darker tone of the surface (`outlineColour`:
-  near-white surfaces get a rose-lilac line; instanced copies darken their own colour; a material's
+  near-white surfaces get a silver-blue line (17/11/2026); instanced copies darken their own colour; a material's
   `userData.outlineColour` / `noOutline` overrides; a geometry's `userData.hull` gives a welded skin). See-through
   surfaces (the PP wall and lid, its white print, ice) have no hull, which would show through them as a solid band:
   their edge line is drawn in the shader where they turn edge-on (`toonMaterial({ edge })`). No white
@@ -129,22 +135,25 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   lathes; smooth normals); `foam.ts` the cream cap, one design for both creams (owner, 22/10/2026): a thin swell inside the rim (`FOAM_RIM`), cream colour, rose petals and osmanthus;
   `palette.ts` the drinks' and props' own colours. No downloaded models: shapes drawn here keep one style and cost
   no requests. The toppings and the PP cup's splash are made after the stage shows (`loadExtras` in index.ts).
-- **Colours** are Tailwind theme variables `--color-brand-<token>` (`bg-brand-pink-500`, `text-brand-ink`,
-  `border-brand-line`, …) generated from the tokens; no hex in components. Text is ink on cream or white; white text
-  only on ink; never pink text; pink-700 is for details, not text. Light only. The whole page stands on cream white
-  (`bg`, the owner's choice of 21/10/2026 over the earlier pink: `body` in `globals.css`, the header, the canvas);
-  panels on it are white cards (`bg-brand-bg-alt`) with a `border-brand-line` hairline, since white on cream needs an
-  edge. Rules are `border-brand-ink/15`.
-- **The Làng Mây UI** (owner's request of 22/10/2026, "sử dụng linh hoạt brandkit ghibli style"): the page's own
-  look follows `../brandkit` as the 3D does. `src/styles/lang-may.css` (imported by globals.css): `.card-sticker`
-  (white card, sticker edge: a cloud-white band and a thin lilac-rose line, a soft lilac shadow) for every panel;
-  `.badge-sticker` (round icon badge on an accent tint, icon in ink); `.button-game` with `data-variant="primary" |
-"outline"` (pill on a lip it presses onto) for every button and button-like link; `.sky` (sky-200 into cream).
-  `src/components/lang-may/`: `<Sky>` (the
-  hero's sky, a plain gradient: no clouds in it, the owner's choice), `<CloudBank>` (the hero's foot), `<TeaHills>` (the
-  footer's top, melting into the cream), `<FlowerMark>` (the low-poly logo flower: tagline marks, story bullets).
-  The header and footer use the Làng Mây logo (`<Logo>`). Accents (sky, moss, honey, cloud) only
-  decorate: never text, never a ground under text.
+- **Colours and the UI (owner, 17/11/2026: white, silver, pastel blue; "tinh tế, tối giản"; it replaced the
+  Làng Mây sticker UI of 22/10/2026).** Brand tokens are `--color-brand-<token>` (generated); `src/styles/look.css`
+  adds `silver-50 … 700` (from the brand's silver 877 C) and `blue-50 … 400` (the sky), and, in `@layer components`
+  so utilities win, `.card-line` (white panel on a silver hairline), `.eyebrow` (tracked small caps after a short
+  rule), `.btn` with `data-variant="primary" | "outline"` (flat pill: white on ink, or ink on a silver hairline),
+  `.flip`, and `.sky` (the hero's sky). The page stands on white; text is ink, secondary lines
+  `text-silver-700`; headings light (`font-light`), set left (`<SectionHeading tagline title aside>`). No pink in
+  the page's own UI; the colour comes from the photos, the 3D garden and the offers' printed pieces (still the Làng Mây
+  collateral). Light only.
+- **The hero garden** (`src/lib/cup-scene/set/garden.ts`; owner, 17/11/2026: assets instead of self-built, cel
+  shading, colourway B): the cover set stands on a small floating island (drawn here) with an old twisted tree
+  behind it and rocks, grass, a fern, a bush and flowers at its feet: CC0 models from Quaternius's Stylized Nature
+  MegaKit (free edition; source and licence in `../brandkit/3d-nature/quaternius-stylized-nature/`), merged and
+  compressed by `npm run sync-nature` (`scripts/sync-nature.mjs`: normal maps dropped, WebP ≤ 1024 px, meshopt →
+  `public/models/nature.<hash>.glb`, ~0.8 MB; URL in `src/data/nature-model.json`). Drawn with the stage's toon
+  material, their painted textures repainted by `toonMaterial({ tint })` (lightness kept, hue replaced: crown white,
+  bark and rocks silver, plants pastel blue-silver); leaf cards alpha-cut, two-sided, without outline. Loaded with
+  the extras after the stage shows, and added to the set after its actor measured it, so the cups keep their size.
+  The boulder and logs are silver too (`SILVER` in `set/index.ts`), and the stage's shade light is silver-blue.
 - **Performance (phones first, 22/10/2026).** The 3D stage starts only after `load` and an idle moment
   (`whenSettled` in cup-stage.tsx, ≤ 1.5 s), so three.js and the models never compete with first paint; WebGL 2 is
   checked by API, not by a throwaway context. Each device gets a quality (`quality.ts`, tested): phones and weak

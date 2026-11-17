@@ -1,32 +1,30 @@
-import { FlowerMark } from "@/components/lang-may/flower-mark";
+import type { ReactNode } from "react";
 
 /**
- * Centred section heading: small tracked tagline between two low-poly flowers (Làng Mây), the section's <h2>,
- * optional subtitle; still, as the page (no parallax).
+ * A section's heading: a small tracked eyebrow over the <h2>, set left, in light type; `aside` (a link, a cup's slot)
+ * sits on the right of the same row on wide screens.
  */
 export function SectionHeading({
   tagline,
   title,
-  subtitle,
   id,
+  aside,
 }: {
   tagline: string;
   title: string;
-  subtitle?: string;
   /** id of the <h2>, for a section that names itself with aria-labelledby */
   id?: string;
+  aside?: ReactNode;
 }) {
   return (
-    <div className="mx-auto mb-10 max-w-2xl text-center md:mb-14">
-      <p className="flex items-center justify-center gap-3 text-sm font-semibold tracking-[0.2em] text-brand-pink-800 uppercase">
-        <FlowerMark className="size-5" />
-        {tagline}
-        <FlowerMark className="size-5" />
-      </p>
-      <h2 id={id} className="mt-2 text-3xl font-bold tracking-tight text-balance text-brand-ink md:text-5xl">
-        {title}
-      </h2>
-      {subtitle && <p className="mt-4 text-lg md:text-xl">{subtitle}</p>}
+    <div className="mb-10 flex flex-wrap items-end justify-between gap-6 md:mb-14">
+      <div>
+        <p className="eyebrow">{tagline}</p>
+        <h2 id={id} className="mt-4 text-3xl font-light tracking-tight text-balance md:text-5xl">
+          {title}
+        </h2>
+      </div>
+      {aside}
     </div>
   );
 }

@@ -72,6 +72,11 @@ export interface ToonOptions {
    */
   readonly edge?: ColorRepresentation;
   readonly layers?: DrinkLayers;
+  /**
+   * Repaints a painted texture in one colour: its lightness kept (the brush strokes stay), its hue replaced (the hero
+   * garden's CC0 plants, recoloured to the site's silver and pastel blue).
+   */
+  readonly tint?: ColorRepresentation;
   readonly doubleSided?: boolean;
   readonly name?: string;
 }
@@ -81,8 +86,8 @@ const HIGHLIGHT = { threshold: toon.highlight.threshold, soft: 0.004 };
 const LAYER = { wave: toon.drink.wave, soft: 0.018 };
 /** An outline's most saturation (HSL): its colour stays soft, as the brand kit's outlines are. */
 const OUTLINE_MAX_SATURATION = 0.42;
-/** The outline of anything near white: pink-700 cooled toward the clouds' lilac shade, a step darker. */
-const NEAR_WHITE = new Color(tokens["pink-700"]).lerp(new Color("#9C8FB0"), 0.35);
+/** The outline of anything near white: a soft silver-blue (the site's white, silver and pastel blue, 17/11/2026). */
+const NEAR_WHITE = new Color("#A7B4BE");
 const RIM = { colour: new Color(tokens.cloud), strength: toon.rim.strength };
 
 /** A toon material for the stage (see the file's head). */
@@ -113,7 +118,9 @@ export function toonMaterial(options: ToonOptions = {}): MeshToonMaterial {
     uLayerRange: { value: new Vector3(layers?.y0 ?? 0, layers?.y1 ?? 1, LAYER.wave) },
     uLayerAxis: { value: [layers?.axis[0] ?? 0, layers?.axis[1] ?? 0] },
     uEdgeColour: { value: new Color(options.edge ?? "#000000") },
+    uTint: { value: new Color(options.tint ?? "#ffffff") },
   };
+  const tinted = options.tint === undefined ? 0 : 1;
   const edged = options.edge === undefined ? 0 : 1;
   const poured = layers ? 1 : 0;
   material.onBeforeCompile = (shader) => {
@@ -136,11 +143,18 @@ uniform vec3 uLayer1;
 uniform vec3 uLayer2;
 uniform vec3 uLayerRange;
 uniform vec2 uLayerAxis;
-uniform vec3 uEdgeColour;`,
+uniform vec3 uEdgeColour;
+uniform vec3 uTint;`,
       )
       .replace(
         "#include <color_fragment>",
         `#include <color_fragment>
+#if ${tinted}
+{
+  float tintLight = dot( diffuseColor.rgb, vec3( 0.299, 0.587, 0.114 ) );
+  diffuseColor.rgb = uTint * mix( 0.8, 1.1, tintLight );
+}
+#endif
 #if ${poured}
 {
   float around = atan( vToonPos.z - uLayerAxis.y, vToonPos.x - uLayerAxis.x );
@@ -176,14 +190,14 @@ uniform vec3 uEdgeColour;`,
 #include <opaque_fragment>`,
       );
   };
-  material.customProgramCacheKey = () => `toon-${poured}-${edged}`;
+  material.customProgramCacheKey = () => `toon-${poured}-${edged}-${tinted}`;
   return material;
 }
 
 /**
  * The outline's colour for a surface of colour `base`: the same hue, darker and a little richer (toon.outline), never
  * black. Near-white surfaces (paper, white lids, clouds, clear plastic: their hue means nothing) take a soft
- * rose-lilac instead.
+ * silver-blue instead.
  */
 export function outlineColour(base: ColorRepresentation): Color {
   const colour = new Color(base);

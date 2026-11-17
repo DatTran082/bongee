@@ -19,7 +19,7 @@ export function Visit() {
   const links = socials.flatMap((s) => (s.href ? [{ ...s, href: s.href }] : []));
 
   return (
-    <section id={sections.visit} className="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
+    <section id={sections.visit} className="mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28">
       <SectionHeading tagline={visit.tagline} title={visit.title} />
       <div className="cup-grid lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-center lg:gap-12">
         <CupAnchor
@@ -29,34 +29,34 @@ export function Visit() {
           tilt={0.08}
           className="mb-8 h-[40vh] max-h-[24rem] lg:mb-0 lg:h-[60vh] lg:max-h-[40rem]"
         />
-        <div className="card-sticker px-6 py-8 md:px-12 md:py-12">
-          <address className="text-center not-italic">
-            <p className="flex items-center justify-center gap-2 text-sm tracking-[0.2em] uppercase">
-              <IconMapPin aria-hidden className="size-5" />
+        <div className="card-line bg-gradient-to-b from-blue-50 to-white px-6 py-10 md:px-14 md:py-14">
+          <address className="not-italic">
+            <p className="flex items-center gap-2 text-xs tracking-[0.28em] text-silver-700 uppercase">
+              <IconMapPin aria-hidden className="size-4" />
               Địa chỉ
             </p>
-            <p className="mt-2 text-2xl md:text-3xl">{visit.address.street}</p>
+            <p className="mt-4 text-2xl font-light md:text-3xl">{visit.address.street}</p>
             <p className="mt-1 text-lg">
               {visit.address.district}, {visit.address.city}
             </p>
-            <p className="mt-2 text-lg">{visit.services}</p>
+            <p className="mt-4 text-silver-700">{visit.services}</p>
             <a
               href={visit.mapUrl}
               target="_blank"
               rel="noopener noreferrer"
               data-variant="primary"
-              className="button-game mt-5 inline-flex items-center gap-2 rounded-full px-5 py-2.5"
+              className="btn mt-6 px-5 py-2.5"
             >
               Xem bản đồ
               <IconExternalLink aria-hidden className="size-4" />
               <span className="sr-only"> (Google Maps, mở tab mới)</span>
             </a>
           </address>
-          <dl className="mt-8 grid gap-6 border-t border-brand-ink/15 pt-8 sm:grid-cols-2">
+          <dl className="mt-10 grid gap-6 border-t border-silver-200 pt-8 sm:grid-cols-2">
             {rows.map(({ Icon, label, value, href }) => (
-              <div key={label} className="text-center">
-                <dt className="flex items-center justify-center gap-2 text-sm tracking-[0.2em] uppercase">
-                  <Icon aria-hidden className="size-5" />
+              <div key={label}>
+                <dt className="flex items-center gap-2 text-xs tracking-[0.28em] text-silver-700 uppercase">
+                  <Icon aria-hidden className="size-4" />
                   {label}
                 </dt>
                 <dd className="mt-2 text-lg">
@@ -73,7 +73,7 @@ export function Visit() {
           </dl>
           <DeliveryApps />
           {links.length > 0 && (
-            <ul className="mt-10 flex flex-wrap justify-center gap-3">
+            <ul className="mt-10 flex flex-wrap gap-3">
               {links.map((s) => (
                 <li key={s.name}>
                   <a
@@ -81,7 +81,7 @@ export function Visit() {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-variant="primary"
-                    className="button-game inline-flex items-center gap-2 rounded-full px-5 py-2.5"
+                    className="btn px-5 py-2.5"
                   >
                     <SocialIcon name={s.icon} />
                     {s.name}

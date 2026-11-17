@@ -3,7 +3,6 @@
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { FlowerMark } from "@/components/lang-may/flower-mark";
 import { formatPrice } from "@/data/menu";
 import type { LookbookDish, LookbookGroup } from "@/lib/lookbook/join";
 
@@ -17,11 +16,8 @@ function priceLine(prices: number[]): string {
 
 function NoPhoto({ className = "" }: { className?: string }) {
   return (
-    <div className={`grid place-items-center gap-2 bg-brand-bg-alt text-brand-ink-muted ${className}`}>
-      <div className="grid place-items-center gap-2 text-sm">
-        <FlowerMark className="size-8 opacity-60" />
-        Ảnh đang cập nhật
-      </div>
+    <div className={`grid place-items-center gap-2 bg-white text-silver-700 ${className}`}>
+      <div className="text-xs tracking-[0.2em] uppercase">Ảnh đang cập nhật</div>
     </div>
   );
 }
@@ -47,16 +43,16 @@ function DishCard({ dish, onOpen }: DishCardProps) {
             width={600}
             height={750}
             sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
-            className="aspect-[4/5] w-full rounded-2xl border border-brand-line object-cover"
+            className="aspect-[4/5] w-full rounded-2xl bg-silver-100 object-cover transition-opacity group-enabled:group-hover:opacity-90"
           />
         ) : (
-          <NoPhoto className="aspect-[4/5] w-full rounded-2xl border border-brand-line" />
+          <NoPhoto className="aspect-[4/5] w-full rounded-2xl border border-silver-200" />
         )}
-        <span className="mt-3 flex items-baseline justify-between gap-3">
-          <span className="text-lg font-bold text-brand-ink group-enabled:group-hover:underline">{dish.name}</span>
-          <span className="shrink-0 font-semibold tabular-nums">{priceLine(dish.prices)}</span>
+        <span className="mt-4 flex items-baseline justify-between gap-3">
+          <span className="text-lg font-normal">{dish.name}</span>
+          <span className="shrink-0 text-sm text-silver-700 tabular-nums">{priceLine(dish.prices)}</span>
         </span>
-        {dish.note && <span className="mt-1 block text-sm text-brand-ink-muted italic">{dish.note}</span>}
+        {dish.note && <span className="mt-1 block text-sm text-silver-700">{dish.note}</span>}
       </button>
     </li>
   );
@@ -95,21 +91,19 @@ export function LookbookGallery({ groups }: { groups: LookbookGroup[] }) {
 
   return (
     <>
-      <div className="space-y-16 md:space-y-20">
-        {groups.map((group) => (
+      <div className="space-y-20 md:space-y-28">
+        {groups.map((group, index) => (
           <section key={group.id} id={group.id} aria-labelledby={`${group.id}-title`} className="scroll-mt-28">
             <h2
               id={`${group.id}-title`}
-              className="mb-6 flex items-center gap-3 border-b-2 border-brand-pink-700/50 pb-3 text-xl font-bold tracking-wide uppercase md:text-2xl"
+              className="mb-8 flex items-baseline gap-6 border-b border-silver-200 pb-4 text-2xl font-light tracking-tight md:text-4xl"
             >
-              {group.mark ? (
-                <Image src={group.mark} alt="" aria-hidden width={36} height={36} unoptimized className="size-9" />
-              ) : (
-                <FlowerMark className="size-8" />
-              )}
+              <span aria-hidden className="text-xs tracking-[0.2em] text-silver-500 tabular-nums">
+                {String(index + 1).padStart(2, "0")}
+              </span>
               {group.title}
             </h2>
-            <ul className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <ul className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {group.items.map((dish) => (
                 <DishCard key={dish.name} dish={dish} onOpen={() => show(dish.name)} />
               ))}
@@ -127,7 +121,7 @@ export function LookbookGallery({ groups }: { groups: LookbookGroup[] }) {
           if (e.key === "ArrowRight") step(1);
           if (e.key === "ArrowLeft") step(-1);
         }}
-        className="m-auto w-[min(92vw,56rem)] overflow-hidden rounded-3xl border border-brand-line bg-brand-bg p-0 text-brand-ink backdrop:bg-brand-ink/70"
+        className="m-auto w-[min(92vw,56rem)] overflow-hidden rounded-3xl border border-silver-200 bg-white p-0 text-brand-ink backdrop:bg-brand-ink/50 backdrop:backdrop-blur-sm"
       >
         {current?.dish.photo && (
           <div className="grid max-h-[90dvh] md:grid-cols-[minmax(0,1fr)_18rem]">
@@ -140,16 +134,16 @@ export function LookbookGallery({ groups }: { groups: LookbookGroup[] }) {
               className="aspect-[4/5] max-h-[70dvh] w-full object-cover md:max-h-[90dvh]"
             />
             <div className="flex flex-col gap-3 p-6">
-              <p className="text-xs font-semibold tracking-[0.15em] text-brand-ink-muted uppercase">{current.group}</p>
-              <h2 id="lookbook-dialog-title" className="text-2xl font-bold">
+              <p className="eyebrow">{current.group}</p>
+              <h2 id="lookbook-dialog-title" className="text-2xl font-light">
                 {current.dish.name}
               </h2>
-              <p className="font-semibold tabular-nums">{priceLine(current.dish.prices)}</p>
-              {current.dish.note && <p className="text-brand-ink-muted italic">{current.dish.note}</p>}
+              <p className="text-silver-700 tabular-nums">{priceLine(current.dish.prices)}</p>
+              {current.dish.note && <p className="text-sm text-silver-700">{current.dish.note}</p>}
               <div className="mt-auto flex items-center gap-2 pt-4">
                 <button
                   type="button"
-                  className="button-game grid size-11 place-items-center rounded-full"
+                  className="btn size-11 justify-center"
                   data-variant="outline"
                   onClick={() => step(-1)}
                 >
@@ -158,7 +152,7 @@ export function LookbookGallery({ groups }: { groups: LookbookGroup[] }) {
                 </button>
                 <button
                   type="button"
-                  className="button-game grid size-11 place-items-center rounded-full"
+                  className="btn size-11 justify-center"
                   data-variant="outline"
                   onClick={() => step(1)}
                 >
@@ -167,7 +161,7 @@ export function LookbookGallery({ groups }: { groups: LookbookGroup[] }) {
                 </button>
                 <button
                   type="button"
-                  className="button-game ml-auto grid size-11 place-items-center rounded-full"
+                  className="btn ml-auto size-11 justify-center"
                   data-variant="primary"
                   onClick={() => setOpen(null)}
                   autoFocus

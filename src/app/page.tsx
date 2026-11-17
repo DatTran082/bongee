@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import { CupStage } from "@/components/cup-stage";
-import { Faq } from "@/components/faq";
 import { Hero } from "@/components/hero";
 import { Menu } from "@/components/menu";
 import { Offers } from "@/components/offers";
 import { Visit } from "@/components/visit";
 import { brand, socials, visit } from "@/data/boongee";
-import { faq } from "@/data/faq";
 import { priceRange, pricesAreIllustrative } from "@/data/menu";
 import { openGraphBase } from "@/lib/metadata";
 import { SITE_URL } from "@/lib/site-url";
@@ -58,18 +56,6 @@ const structuredData = [
     hasMenu: `${SITE_URL}/menu`,
     ...(sameAs.length ? { sameAs } : {}),
   },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq
-      .filter((item) => !(item.topic === "address" && !visit.address.confirmed))
-      .filter((item) => !(item.topic === "price" && pricesAreIllustrative))
-      .map((item) => ({
-        "@type": "Question",
-        name: item.question,
-        acceptedAnswer: { "@type": "Answer", text: item.answer },
-      })),
-  },
 ];
 
 export default function Home() {
@@ -85,7 +71,6 @@ export default function Home() {
       <CupStage />
       <Menu />
       <Offers />
-      <Faq />
       <Visit />
     </>
   );

@@ -3,19 +3,26 @@ import { seeded } from "../random";
 import { createFoam } from "../toon/foam";
 import { outlineColour, toonMaterial } from "../toon/material";
 import { addOutlines } from "../toon/outline";
-import { PROPS } from "../toon/palette";
 import { boulder, log } from "../toon/shapes";
 import { FOOT, LIDDED_CUP, LOGS, OPEN_CUP, type Placement } from "./layout";
 
 // The cover photo's set, as a stylized game scene: the brand kit's paper cup twice (one under a smooth, plump cap of
 // cream sprinkled with rose petals, one lidded) on smooth props drawn here (toon/shapes.ts): a pale boulder under the
-// open cup, a sawn log under the lidded cup with a shorter one behind. The sky and its clouds are the page's, behind
-// the stage (src/components/lang-may/sky.tsx). No plants or flowers. It floats as one piece: the boulder and the logs
-// end at FOOT (layout.ts). In the hero it holds still and leans toward the pointer (index.ts, SET_MOTION).
+// open cup, a sawn log under the lidded cup with a shorter one behind, in silver. The sky is the page's, behind the
+// stage (`.sky` in the hero). Its plants stand round it on a floating island (garden.ts, added once the stage shows).
+// The boulder and the logs end at FOOT (layout.ts). In the hero it holds still and leans toward the pointer (index.ts, SET_MOTION).
 
 /** The boulder's box (metres): its flat top a little under y = 0, where the open cup stands; its centre; its turn. */
 const STONE = { width: 0.3, height: -FOOT, depth: 0.22, x: -0.075, z: 0.027, sink: 0.002, turn: 0.35 };
 const SEED = 31;
+/**
+ * The boulder and the logs in the site's silver (owner, 17/11/2026: white, silver, pastel blue), not the cover
+ * photo's stone and wood: they stand in the silver-blue garden (garden.ts).
+ */
+const SILVER = {
+  stone: "#E3E8EC",
+  log: { bark: "#B4BDC4", barkDark: "#97A2AB", cut: "#EEF1F3", ring: "#D5DCE1" },
+} as const;
 
 export interface CupSet {
   readonly group: Group;
@@ -56,22 +63,14 @@ export function createSet(paper: Object3D): CupSet {
 
   const stone = new Mesh(
     boulder(random, STONE.width, STONE.height, STONE.depth),
-    toonMaterial({ color: PROPS.stone, highlight: 0 }),
+    toonMaterial({ color: SILVER.stone, highlight: 0 }),
   );
   stone.position.set(STONE.x, -STONE.sink, STONE.z);
   stone.rotation.y = STONE.turn;
   const wood = toonMaterial({ vertexColors: true, highlight: 0.12 });
-  wood.userData.outlineColour = outlineColour(PROPS.bark);
+  wood.userData.outlineColour = outlineColour(SILVER.log.barkDark);
   const logs = LOGS.map((spec, i) => {
-    const mesh = new Mesh(
-      log(random, spec.radius, spec.top - FOOT, {
-        bark: PROPS.bark,
-        barkDark: PROPS.barkDark,
-        cut: PROPS.cut,
-        ring: PROPS.cutRing,
-      }),
-      wood,
-    );
+    const mesh = new Mesh(log(random, spec.radius, spec.top - FOOT, SILVER.log), wood);
     mesh.position.set(spec.x, FOOT, spec.z);
     mesh.rotation.y = i * 2.1;
     return mesh;

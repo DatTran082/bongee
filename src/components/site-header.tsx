@@ -4,12 +4,12 @@ import { IconMenu2, IconX } from "@tabler/icons-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/logo";
-import { nav, sections } from "@/data/boongee";
+import { actions, nav, sections } from "@/data/boongee";
 
 const DESKTOP = "(min-width: 768px)"; // Tailwind md: the inline links replace the phone menu
 
 /**
- * Sticky header: logo, the section links, "Ghé quán" as the button; a toggled menu on phones. Escape closes the menu
+ * Sticky header: logo, the section links, "Tìm cửa hàng" as the button; a toggled menu on phones. Escape closes the menu
  * and returns focus to its button; the menu also closes when the window widens to the desktop layout, so it never
  * stays "open" while hidden.
  */
@@ -17,7 +17,7 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const close = () => setOpen(false);
-  const links = nav.filter((item) => item.id !== sections.visit); // "Ghé quán" is the button
+  const links = nav.filter((item) => item.id !== sections.visit); // the store is the button
 
   useEffect(() => {
     if (!open) return;
@@ -38,14 +38,18 @@ export function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-brand-ink/15 bg-brand-bg md:bg-brand-bg/90 md:backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-silver-200/70 bg-white md:bg-white/80 md:backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         <Link href="/" onClick={close} aria-label="Boongee — trang chủ">
           <Logo />
         </Link>
         <nav aria-label="Điều hướng chính" className="hidden items-center gap-8 md:flex">
           {links.map((item) => (
-            <Link key={item.id} href={`/#${item.id}`} className="text-sm underline-offset-4 hover:underline">
+            <Link
+              key={item.id}
+              href={`/#${item.id}`}
+              className="text-xs tracking-[0.24em] uppercase transition-colors hover:text-silver-700"
+            >
               {item.label}
             </Link>
           ))}
@@ -54,9 +58,9 @@ export function SiteHeader() {
           <Link
             href={`/#${sections.visit}`}
             data-variant="outline"
-            className="button-game hidden rounded-full px-5 py-2 text-sm md:inline-block"
+            className="btn hidden px-5 py-2 text-sm md:inline-flex"
           >
-            Ghé quán
+            {actions.visit}
           </Link>
           <button
             ref={buttonRef}
@@ -75,7 +79,7 @@ export function SiteHeader() {
         <nav
           id="mobile-nav"
           aria-label="Điều hướng"
-          className="border-t border-brand-ink/15 bg-brand-bg px-4 pb-4 md:hidden"
+          className="border-t border-silver-200 bg-white px-4 pb-4 md:hidden"
         >
           <ul>
             {nav.map((item) => (

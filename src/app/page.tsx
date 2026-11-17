@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { CupStage } from "@/components/cup-stage";
 import { Faq } from "@/components/faq";
-import { Flavors } from "@/components/flavors";
 import { Hero } from "@/components/hero";
 import { Menu } from "@/components/menu";
 import { Offers } from "@/components/offers";
-import { Promises } from "@/components/promises";
 import { Story } from "@/components/story";
 import { Visit } from "@/components/visit";
-import { brand, sections, socials, visit } from "@/data/boongee";
+import { brand, socials, visit } from "@/data/boongee";
 import { faq } from "@/data/faq";
 import { priceRange, pricesAreIllustrative } from "@/data/menu";
 import { openGraphBase } from "@/lib/metadata";
@@ -58,7 +56,7 @@ const structuredData = [
       : {}),
     servesCuisine: ["Trà sữa", "Trà trái cây", "Cà phê"],
     ...(pricesAreIllustrative ? {} : { priceRange: `${vnd(priceRange.min)} – ${vnd(priceRange.max)}` }),
-    hasMenu: `${SITE_URL}/#${sections.menu}`,
+    hasMenu: `${SITE_URL}/menu`,
     ...(sameAs.length ? { sameAs } : {}),
   },
   {
@@ -87,8 +85,6 @@ export default function Home() {
       {/* the 3D cup: a fixed canvas behind the page (globals.css); after the hero, so its control follows the hero's buttons */}
       <CupStage />
       <Story />
-      <Flavors />
-      <Promises />
       <Menu />
       <Offers />
       <Faq />

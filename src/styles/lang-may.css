@@ -98,32 +98,6 @@
 }
 
 /*
- * The menu's group marks (the painted monogram flowers): a flower turns slowly only while its group is hovered (or a
- * drink in it has keyboard focus), and stops where it is when the pointer leaves, without snapping back (owner,
- * 22/10/2026: not every mark at once). It swells a little while it turns.
- */
-.mark-spin {
-  transition: scale 0.4s ease-out;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .mark-spin {
-    animation: mark-spin 7s linear infinite paused;
-  }
-
-  .menu-group:is(:hover, :has(:focus-visible)) .mark-spin {
-    animation-play-state: running;
-    scale: 1.12;
-  }
-}
-
-@keyframes mark-spin {
-  to {
-    rotate: 360deg;
-  }
-}
-
-/*
  * A card that turns over (the offers' vouchers and loyalty card): the front and the back stacked in one cell, the
  * back turned away; [data-flipped] turns the whole card. With reduced motion it swaps at once.
  */

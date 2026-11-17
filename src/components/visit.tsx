@@ -19,7 +19,7 @@ export function Visit() {
   const links = socials.flatMap((s) => (s.href ? [{ ...s, href: s.href }] : []));
 
   return (
-    <section id={sections.visit} className="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
+    <section id={sections.visit} className="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
       <SectionHeading tagline={visit.tagline} title={visit.title} />
       <div className="cup-grid lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-center lg:gap-12">
         <CupAnchor

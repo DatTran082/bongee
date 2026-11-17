@@ -42,8 +42,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   `public/models/`, `src/app/{icon.svg,favicon.ico,apple-icon.png,opengraph-image.*,twitter-image.*}`): change the
   brand kit, rebuild it, then run `npm run sync-brand`.
 - **The 3D stage** (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`): a fixed three.js canvas at z-index −10
-  inside `main` (mounted by `page.tsx`, after the hero), transparent (the flavour section's tone is its clear colour,
-  at that section's presence), so the hero's painted sky (z-index −20) shows behind the actors, a cloud bank (z auto)
+  inside `main` (mounted by `page.tsx`, after the hero), transparent, so the hero's painted sky (z-index −20) shows behind the actors, a cloud bank (z auto)
   in front of them, and they pass behind the white cards. Three actors (`ACTORS`, one `Actor` each, `actor.ts`): `set`, the cover photo rebuilt in 3D
   (`set/`: the brand kit's paper cup twice, one under a smooth, plump cream cap with rose petals, one lidded, on a smooth
   boulder and two sawn logs, two clouds behind (hung with `decorate`, so they do not count in the set's size); no
@@ -51,8 +50,8 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   still picture (`SET_MOTION`, `turnable: false`; no parallax anywhere on the page since 22/10/2026, the owner: it
   made phones lag)); `pp`, the 700 ml PP cup,
   clear plastic by alpha, holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
-  standing in it and drifting round it (`splash.ts`); `paper`, the lidded paper cup alone; `flavor`,
-  the carousel's cup (below). Both GLBs (`brandkit/print/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
+  standing in it and drifting round it (`splash.ts`); `paper`, the lidded paper cup alone (the flavour carousel's
+  `flavor` actor, its toppings and the PET cup were removed with the carousel, 17/11/2026). Both GLBs (`brandkit/print/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
   meshopt + WebP to `public/models/<name>.<hash>.glb`, URLs in `src/data/cup-model.json`, cached immutable by
   `next.config.ts`. Sections lay out empty slots with `<CupAnchor name actor turn tilt lid fill>`; `track.ts`
   rests each actor in its own slot nearest above the viewport's middle and flies it to its next (dwell 12 % at
@@ -67,17 +66,17 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   the other slots and the `cup-grid` / `cup-row` wrappers collapse and the hero's slot shows the cover photo (a
   `<noscript>` copy is there without script). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
-- **The menu is laid out as the printed menu board** (`src/components/menu-picker.tsx`, client; `menu.tsx` keeps the
-  heading), after `../brandkit/menu-board/thuc-don.pdf`: a column of featured cups (the board's Blender toon
-  renders, `public/menu/ly/*.<hash>.png`, list and URLs in `src/data/menu-featured.json`, both written by sync-brand from
-  `brandkit/menu-board/`; a scrolling strip on phones), the drink groups in two CSS columns (the group's painted
-  monogram mark, `public/menu/mark/*.<hash>.svg`, group → mark in menu-featured.json → marks, an upper-case heading over a rule, each drink's plain line in italics, M / L prices in small
-  size discs, a plain honey disc by the featured drink), the lookbook photo (`public/menu/poster.jpg`, when the board has
-  one), and the topping / sugar / ice strips at the foot. It is alive: a group's mark turns slowly only while the
-  pointer is on that group (or a drink in it has keyboard focus; `.mark-spin` in lang-may.css: paused, not reset,
-  when it leaves; none with reduced motion; owner, 22/10/2026: not every mark at once); picking a drink
-  (a row or a cup) or a strip's choice only marks it. No pop-up bar (the "Ly của bạn" bar was removed, owner,
-  22/10/2026). Nothing is ordered on the site. No 3D actor rests in the menu (lighter on phones).
+- **The home page is short (restyle, 17/11/2026, owner: "bỏ section scroll quá dài, quá nhiều text"):** hero (3D set),
+  story (poem + the three promises as small badges beside the 3D PP cup; the old promises section and the story's
+  beats are gone), menu, offers, FAQ (all answers closed), visit (3D paper cup). 3D and real photos mix: the 3D cups
+  rest in the hero, story and visit; the menu shows the lookbook's real (AI studio) photos. The 7-viewport flavour
+  carousel and the printed-menu-board picker (`menu-picker.tsx`) were removed; the full menu with a photo and prices
+  per dish lives on `/menu`.
+- **The menu section** (`src/components/menu.tsx`, server): one card per drink group of the till (`lookbookGroups`
+  from `src/data/lookbook.ts`, combos and toppings left to /menu), the first dish's lookbook photo, the group's count
+  and starting price, each linking to `/menu#<group>`; a sideways snap strip on phones, five columns from `lg`; a
+  "Xem cả thực đơn" button and "Ảnh minh hoạ.". The structured data's `hasMenu` points to `/menu`. No 3D actor rests
+  in the menu.
 - **The /menu page** (`src/app/menu/page.tsx`, `src/components/lookbook-gallery.tsx`; 16/11/2026, it replaced the
   old `/preview` and `/thuc-don`, which held invented copy and hard-coded prices): every dish on the till, combos
   included, group by group in the till's order, each with its lookbook studio photo (4:5) and its name, price and
@@ -106,33 +105,9 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   loyalty card front and back, the weekly-offer post, an A4 poster, a story, a cup sticker), copied by sync-brand to
   `public/uu-dai/*.<hash>.png` (resized; URLs in `src/data/uu-dai.json`). Like the models, every picture sync-brand
   writes to `public/menu` and `public/uu-dai` is named after its content and cached immutable (next.config.ts), so a
-  re-render is a new URL and no cache shows the old one. The section shows the weekly post, the loyalty card and both vouchers; each card
+  re-render is a new URL and no cache shows the old one. The section shows the weekly post, the loyalty card and both vouchers in one row from `lg`; each card
   turns over (`.flip` in lang-may.css; instant with reduced motion), each voucher can be downloaded to show at the
   counter. The pictures carry the words, so every `alt` says them in full and the terms are also set as text.
-- **The flavour carousel** (`src/components/flavors.tsx`, section `#huong-vi` after the story): one flavour per
-  menu category (`src/data/flavors.ts`: its cup, its toppings, its background tone; titles and item names from the
-  menu, never written by hand). With script the section gives each change 1.7 viewports of scroll and its inside sticks
-  (CSS). No script animates or pins the page (GSAP was removed, 22/10/2026: its pin, scrub and snap lagged on
-  phones): a passive scroll handler reads `scrollY` (the section's place is measured only on resize / ResizeObserver)
-  and stores the progress and the tone's presence in `src/lib/cup-scene/flavor-scroll.ts`; the stage glides the cup
-  there (`FLAVOR_TAU` in index.ts); the words change by a CSS fade (`data-current`, the only re-render); the page
-  settles on a flavour by the browser's own scroll snapping (`html.flavor-snap`, `scroll-snap-type: y proximity`, an
-  invisible `.flavor-snap-mark` per flavour with `scroll-snap-stop: always`), so a phone keeps its native momentum
-  scroll. The stage's `flavor` actor
-  (`flavor-rig.ts`) reads it every frame through `flavor-track.ts` (pure, tested): the cup turns once per flavour;
-  `cupParts` keeps one paper cup between two paper-cup flavours and swaps only its topper (the lid lifts off and
-  shrinks, the milk-foam or cheese cream drops in and settles), and swaps the whole cup only between paper and a
-  clear cup: the PP cup of the fruit teas (about its middle, never below half size, never both at once). The coffees
-  are in the lidded paper cup (the owner tried the 350 ml PET cup and went back, 22/10/2026). The PET cup stays ready
-  (`cup: "pet"` in flavors.ts; `toon/pet-cup.ts`: no GLB, turned from its sizes in `src/data/pet-cup.json` and wrapped
-  with its white print by the print fan, both written by sync-brand from `brandkit/menu-board/cups/src`; coldbrew in it,
-  no lid); the stage builds it and fetches its print only when a flavour uses it. Every shader, hidden cups too
-  (`compileAll`), compiles before the first frame and the PET print (when used) is uploaded then, not mid-scroll; the
-  toppings (`toppings.ts`) fade from one flavour's set to the next, and the canvas's clear colour moves through the
-  flavours' tones. **Tones stay in the brand's creams and whites** (`bg`, `bg-alt`, `grey-100`); flavour colours live
-  only in the drink and the toppings. While the section has the viewport the `pp` and `paper` actors shrink away.
-  Without script it is a plain list; dots jump to a flavour; reduced motion keeps the pin but drops the turn,
-  the snap and the gliding.
 - **The 3D look is a smooth stylized drink game asset** (owner's choice of 21/10/2026, over the earlier realistic
   scans, which are in `git stash` "snapshot: 3D tả thực…", and then over a faceted low-poly pass the owner found too
   coarse), after the Làng Mây edition's toon rules

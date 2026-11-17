@@ -1,7 +1,7 @@
 import tokens from "@/data/brand-tokens.json";
 
 // Colours of what the stage draws that are not brand colours: the drinks, the fruit, the beans (sRGB). They are the
-// flavours' own colours and live only in the 3D (flavors.ts keeps the page's grounds in the brand's creams). Every
+// drinks' own colours and live only in the 3D (the page's grounds stay in the brand's creams). Every
 // one is a soft, slightly chalky tone, as a stylized game asset paints them; the brand's own colours come from the
 // tokens (the Làng Mây accents: cloud, sky, moss, honey, wood, stone).
 

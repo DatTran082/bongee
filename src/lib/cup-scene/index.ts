@@ -7,9 +7,6 @@ import {
   PCFShadowMap,
   PerspectiveCamera,
   Scene,
-  SRGBColorSpace,
-  type Texture,
-  TextureLoader,
   Vector3,
   WebGLRenderer,
 } from "three";
@@ -21,29 +18,23 @@ import { ACTORS, type ActorName } from "./actors";
 import { disposeScene } from "./dispose";
 import { DISTANCE, FOV } from "./fit";
 import { MODELS, NODES } from "./model";
-import { approach, needsRedraw } from "./motion";
+import { needsRedraw } from "./motion";
 import { qualityFor } from "./quality";
 import { seeded } from "./random";
 import { createSet } from "./set";
 import { createSplash, type Splash } from "./splash";
-import { createToppings } from "./toppings";
 import { toonCup } from "./toon/cups";
 import { setOutlineSize } from "./toon/outline";
-import { createPetCup, PET_PRINT_URL } from "./toon/pet-cup";
-import { flavors } from "@/data/flavors";
-import { createFlavorRig, type FlavorRig } from "./flavor-rig";
-import { flavorScroll } from "./flavor-scroll";
-import { flavorState } from "./flavor-track";
 import { Lean } from "./steppers";
 import type { CupTarget } from "./track";
 
 // The 3D stage: a canvas behind the page with its actors on it, each flying between the sections' slots as the
-// page scrolls (track.ts, actor.ts): the cover photo's set (set/), which floats in the hero; the flavour carousel's
-// cup (flavor-rig.ts: paper, the PP cup of the fruit teas, the PET cup of the coffees); the clear PP cup of grape tea with grapes and ice in it and floating round it (splash.ts);
+// page scrolls (track.ts, actor.ts): the cover photo's set (set/), which stands in the hero; the clear PP cup of grape
+// tea with grapes and ice in it and floating round it (splash.ts);
 // the lidded paper cup. Everything is drawn as a smooth stylized game asset (toon/: the Làng Mây edition's toon
 // rules): soft cel bands, sticker outlines, flat white highlights. No flowers drift behind them (the owner took them
 // out, 22/10/2026), and no sparkles twinkle round them (the owner, 27/10/2026). The canvas is transparent, so the page's painted scenery (sky, clouds)
-// stays behind the actors; it takes the flavour section's tone only while that section has the viewport. A drag turns an actor, a tap on a lid flips its strap,
+// stays behind the actors. A drag turns an actor, a tap on a lid flips its strap,
 // the keyboard does both. With reduced motion nothing moves on its own: everything sits in its slot, follows the
 // scroll, and frames are drawn only when something changed.
 
@@ -54,19 +45,11 @@ const MAX_STEP = 250;
 /** The actors lean against the scroll: radians per px/ms of scroll speed, the most, the smoothing (ms). */
 const LEAN = { perSpeed: 0.05, max: 0.14, tau: 90 };
 const SPLASH_SEED = 19;
-const TOPPING_SEED = 43;
 const CLEAR = new Color(tokens["bg"]); // the page's cream ground
 /** Idle motion and flight of the cups: they float, and a drag turns them. */
 const CUP_MOTION = { bob: 0.016, sway: 0.08, roll: 0.02, hz: 0.24, spin: 1.1, turnable: true };
-/** The carousel's cup: a gentle float, no turn of its own (the scroll turns it). */
-const FLAVOR_MOTION = { bob: 0.01, sway: 0.03, roll: 0.012, hz: 0.2, spin: 0, turnable: true };
 /** The hero's set is a still picture: it does not float, turn or follow the pointer (no parallax, 22/10/2026). */
 const SET_MOTION = { bob: 0, sway: 0, roll: 0, hz: 0, spin: 0, turnable: false };
-/**
- * The carousel follows the section's scroll through this smoothing (ms): the scroll handler only stores where the
- * page is, and the cup glides there, so a wheel step or a flick never jerks it (flavors.tsx).
- */
-const FLAVOR_TAU = 140;
 /** The PP cup's lid rises this far (metres) in a slot that asks for it. */
 const PP_LID_LIFT = 0.055;
 /** The key light: from the upper left, as in the photo; it follows the set to throw its shadows. */
@@ -119,22 +102,9 @@ async function loadCup(model: { url: string; root: string }, signal: AbortSignal
   return required(gltf.scene, model.root, model.url);
 }
 
-/** A cup's print texture; null when it cannot be had (the cup is then drawn plain, the stage still works). */
-async function loadPrint(url: string): Promise<Texture | null> {
-  try {
-    const texture = await new TextureLoader().loadAsync(url);
-    texture.colorSpace = SRGBColorSpace;
-    texture.anisotropy = 4;
-    return texture;
-  } catch (error) {
-    console.warn("Không tải được hình in ly PET.", error);
-    return null;
-  }
-}
-
 /**
- * Compiles every shader the stage may need, hidden parts too (compileAsync skips what is not visible: the
- * carousel's other cups would compile mid-scroll, the first time each shows, and stall that frame).
+ * Compiles every shader the stage may need, hidden parts too (compileAsync skips what is not visible: a part shown
+ * later would compile mid-scroll, the first time it shows, and stall that frame).
  */
 async function compileAll(renderer: WebGLRenderer, scene: Scene, camera: PerspectiveCamera): Promise<void> {
   const hidden: Object3D[] = [];
@@ -184,18 +154,11 @@ export async function createCupScene(
   options: CupSceneOptions,
 ): Promise<CupScene> {
   const quality = deviceQuality();
-  const usesPet = flavors.some((flavor) => flavor.cup === "pet"); // the PET cup and its print only when served
-  const [pp, paper, petPrint] = await Promise.all([
-    loadCup(MODELS.pp, options.signal),
-    loadCup(MODELS.paper, options.signal),
-    usesPet ? loadPrint(PET_PRINT_URL) : null,
-  ]);
+  const [pp, paper] = await Promise.all([loadCup(MODELS.pp, options.signal), loadCup(MODELS.paper, options.signal)]);
   const scene = new Scene();
   const listeners = new AbortController();
   const actors: Partial<Record<ActorName, Actor>> = {};
   let splash: Splash | null = null;
-  let toppingsDispose: (() => void) | null = null;
-  let rig: FlavorRig | null = null;
   let renderer: WebGLRenderer | null = null;
   let frame = 0;
 
@@ -205,8 +168,6 @@ export async function createCupScene(
     listeners.abort();
     for (const actor of Object.values(actors)) actor.dispose();
     splash?.dispose();
-    toppingsDispose?.();
-    rig?.dispose();
     disposeScene(scene);
     renderer?.dispose();
     renderer?.forceContextLoss(); // free the context now, not when the GC gets to it (dev reloads pile them up)
@@ -235,11 +196,8 @@ export async function createCupScene(
     toonCup(paper, "milkTea");
     const set = createSet(paper);
     const single = paper.clone(true);
-    // the flavour carousel clones the prepared cups before any actor re-centres them
-    const carousel = (rig = createFlavorRig(paper, pp, usesPet ? createPetCup(petPrint) : null, flavors));
     const specs: Record<ActorName, ActorSpec> = {
       set: { subject: set.group, lid: set.lid, strap: set.strap, lidLift: 0, ...SET_MOTION, phase: 0 },
-      flavor: { subject: carousel.group, lid: null, strap: null, lidLift: 0, ...FLAVOR_MOTION, phase: 2.6 },
       pp: {
         subject: pp,
         lid: required(pp, NODES.lid, MODELS.pp.url),
@@ -271,13 +229,12 @@ export async function createCupScene(
     };
     const cast: Record<ActorName, Actor> = {
       set: hire("set"),
-      flavor: hire("flavor"),
       pp: hire("pp"),
       paper: hire("paper"),
     };
 
     /**
-     * The toppings and what floats round the PP cup are not seen at first: they are made after the stage shows (their
+     * What floats round the PP cup is not seen at first: they are made after the stage shows (their
      * shaders compile then), and hang on their actors. Without them the page still works, only plainer.
      */
     /** Waits for an idle moment (or the next frame): the extras are built in small steps, not one long task. */
@@ -294,15 +251,8 @@ export async function createCupScene(
       const made = createSplash(seeded(SPLASH_SEED));
       splash = made;
       pp.add(made.inside); // what stands in the tea, in the cup's space
-      carousel.pp.add(made.inside.clone(true)); // the carousel's PP cup holds the same tea
       cast.pp.decorate(made.group);
-      await breathe();
-      options.signal.throwIfAborted();
-      const toppings = createToppings(seeded(TOPPING_SEED));
-      toppingsDispose = () => toppings.dispose();
-      carousel.setToppings(toppings);
-      cast.flavor.decorate(toppings.group);
-      // compile their shaders now, while nothing moves: not mid-scroll when a flavour's toppings first come in
+      // compile their shaders now, while nothing moves: not mid-scroll when they first come in
       await breathe();
       if (renderer) await compileAll(renderer, scene, camera);
       options.signal.throwIfAborted();
@@ -331,11 +281,6 @@ export async function createCupScene(
     let dirty = true; // an input, a resize or a layout change: measure and draw
     let targets: Record<string, CupTarget | null> = {};
     let lastScroll = NaN;
-    let flavorProgress = flavorScroll().progress; // the carousel's progress, smoothed toward the scroll's
-    let lastPresence = flavorScroll().presence;
-    const ground = new Color();
-    const toneFrom = new Color();
-    const toneTo = new Color();
 
     /** While only the idle float moves, a frame at most this often (ms): 30 fps on a light device, a little slack. */
     const idleFrameMs = 1000 / quality.idleFps - 4;
@@ -386,13 +331,7 @@ export async function createCupScene(
       const next = remeasure ? options.measure() : targets;
       const targetChanged = !sameTargets(next, targets);
       targets = next;
-      const fl = flavorScroll();
-      const before = flavorProgress;
-      flavorProgress = reduced ? fl.progress : approach(flavorProgress, fl.progress, dt, FLAVOR_TAU);
-      if (Math.abs(flavorProgress - fl.progress) < 1e-4) flavorProgress = fl.progress;
-      const flavorMoved = flavorProgress !== before || fl.presence !== lastPresence;
-      lastPresence = fl.presence;
-      const moving = [...ACTORS.map((name) => cast[name].step(dt)), lean.moving, flavorMoved].some(Boolean);
+      const moving = [...ACTORS.map((name) => cast[name].step(dt)), lean.moving].some(Boolean);
       const frameState: Frame = {
         dt,
         time,
@@ -401,25 +340,12 @@ export async function createCupScene(
         width,
         height,
       };
-      // while the flavour section has the viewport, the other cups make way for its carousel
-      for (const name of ACTORS) {
-        const fade = name === "pp" || name === "paper" ? fl.presence : 0;
-        options.onPlace(name, cast[name].place(targets[name] ?? null, frameState, fade));
-      }
-      const state = flavorState(flavorProgress, flavors.length, reduced);
-      carousel.update(state, time, !reduced);
-      // the ground takes the flavour's tone (pink and cream only) while the section has the viewport
-      toneFrom.set(flavors[state.from]?.toneHex ?? CLEAR);
-      toneTo.set(flavors[state.to]?.toneHex ?? CLEAR);
-      ground.lerpColors(toneFrom, toneTo, state.blend);
-      renderer?.setClearColor(ground, fl.presence); // clear, but for the flavour section's tone while it has the view
+      for (const name of ACTORS) options.onPlace(name, cast[name].place(targets[name] ?? null, frameState));
       followSet();
       key.castShadow = quality.shadows && cast.set.root.visible; // the shadow pass serves the set alone
       splash?.update(time, reduced ? 0 : dt / 1000);
       const sinceDraw = now - lastDraw;
-      if (
-        needsRedraw({ reduced, moving: moving || flavorMoved, dirty, scrolled, targetChanged, sinceDraw, idleFrameMs })
-      ) {
+      if (needsRedraw({ reduced, moving, dirty, scrolled, targetChanged, sinceDraw, idleFrameMs })) {
         renderer?.render(scene, camera);
         lastDraw = now;
       }
@@ -448,7 +374,6 @@ export async function createCupScene(
       { signal },
     );
     await compileAll(renderer, scene, camera);
-    if (petPrint) renderer.initTexture(petPrint); // upload it now: not on the coffee cup's first frame, mid-scroll
     options.signal.throwIfAborted();
     loadExtras().catch((error: unknown) => {
       if (!options.signal.aborted) console.warn("Không tải được topping 3D.", error);

@@ -1,5 +1,5 @@
 // Boongee: the words and facts the landing page shows. Sources:
-//   - brand story, tone and promises: ShanMay brand-kit docs/01-brand-foundation.md (USP, visual narrative, tone);
+//   - brand tone and the sweetness promise: ShanMay brand-kit docs/01-brand-foundation.md (USP, visual narrative, tone);
 //   - menu and offers: ShanMay menu-data.json and collateral.json, through src/data/menu.ts and src/data/offers.ts.
 // ShanMay marks some facts as assumptions ([GIẢ ĐỊNH]); they carry a TODO(boongee) here: confirm before launch.
 // Tone (docs/01 §7): short sentences, one idea each, at most two adjectives, no "siêu / đỉnh / mê / tuyệt hảo /
@@ -22,7 +22,6 @@ export const brand = {
 
 /** Section anchors, shared by the page and the navigation. */
 export const sections = {
-  story: "cau-chuyen",
   menu: "menu",
   offers: "uu-dai",
   faq: "hoi-dap",
@@ -30,7 +29,6 @@ export const sections = {
 } as const;
 
 export const nav = [
-  { label: "Câu chuyện", id: sections.story },
   { label: "Menu", id: sections.menu },
   { label: "Ưu đãi", id: sections.offers },
   { label: "Ghé quán", id: sections.visit },
@@ -74,41 +72,10 @@ export const cup = {
 };
 
 /**
- * The story: a short poem, then the three promises (below). Words kept simple (the owner, 22/10/2026: no flowery
- * copy); the pictures are small, quiet ones (clouds, wind, a kitchen), as in a hand-drawn film.
+ * The default sweetness, quoted by the FAQ (USP proof 3 of docs/01).
+ * TODO(boongee): 50 % is the default ShanMay proposes; confirm it at the counter.
  */
-export const story = {
-  tagline: "Câu chuyện",
-  title: "Trà ướp hoa",
-  // The clouds and the wind are pictures, not facts: the tea's origin is not confirmed yet (TODO(boongee): docs/01
-  // asks for a name story once "boongee" has a meaning; add the origin then, if it is confirmed).
-  poem: ["Mây đi ngang mái nhà,", "gió mang hương hoa vào bếp.", "Ấm trà để yên một lúc,", "rồi rót ra, thật nhẹ."],
-};
-
-export type PromiseIcon = "flower" | "droplet" | "feather";
-
-/** What a Boongee drink keeps to: the USP of docs/01 §1 and its proofs (shown in the story). */
-export const promises = {
-  items: [
-    {
-      title: "Hoa thật",
-      // the flower teas in the till's recipes (Odoo, cost sheet of 03/11/2026): cốt trà dành dành, bạch lan hoa, hoa nhài
-      text: "Ướp cùng dành dành, bạch lan, hoa nhài.",
-      icon: "flower",
-    },
-    {
-      // TODO(boongee): 50 % is the default ShanMay proposes (USP proof 3); confirm it at the counter.
-      title: "Ngọt tuỳ bạn",
-      text: "Mặc định 50% đường, dặn quầy để đổi.",
-      icon: "droplet",
-    },
-    {
-      title: "Vị thanh",
-      text: "Pha vừa tay, đến cuối ly vẫn nhẹ.",
-      icon: "feather",
-    },
-  ] satisfies Array<{ title: string; text: string; icon: PromiseIcon }>,
-};
+export const sweetness = "Mặc định 50% đường, dặn quầy để đổi.";
 
 export const menuIntro = {
   tagline: "Menu",

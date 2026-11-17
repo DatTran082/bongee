@@ -4,7 +4,6 @@ import { Faq } from "@/components/faq";
 import { Hero } from "@/components/hero";
 import { Menu } from "@/components/menu";
 import { Offers } from "@/components/offers";
-import { Story } from "@/components/story";
 import { Visit } from "@/components/visit";
 import { brand, socials, visit } from "@/data/boongee";
 import { faq } from "@/data/faq";
@@ -84,7 +83,6 @@ export default function Home() {
       <Hero />
       {/* the 3D cup: a fixed canvas behind the page (globals.css); after the hero, so its control follows the hero's buttons */}
       <CupStage />
-      <Story />
       <Menu />
       <Offers />
       <Faq />

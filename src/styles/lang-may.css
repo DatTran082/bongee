@@ -16,7 +16,7 @@
     0 10px 18px -12px color-mix(in oklab, #9c8fb0 70%, transparent);
 }
 
-/* A white card with a sticker's edge: the panels on the cream (menu, offers, promises, visit). */
+/* A white card with a sticker's edge: the panels on the cream (menu, offers, visit). */
 .card-sticker {
   border-radius: 2rem;
   background: var(--color-brand-bg-alt);

@@ -95,9 +95,10 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   page's pale blue wash (no frame, no card); the page's name "Thực đơn" is an `sr-only` <h1> (owner: no visible title);
   no dish count, only "Ảnh minh hoạ · Giá tại quầy, cập nhật <date>". Groups are numbered light headings on a hairline.
   The Lottie (`src/components/menu-hero-lottie.tsx`, lottie-web's light SVG player,
-  loaded in the browser only; 6 s since 17/11/2026): a pastel-blue paper cup is set down, the four monogram marks
-  (the print kit's cluster, `brandkit/lottie/monogram-marks.mjs`, drawn with still edges) fly onto it one by one,
-  the lid goes on; then the loop: the marks breathe in turn, a curl of scent rises. Intro frames 0–48 once, then the
+  loaded in the browser only; 6 s since 17/11/2026, "Hương thành hoa"): a teapot pours into a pastel-blue paper
+  cup, two curls of steam rise and draw a hand-drawn five-petalled flower above it (not the logo); the loop: the
+  flower bobs on its scent, the steam sways. Earlier versions (monogram on a paper cup, monogram column on the PP
+  cup) are in `~/Documents/Boongee-luu-tru/2026-11-17/lottie-menu-hero-*`. Intro frames 0–48 once, then the
   loop 48–72; paused off screen; frame 48 still with reduced motion. Its source is
   `../brandkit/lottie/menu-hero.scene.mjs` (skill `hand-drawn-lottie`: 12 fps, ink Đen Than + one colour, pastel blue `#A8D3E3` since 17/11/2026,
   no sparkles, not the logo), built to `menu-hero.json` there and copied by sync-lookbook as

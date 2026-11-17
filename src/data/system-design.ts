@@ -134,7 +134,7 @@ export const changelog = [
     lines: [
       "Website đổi sang trắng, bạc, xanh pastel; bỏ thẻ sticker và nút “game”.",
       "Hero: đảo bay cel-shading với cây cỏ CC0 (Quaternius), nhuộm bạc/xanh; bỏ núi và mây.",
-      "Lottie /menu 6 giây: cốc giấy và bốn hoa monogram, màu xanh pastel.",
+      "Lottie /menu 6 giây “Hương thành hoa”: ấm trà rót vào ly giấy, hơi trà vẽ thành bông hoa, màu xanh pastel.",
       "Lập Design DNA, Design System, tokens.json và trang /system-design.",
     ],
   },

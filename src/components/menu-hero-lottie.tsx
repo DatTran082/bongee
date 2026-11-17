@@ -2,12 +2,12 @@
 
 import { useEffect, useRef } from "react";
 
-/** Frames of the Lottie's markers (brandkit/lottie/menu-hero.scene.mjs): intro once, then the loop; 24 is the rest. */
-const INTRO: [number, number] = [0, 24];
-const LOOP: [number, number] = [24, 48];
+/** Frames of the Lottie's markers (brandkit/lottie/menu-hero.scene.mjs): intro once, then the loop; 48 is the rest. */
+const INTRO: [number, number] = [0, 48];
+const LOOP: [number, number] = [48, 72];
 
 /**
- * The /menu page's hand-drawn Lottie (a cup is set down, a flower drifts into it, its scent rises): lottie-web's
+ * The /menu page's hand-drawn Lottie (a paper cup is set down, the four monogram flowers fly onto it, the lid goes on, the flowers breathe and a curl of scent rises): lottie-web's
  * light SVG player, loaded only in the browser. Intro once, then the loop; paused while off screen; one still frame
  * (the rest) with reduced motion. Decorative: hidden from assistive tech.
  */

@@ -95,11 +95,22 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   page's pale blue wash (no frame, no card); the page's name "Thực đơn" is an `sr-only` <h1> (owner: no visible title);
   no dish count, only "Ảnh minh hoạ · Giá tại quầy, cập nhật <date>". Groups are numbered light headings on a hairline.
   The Lottie (`src/components/menu-hero-lottie.tsx`, lottie-web's light SVG player,
-  loaded in the browser only): a pastel-blue cup is set down, a flower drifts into it, its scent rises; intro frames 0–24
-  once, then the loop 24–48; paused off screen; frame 24 still with reduced motion. Its source is
+  loaded in the browser only; 6 s since 17/11/2026): a pastel-blue paper cup is set down, the four monogram marks
+  (the print kit's cluster, `brandkit/lottie/monogram-marks.mjs`, drawn with still edges) fly onto it one by one,
+  the lid goes on; then the loop: the marks breathe in turn, a curl of scent rises. Intro frames 0–48 once, then the
+  loop 48–72; paused off screen; frame 48 still with reduced motion. Its source is
   `../brandkit/lottie/menu-hero.scene.mjs` (skill `hand-drawn-lottie`: 12 fps, ink Đen Than + one colour, pastel blue `#A8D3E3` since 17/11/2026,
   no sparkles, not the logo), built to `menu-hero.json` there and copied by sync-lookbook as
   `public/menu/lookbook/menu-hero.<hash>.json` (`animation` in lookbook.json).
+- **The /system-design page** (`src/app/system-design/page.tsx`, 17/11/2026, owner: "tham chiếu cho những thiết kế
+  sau này"): Boongee's design system as a living page for the team, `noindex`, not in the sitemap or the nav. Values
+  come from the brand kit's merged tokens (`../brandkit/design-system/tokens.json`, built by
+  `brandkit/scripts/build_design_tokens.py`), copied with the monogram cluster SVG by `npm run sync-design-system`
+  to `src/data/design-system.json` and `src/assets/brand/cum-4-hoa-den.svg`; the words (DNA, principles, surfaces,
+  voice, 3D and photo rules, checklist, **changelog**) are in `src/data/system-design.ts`; components shown are the
+  site's own (`.btn`, `.card-line`, `<SectionHeading>`, the Lottie). Contrast of the colour pairs is computed
+  (`src/lib/design/contrast.ts`, tested). **Updating it:** change the brand kit's source and
+  `design-system.md`, rebuild and sync the tokens, edit `src/data/system-design.ts`, and add a changelog line.
 - **Delivery apps** (`src/components/delivery-apps.tsx`, in the visit section): Boongee is on GrabFood and ShopeeFood
   (owner, 22/10/2026; `delivery` in `src/data/boongee.ts`), each shown with its painted badge from the Làng Mây edition
   (`giao_hang.py` → `identity/delivery/` → sync-brand → `src/assets/lang-may/{grabfood,shopeefood}.svg`: each app's

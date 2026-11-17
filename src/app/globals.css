@@ -65,10 +65,9 @@ footer {
 }
 
 /*
- * No cup (no WebGL 2, data saver, or the model failed): the slots collapse, but the hero's, which shows the cover
- * photo; the two-column grids around them go back to one column (a hidden grid item leaves its track empty).
+ * No cup (no WebGL 2, data saver, or the model failed): the slots collapse; the two-column grids around them go back to one column (a hidden grid item leaves its track empty).
  */
-.cup-failed .cup-anchor:not([data-cup-anchor="hero"]),
+.cup-failed .cup-anchor,
 .cup-failed .cup-row {
   display: none;
 }

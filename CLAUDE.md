@@ -43,13 +43,10 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   `public/models/`, `src/app/{icon.svg,favicon.ico,apple-icon.png,opengraph-image.*,twitter-image.*}`): change the
   brand kit, rebuild it, then run `npm run sync-brand`.
 - **The 3D stage** (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`): a fixed three.js canvas at z-index −10
-  inside `main` (mounted by `page.tsx`, after the hero), transparent, so the hero's plain sky (`.sky`, z-index −20) shows behind the actors, and they pass behind the
-  white cards. Three actors (`ACTORS`, one `Actor` each, `actor.ts`): `set`, the cover photo rebuilt in 3D
-  (`set/`: the brand kit's paper cup twice, one under a smooth, plump cream cap with rose petals, one lidded, on a smooth
-  boulder and two sawn logs, two clouds behind (hung with `decorate`, so they do not count in the set's size); no
-  plants or flowers; with shadows from a key light that follows it; it does not float, turn or follow the mouse: a
-  still picture (`SET_MOTION`, `turnable: false`; no parallax anywhere on the page since 22/10/2026, the owner: it
-  made phones lag)); `pp`, the 700 ml PP cup,
+  inside `main` (mounted by `page.tsx`, after the hero), transparent; the actors pass behind the white cards. Two
+  actors (`ACTORS`, one `Actor` each, `actor.ts`; the hero's `set` actor, the cover photo rebuilt in 3D, was removed
+  with its shadows when the hero became a photograph, 17/11/2026; no parallax anywhere on the page since 22/10/2026,
+  the owner: it made phones lag): `pp`, the 700 ml PP cup,
   clear plastic by alpha, holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
   standing in it and drifting round it (`splash.ts`); `paper`, the lidded paper cup alone (the flavour carousel's
   `flavor` actor, its toppings and the PET cup were removed with the carousel, 17/11/2026). Both GLBs (`brandkit/print/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
@@ -64,12 +61,10 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   the keyboard). No flowers drift behind (removed 22/10/2026) and no sparkles twinkle anywhere on the page, 2D or
   3D (removed, owner, 27/10/2026: no sparkle stars in any design); headings and cards hold still (the scroll-driven
   parallax was removed, 22/10/2026). No WebGL 2, data saver or no model: `<html class="cup-failed">`,
-  the other slots and the `cup-grid` / `cup-row` wrappers collapse and the hero's slot shows the cover photo (a
-  `<noscript>` copy is there without script). The pure maths (`track`, `fit`, `motion`) has `node --test`
+  the slots and the `cup-grid` / `cup-row` wrappers collapse (without script too). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
 - **The home page is short and quiet (owner, 17/11/2026: "tinh tế, tối giản", white, silver and pastel blue):**
-  hero (slogan + two buttons, no intro line; the 3D set on its floating island over a plain pastel sky: the toon
-  mountains and clouds were removed the same day, owner: "bỏ mây núi, chỉ giữ lại đảo bay"), Thực đơn · "Thức uống đặc trưng"
+  hero (slogan + two buttons, no intro line; a photograph of the two cups in tea-hill fog), Thực đơn · "Thức uống đặc trưng"
   (3D PP cup beside the photos from `lg`), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper
   cup). The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
   counts (no "23 món, 32K – 65K", no per-group counts or starting prices). Section ids: `thuc-don`, `uu-dai`,
@@ -96,8 +91,10 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   no dish count, only "Ảnh minh hoạ · Giá tại quầy, cập nhật <date>". Groups are numbered light headings on a hairline.
   The Lottie (`src/components/menu-hero-lottie.tsx`, lottie-web's light SVG player,
   loaded in the browser only; 6 s since 17/11/2026, "Hương thành hoa"): a teapot pours into a pastel-blue paper
-  cup, two curls of steam rise and draw a hand-drawn five-petalled flower above it (not the logo); the loop: the
-  flower bobs on its scent, the steam sways. Earlier versions (monogram on a paper cup, monogram column on the PP
+  cup while the four monogram marks grow up its face (a sprout at its foot, each mark budding from the one below
+  and rising into the print's column order, edges still), two curls of steam rise and draw a hand-drawn
+  five-petalled flower above it (not the logo); the loop: the flower bobs on its scent, the steam sways, the marks
+  breathe bottom to top. Earlier versions (monogram on a paper cup, monogram column on the PP
   cup) are in `~/Documents/Boongee-luu-tru/2026-11-17/lottie-menu-hero-*`. Intro frames 0–48 once, then the
   loop 48–72; paused off screen; frame 48 still with reduced motion. Its source is
   `../brandkit/lottie/menu-hero.scene.mjs` (skill `hand-drawn-lottie`: 12 fps, ink Đen Than + one colour, pastel blue `#A8D3E3` since 17/11/2026,
@@ -154,18 +151,18 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   rule), `.btn` with `data-variant="primary" | "outline"` (flat pill: white on ink, or ink on a silver hairline),
   `.flip`, and `.sky` (the hero's sky). The page stands on white; text is ink, secondary lines
   `text-silver-700`; headings light (`font-light`), set left (`<SectionHeading tagline title aside>`). No pink in
-  the page's own UI; the colour comes from the photos, the 3D garden and the offers' printed pieces (still the Làng Mây
+  the page's own UI; the colour comes from the photos, the 3D cups and the offers' printed pieces (still the Làng Mây
   collateral). Light only.
-- **The hero garden** (`src/lib/cup-scene/set/garden.ts`; owner, 17/11/2026: assets instead of self-built, cel
-  shading, colourway B): the cover set stands on a small floating island (drawn here) with an old twisted tree
-  behind it and rocks, grass, a fern, a bush and flowers at its feet: CC0 models from Quaternius's Stylized Nature
-  MegaKit (free edition; source and licence in `../brandkit/3d-nature/quaternius-stylized-nature/`), merged and
-  compressed by `npm run sync-nature` (`scripts/sync-nature.mjs`: normal maps dropped, WebP ≤ 1024 px, meshopt →
-  `public/models/nature.<hash>.glb`, ~0.8 MB; URL in `src/data/nature-model.json`). Drawn with the stage's toon
-  material, their painted textures repainted by `toonMaterial({ tint })` (lightness kept, hue replaced: crown white,
-  bark and rocks silver, plants pastel blue-silver); leaf cards alpha-cut, two-sided, without outline. Loaded with
-  the extras after the stage shows, and added to the set after its actor measured it, so the cups keep their size.
-  The boulder and logs are silver too (`SILVER` in `set/index.ts`), and the stage's shade light is silver-blue.
+- **The hero** (`src/components/hero.tsx`, 17/11/2026, owner's direction B "Sương sớm trên núi"): a photograph,
+  AI-made from `../brandkit/lookbook/prompts-hero-web.md` (refs `ref-01…05`; files in
+  `../brandkit/lookbook/hero-web/`, copied as JPEG to `src/assets/images/hero-suong-som-{16x9,4x5}.jpg`): the two
+  cups on river stones, tea hills in morning fog, prints checked against ref-04. From `lg` the 16:9 picture fills the
+  section behind the slogan (on its empty left); below `lg` the slogan comes first on the picture's own sky colour
+  and the 4:5 picture follows (over its top the text would touch the cups). Each loads only where it shows, at high
+  priority; no preload. "Ảnh minh hoạ" in its corner. The hero has no 3D since then: the stage's `set` actor
+  (cups on boulder and logs) and its shadows were removed; before the photo, a 2.5D mountain world and a cel-shaded
+  floating garden were tried and removed the same day (CC0 models kept in `../brandkit/3d-nature/`;
+  `toonMaterial({ tint })` stays for such assets).
 - **Performance (phones first, 22/10/2026).** The 3D stage starts only after `load` and an idle moment
   (`whenSettled` in cup-stage.tsx, ≤ 1.5 s), so three.js and the models never compete with first paint; WebGL 2 is
   checked by API, not by a throwaway context. Each device gets a quality (`quality.ts`, tested): phones and weak

@@ -40,27 +40,18 @@ export const actions = {
 };
 
 export const hero = {
-  /** the cover photo, shown in the hero's slot only when the 3D cup cannot be */
-  imageAlt: "Hai ly Boongee: ly kem bông rắc cánh hồng khô và ly giấy đậy nắp, in hoa monogram màu bạc",
+  /** the hero's photograph (src/assets/images/hero-suong-som-*.jpg, brandkit/lookbook/hero-web/) */
+  imageAlt:
+    "Hai ly Boongee trên phiến đá giữa đồi chè trong sương sớm: ly giấy kem bông rắc cánh hồng khô in hoa monogram màu bạc, ly nhựa trà nho xanh in cột hoa trắng. Ảnh minh hoạ.",
 };
 
 /** The 3D stage's actors, floating through the page (src/components/cup-stage.tsx). */
 export const cup = {
   actors: {
-    set: {
-      short: "Bộ ảnh bìa",
-      label:
-        "Bộ ảnh bìa Boongee dựng 3D kiểu hoạt hình: hai ly giấy 16 oz in bốn dấu monogram và chữ Boongee; ly kem bông rắc cánh hồng khô đứng trên tảng đá, ly đậy nắp bật trắng đứng trên khúc gỗ, mây trắng trôi phía sau.",
-    },
-    flavor: {
-      short: "Ly theo hương vị",
-      label:
-        "Ly Boongee 3D đổi theo hương vị khi cuộn: ly giấy in monogram bạc cho trà sữa hương hoa, kem bông, kem cheese và cà phê, ly nhựa trong cho trà trái cây; topping của từng vị bay quanh ly.",
-    },
     pp: {
       short: "Ly nhựa",
       label:
-        "Ly Boongee 700 ml, mô hình 3D kiểu hoạt hình: ly nhựa trong in bốn dấu monogram và chữ Boongee, bên trong là trà nho xanh, đậy nắp bật nút trong; nho xanh, viên đá và đốm lấp lánh quanh ly.",
+        "Ly Boongee 700 ml, mô hình 3D kiểu hoạt hình: ly nhựa trong in bốn dấu monogram và chữ Boongee, bên trong là trà nho xanh, đậy nắp bật nút trong; nho xanh và viên đá quanh ly.",
     },
     paper: {
       short: "Ly giấy",

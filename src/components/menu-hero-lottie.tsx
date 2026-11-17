@@ -7,7 +7,7 @@ const INTRO: [number, number] = [0, 48];
 const LOOP: [number, number] = [48, 72];
 
 /**
- * The /menu page's hand-drawn Lottie (a teapot pours into a paper cup, the steam rises and draws a flower above it, the flower floats on its scent): lottie-web's
+ * The /menu page's hand-drawn Lottie (a teapot pours into a paper cup, the four monogram marks grow up its face, the steam rises and draws a flower above it, the flower floats on its scent): lottie-web's
  * light SVG player, loaded only in the browser. Intro once, then the loop; paused while off screen; one still frame
  * (the rest) with reduced motion. Decorative: hidden from assistive tech.
  */

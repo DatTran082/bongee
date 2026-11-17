@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { type KeyboardEvent, useEffect, useId, useRef, useState } from "react";
 import { createPortal, preload } from "react-dom";
-import heroPhoto from "@/assets/images/hero.jpg";
-import { cup, hero } from "@/data/boongee";
+import { cup } from "@/data/boongee";
 import type { CupPlacement, CupScene } from "@/lib/cup-scene";
 import { ACTORS, type ActorName } from "@/lib/cup-scene/actors";
 import { findAnchors, measureAnchors } from "@/lib/cup-scene/anchors";
@@ -15,7 +13,7 @@ import { targetsByActor } from "@/lib/cup-scene/track";
 type Status = "loading" | "ready" | "failed";
 
 const KEY_STEP = Math.PI / 12;
-/** Set on <html> when the stage cannot be shown: the slots collapse, the hero shows the cover photo. */
+/** Set on <html> when the stage cannot be shown: the slots collapse. */
 const FAILED_CLASS = "cup-failed";
 /** The longest the stage waits for an idle moment after the page has loaded (ms). */
 const IDLE_WAIT = 1500;
@@ -80,12 +78,12 @@ function placeHit(hit: HTMLElement, placement: CupPlacement | null): void {
 }
 
 /**
- * The 3D stage: a fixed, transparent canvas behind the page on which three actors float, flying between the
- * sections' slots (CupAnchor) as the page scrolls and passing behind the white cards: the cover photo's set in
- * the hero, the frosted PP cup of grape tea with grapes and ice about it, the lidded paper cup. three.js (loaded
- * after the page shows, by the dynamic import below: nothing here imports it eagerly) and the models load after
- * the page shows; until then the slots are empty pink, and if WebGL or a model fails (or the visitor saves data)
- * the hero's slot shows the cover photo instead. While an actor rests in a slot an invisible element over it takes
+ * The 3D stage: a fixed, transparent canvas behind the page on which two actors float, flying between the
+ * sections' slots (CupAnchor) as the page scrolls and passing behind the white cards: the frosted PP cup of grape
+ * tea with grapes and ice about it, the lidded paper cup (the hero is a photograph since 17/11/2026). three.js
+ * (loaded after the page shows, by the dynamic import below: nothing here imports it eagerly) and the models load
+ * after the page shows; until then the slots are empty, and if WebGL or a model fails (or the visitor saves data)
+ * they collapse. While an actor rests in a slot an invisible element over it takes
  * the pointer: a drag turns it, a tap on a lid flips its strap; the arrow keys, Enter and Home do the same. The
  * hint saying so is portalled into the line the hero holds for it under its buttons. Mounted by the home page (not
  * the layout), so only that page pays for it. The canvas is made by the effect, fresh each time it runs: a WebGL
@@ -97,7 +95,6 @@ export function CupStage() {
   const sceneRef = useRef<CupScene | null>(null);
   const [status, setStatus] = useState<Status>("loading");
   const [hintSlot, setHintSlot] = useState<Element | null>(null);
-  const [heroSlot, setHeroSlot] = useState<Element | null>(null);
   const [announcement, setAnnouncement] = useState(""); // the last strap change, for the live region
   const hintId = useId();
 
@@ -108,7 +105,6 @@ export function CupStage() {
     const fail = (error: unknown) => {
       console.warn("Không dựng được cảnh 3D.", error);
       document.documentElement.classList.add(FAILED_CLASS);
-      setHeroSlot(document.querySelector('[data-cup-anchor="hero"]'));
       setStatus("failed");
     };
     if (savesData() || !webglAvailable()) {
@@ -198,9 +194,9 @@ export function CupStage() {
   const ready = status === "ready";
   return (
     <>
-      {/* without script the slots stay empty: collapse them and let the hero's cover photo (noscript in hero.tsx) show */}
+      {/* without script the slots stay empty: collapse them */}
       <noscript>
-        <style>{`.cup-anchor:not([data-cup-anchor="hero"]),.cup-row{display:none}.cup-grid{display:block}`}</style>
+        <style>{`.cup-anchor,.cup-row{display:none}.cup-grid{display:block}`}</style>
       </noscript>
       {/* the canvas goes in here (see above); React never renders children into this layer */}
       <div ref={layerRef} aria-hidden className="cup-layer pointer-events-none fixed inset-0 -z-10" />
@@ -234,21 +230,6 @@ export function CupStage() {
             {cup.hint} {cup.keys}
           </p>,
           hintSlot,
-        )}
-      {status === "failed" &&
-        heroSlot &&
-        createPortal(
-          <Image
-            src={heroPhoto}
-            alt={hero.imageAlt}
-            placeholder="blur"
-            // shown only when the stage failed: then it is the hero's largest picture, wanted at once
-            loading="eager"
-            fetchPriority="high"
-            sizes="(min-width: 80rem) 60vw, 100vw"
-            className="h-full w-full rounded-3xl object-cover object-[72%_center]"
-          />,
-          heroSlot,
         )}
     </>
   );

@@ -4,7 +4,6 @@ import {
   HemisphereLight,
   NoToneMapping,
   type Object3D,
-  PCFShadowMap,
   PerspectiveCamera,
   Scene,
   Vector3,
@@ -21,9 +20,6 @@ import { MODELS, NODES } from "./model";
 import { needsRedraw } from "./motion";
 import { qualityFor } from "./quality";
 import { seeded } from "./random";
-import { createSet } from "./set";
-import { createGarden } from "./set/garden";
-import nature from "@/data/nature-model.json";
 import { createSplash, type Splash } from "./splash";
 import { toonCup } from "./toon/cups";
 import { setOutlineSize } from "./toon/outline";
@@ -50,12 +46,10 @@ const SPLASH_SEED = 19;
 const CLEAR = new Color(tokens["bg"]); // the page's cream ground
 /** Idle motion and flight of the cups: they float, and a drag turns them. */
 const CUP_MOTION = { bob: 0.016, sway: 0.08, roll: 0.02, hz: 0.24, spin: 1.1, turnable: true };
-/** The hero's set is a still picture: it does not float, turn or follow the pointer (no parallax, 22/10/2026). */
-const SET_MOTION = { bob: 0, sway: 0, roll: 0, hz: 0, spin: 0, turnable: false };
 /** The PP cup's lid rises this far (metres) in a slot that asks for it. */
 const PP_LID_LIFT = 0.055;
-/** The key light: from the upper left, as in the photo; it follows the set to throw its shadows. */
-const KEY = { offset: new Vector3(-0.9, 1.3, 1.1), halfSize: 0.34, mapSize: 1024 };
+/** The key light's direction: from the upper left, toward the viewer. */
+const KEY = new Vector3(-0.9, 1.3, 1.1);
 /** Light levels (no tone mapping): the key's lit band shows a surface at about its own colour, the shade ~ 70 %. */
 const LIGHT = { key: 2.3, ambient: 1.05 };
 /** The shade side's colour: silver-blue (the site's white, silver and pastel blue, 17/11/2026; lilac before). */
@@ -196,16 +190,12 @@ export async function createCupScene(
     });
     renderer.setClearColor(CLEAR, 0);
     renderer.toneMapping = NoToneMapping; // toon colours are the palette's own: nothing should bend them
-    renderer.shadowMap.enabled = quality.shadows; // the set's cups and logs throw shadows on the boulder (not on a phone)
-    renderer.shadowMap.type = PCFShadowMap;
 
     // the actors, toon from the start (the clones below share the toon geometry and materials)
     toonCup(pp, "grapeTea");
     toonCup(paper, "milkTea");
-    const set = createSet(paper);
     const single = paper.clone(true);
     const specs: Record<ActorName, ActorSpec> = {
-      set: { subject: set.group, lid: set.lid, strap: set.strap, lidLift: 0, ...SET_MOTION, phase: 0 },
       pp: {
         subject: pp,
         lid: required(pp, NODES.lid, MODELS.pp.url),
@@ -236,7 +226,6 @@ export async function createCupScene(
       return actor;
     };
     const cast: Record<ActorName, Actor> = {
-      set: hire("set"),
       pp: hire("pp"),
       paper: hire("paper"),
     };
@@ -256,10 +245,6 @@ export async function createCupScene(
     async function loadExtras(): Promise<void> {
       await breathe(); // after the first frames
       options.signal.throwIfAborted();
-      // the hero garden round the set (set/garden.ts): added after the set's actor measured it, so it does not
-      // shrink the cups in their slot
-      set.group.add(createGarden(await loadScene(nature.url, options.signal)));
-      options.signal.throwIfAborted();
       const made = createSplash(seeded(SPLASH_SEED));
       splash = made;
       pp.add(made.inside); // what stands in the tea, in the cup's space
@@ -275,13 +260,8 @@ export async function createCupScene(
     // takes a cool silver-blue from below
     scene.add(new HemisphereLight(tokens.cloud, SHADE, LIGHT.ambient));
     const key = new DirectionalLight("#fff8ee", LIGHT.key);
-    key.castShadow = true;
-    key.shadow.mapSize.set(KEY.mapSize, KEY.mapSize);
-    key.shadow.intensity = 0.35;
-    key.shadow.radius = 2;
-    key.shadow.bias = -0.0004;
-    key.shadow.normalBias = 0.0015;
-    scene.add(key, key.target);
+    key.position.copy(KEY);
+    scene.add(key);
 
     const lean = new Lean(LEAN.perSpeed, LEAN.max, LEAN.tau);
     let width = 1;
@@ -313,23 +293,6 @@ export async function createCupScene(
       invalidate();
     }
 
-    /** The key light stands over the set wherever it is and however big, so its shadow map covers just the set. */
-    function followSet(): void {
-      const root = cast.set.root;
-      const scale = root.scale.x;
-      key.position.copy(root.position).addScaledVector(KEY.offset, scale);
-      key.target.position.copy(root.position);
-      const half = KEY.halfSize * scale;
-      const shadow = key.shadow.camera;
-      if (shadow.right !== half) {
-        shadow.left = shadow.bottom = -half;
-        shadow.right = shadow.top = half;
-        shadow.near = 0.1;
-        shadow.far = 4 * scale + 1;
-        shadow.updateProjectionMatrix();
-      }
-    }
-
     /** Lays everything out for `now` and draws when something changed. */
     function place(now: number): void {
       const dt = last ? Math.max(0, Math.min(MAX_STEP, now - last)) : 16; // resize() may draw "later" than the next frame
@@ -353,8 +316,6 @@ export async function createCupScene(
         height,
       };
       for (const name of ACTORS) options.onPlace(name, cast[name].place(targets[name] ?? null, frameState));
-      followSet();
-      key.castShadow = quality.shadows && cast.set.root.visible; // the shadow pass serves the set alone
       splash?.update(time, reduced ? 0 : dt / 1000);
       const sinceDraw = now - lastDraw;
       if (needsRedraw({ reduced, moving, dirty, scrolled, targetChanged, sinceDraw, idleFrameMs })) {

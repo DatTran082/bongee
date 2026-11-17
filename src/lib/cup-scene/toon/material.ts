@@ -73,8 +73,8 @@ export interface ToonOptions {
   readonly edge?: ColorRepresentation;
   readonly layers?: DrinkLayers;
   /**
-   * Repaints a painted texture in one colour: its lightness kept (the brush strokes stay), its hue replaced (the hero
-   * garden's CC0 plants, recoloured to the site's silver and pastel blue).
+   * Repaints a painted texture in one colour: its lightness kept (the brush strokes stay), its hue replaced: for
+   * outside assets with painted textures, recoloured to the site's silver and pastel blue.
    */
   readonly tint?: ColorRepresentation;
   readonly doubleSided?: boolean;

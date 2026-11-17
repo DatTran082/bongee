@@ -60,7 +60,7 @@ export const surfaces = [
     name: "Website",
     since: "17/11/2026",
     palette: "Trắng, bạc, xanh pastel; chữ đen than; không hồng trong giao diện",
-    look: "Tinh tế, tối giản; 3D cel-shading, đảo bay",
+    look: "Tinh tế, tối giản; cốc 3D cel-shading",
   },
   {
     name: "Minh hoạ, mạng xã hội, ưu đãi (Làng Mây)",
@@ -133,8 +133,8 @@ export const changelog = [
     date: "17/11/2026",
     lines: [
       "Website đổi sang trắng, bạc, xanh pastel; bỏ thẻ sticker và nút “game”.",
-      "Hero: đảo bay cel-shading với cây cỏ CC0 (Quaternius), nhuộm bạc/xanh; bỏ núi và mây.",
-      "Lottie /menu 6 giây “Hương thành hoa”: ấm trà rót vào ly giấy, hơi trà vẽ thành bông hoa, màu xanh pastel.",
+      "Hero: ảnh “Sương sớm trên núi” (hai ly trên phiến đá, đồi chè trong sương); đã thử rồi bỏ núi mây 2.5D và đảo bay cel-shading.",
+      "Lottie /menu 6 giây “Hương thành hoa”: ấm trà rót vào ly giấy, bốn hoa monogram mọc dọc thân ly, hơi trà vẽ thành bông hoa, màu xanh pastel.",
       "Lập Design DNA, Design System, tokens.json và trang /system-design.",
     ],
   },

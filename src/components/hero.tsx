@@ -1,23 +1,25 @@
 import Image from "next/image";
-import heroPhoto from "@/assets/images/hero.jpg";
+import wide from "@/assets/images/hero-suong-som-16x9.jpg";
+import tall from "@/assets/images/hero-suong-som-4x5.jpg";
 import { ButtonLink } from "@/components/button-link";
-import { CupAnchor } from "@/components/cup-anchor";
 import { actions, brand, hero, sections } from "@/data/boongee";
 
-const HERO_ID = "dau-trang";
+/** The portrait picture's sky at its top edge: the phones' hero ground, so the text area runs on into the picture. */
+const SKY = "#e1edf7";
 
 /**
- * The slogan as the page's one <h1>, light and widely tracked, on a plain pastel sky melting into the page's white
- * (no mountains or clouds: owner, 17/11/2026), beside the slot of the cover photo's set on its floating island (two paper cups on the block and the logs, drawn by the 3D stage: src/components/cup-stage.tsx, which
- * puts the cover photo here only if it cannot draw; without script the photo is here from the start). From xl
- * (1280 px) up the text takes the left column and the set the right; below that the text comes first.
+ * The hero: a photograph (owner, 17/11/2026, direction B "Sương sớm trên núi": the two cups on river stones, tea hills
+ * in morning fog; AI-made, from brandkit/lookbook/prompts-hero-web.md, files in brandkit/lookbook/hero-web/). From
+ * 1024 px the landscape 16:9 picture fills the section and the slogan sits on its empty misty left. Below that the
+ * slogan comes first on the picture's own sky colour and the portrait 4:5 picture follows, its top melting into that
+ * sky (laid over its empty top the text would touch the cups). Each picture loads only where it shows (no preload:
+ * a preload would fetch both everywhere), at high priority, being the largest thing on first paint there. The foot melts into the page's white.
  */
 export function Hero() {
   return (
-    <section id={HERO_ID} className="relative pb-10 md:pb-14">
-      <div aria-hidden className="sky pointer-events-none absolute inset-0 -z-20" />
-      <div className="mx-auto grid max-w-7xl items-center gap-6 px-4 sm:px-6 xl:min-h-[min(80vh,46rem)] xl:grid-cols-[42%_1fr] xl:gap-12">
-        <div className="pt-16 text-center xl:py-24 xl:text-left">
+    <section className="relative isolate overflow-hidden" style={{ backgroundColor: SKY }}>
+      <div className="mx-auto flex max-w-7xl flex-col px-4 pt-14 sm:px-6 lg:min-h-[min(88vh,56rem)] lg:justify-center lg:py-28">
+        <div className="text-center lg:max-w-[38%] lg:text-left">
           <p className="eyebrow">{brand.name}</p>
           <h1 className="mt-6 text-4xl leading-[1.3] font-light tracking-[0.18em] uppercase sm:text-5xl xl:text-6xl">
             {brand.sloganLines.map((line, i) => (
@@ -27,7 +29,7 @@ export function Hero() {
               </span>
             ))}
           </h1>
-          <div className="mt-10 flex flex-wrap justify-center gap-3 xl:justify-start">
+          <div className="mt-10 flex flex-wrap justify-center gap-3 lg:justify-start">
             <ButtonLink href={`#${sections.menu}`} variant="primary">
               {actions.menu}
             </ButtonLink>
@@ -35,24 +37,46 @@ export function Hero() {
           </div>
           <div data-cup-hint className="sr-only" />
         </div>
-        <CupAnchor
-          name="hero"
-          actor="set"
-          turn={0}
-          tilt={0.1}
-          fill={0.94}
-          className="h-[52vh] max-h-[36rem] min-h-72 xl:h-[74vh] xl:max-h-[46rem]"
-        >
-          <noscript>
-            <Image
-              src={heroPhoto}
-              alt={hero.imageAlt}
-              sizes="(min-width: 80rem) 60vw, 100vw"
-              className="h-full w-full rounded-3xl object-cover object-[72%_center]"
-            />
-          </noscript>
-        </CupAnchor>
       </div>
+
+      {/* phones and tablets: the portrait picture under the text */}
+      <div className="relative mx-auto mt-4 aspect-[4/5] max-w-2xl lg:hidden">
+        <Image
+          src={tall}
+          alt={hero.imageAlt}
+          fill
+          fetchPriority="high"
+          quality={82}
+          sizes="(min-width: 42rem) 42rem, 100vw"
+          placeholder="blur"
+          className="object-cover"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-24"
+          style={{ backgroundImage: `linear-gradient(${SKY}, transparent)` }}
+        />
+      </div>
+
+      {/* from lg: the landscape picture behind the text */}
+      <div className="absolute inset-0 -z-10 hidden lg:block">
+        <Image
+          src={wide}
+          alt={hero.imageAlt}
+          fill
+          fetchPriority="high"
+          quality={82}
+          sizes="100vw"
+          placeholder="blur"
+          className="object-cover object-[70%_center]"
+        />
+      </div>
+
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-white"
+      />
+      <p className="absolute right-4 bottom-3 text-xs tracking-[0.12em] text-silver-700 sm:right-6">Ảnh minh hoạ</p>
     </section>
   );
 }

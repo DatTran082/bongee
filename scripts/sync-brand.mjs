@@ -30,7 +30,10 @@
 //   identity/04-cover/facebook-slogan-den.png       → src/app/opengraph-image.jpg, twitter-image.jpg (1200 × 628)
 //   3d/boongee-pp-700ml.glb, 3d/boongee-paper-16oz.glb → public/models/<name>.<hash>.glb   the 3D cups, compressed,
 //                                                        prints only (≤ 2048 px), no normal or metal maps
+//                                                        public/models/<name>-pbr.<hash>.glb   the same with the metal
+//                                                        and grain maps, for the WebGPU stage ("giấy thật, bạc thật")
 //                                                        src/data/cup-model.json          their URLs
+//                                                        (`npm run sync-models`: these two steps only)
 //
 // The menu and the offers come from the ShanMay brand kit (../../ShanMay/brand-kit, or BOONGEE_SHANMAY), the same
 // files the printed menu and the vouchers are built from, so the site and the print never disagree:
@@ -190,8 +193,13 @@ async function photos() {
  * first moves into a child node of its own: the named nodes keep their origins, which the stage turns and lifts about
  * (`lid` sits on the rim, `lid-strap` swings on its hinge). The file is named after its content and the name
  * written to src/data/cup-model.json, so the site can cache it for good and a new model is a new URL.
+ *
+ * Two looks, two files. "toon" (`<name>.<hash>.glb`) is for the toon stage, which uses the prints only. "pbr"
+ * (`<name>-pbr.<hash>.glb`) is for the WebGPU stage's "giấy thật, bạc thật" (real paper, real silver; owner,
+ * 18/11/2026; docs/interactive-landing-script.md): it also keeps the metal-roughness map, where the silver ink is
+ * metal, and the paper, plastic and lid grain normal maps (≤ 1024 px: they tile, or cover the small lid top).
  */
-async function cupModel({ name: CUP, nodes: CUP_NODES }, io) {
+async function cupModel({ name: CUP, nodes: CUP_NODES }, io, look) {
   const doc = await io.read(kit(`3d/${CUP}.glb`));
   for (const node of doc.getRoot().listNodes()) {
     const mesh = node.getMesh();
@@ -202,20 +210,34 @@ async function cupModel({ name: CUP, nodes: CUP_NODES }, io) {
     node.addChild(doc.createNode(`${node.getName()}-mesh`).setMesh(mesh));
     node.setMesh(null);
   }
-  // The stage draws the cups toon (src/lib/cup-scene/toon/cups.ts): of the textures only the prints (base colour) are
-  // used. The grain and lid normal maps and the metal-roughness map are dropped, so phones neither download nor
-  // decode them, and the prints are capped at 2048 px (a 4096 px print is ~32 MB of GPU memory once decoded).
+  // The toon stage (src/lib/cup-scene/toon/cups.ts) uses only the prints (base colour): the grain and lid normal maps
+  // and the metal-roughness map are dropped, so phones neither download nor decode them. Both looks cap the prints
+  // (and the metal map, drawn on the print's own layout) at 2048 px: a 4096 px print is ~32 MB of GPU memory.
   for (const material of doc.getRoot().listMaterials()) {
-    material
-      .setNormalTexture(null)
-      .setMetallicRoughnessTexture(null)
-      .setOcclusionTexture(null)
-      .setEmissiveTexture(null);
+    material.setOcclusionTexture(null).setEmissiveTexture(null);
+    if (look === "toon") material.setNormalTexture(null).setMetallicRoughnessTexture(null);
   }
   await doc.transform(
     dedup(),
     prune({ keepLeaves: true }),
-    textureCompress({ encoder: sharp, targetFormat: "webp", quality: 90, resize: [2048, 2048] }),
+    textureCompress({
+      encoder: sharp,
+      targetFormat: "webp",
+      quality: 90,
+      resize: [2048, 2048],
+      slots: /^(baseColorTexture|metallicRoughnessTexture)$/,
+    }),
+    ...(look === "pbr"
+      ? [
+          textureCompress({
+            encoder: sharp,
+            targetFormat: "webp",
+            quality: 92,
+            resize: [1024, 1024],
+            slots: /^normalTexture$/,
+          }),
+        ]
+      : []),
     meshopt({ encoder: MeshoptEncoder, level: "medium" }),
   );
   const names = new Set(
@@ -228,12 +250,13 @@ async function cupModel({ name: CUP, nodes: CUP_NODES }, io) {
   if (missing.length) throw new Error(`${CUP}.glb has no ${missing.join(", ")} node: the 3D stage needs them.`);
   const glb = await io.writeBinary(doc);
   const hash = createHash("sha256").update(glb).digest("hex").slice(0, 8);
+  const stem = look === "pbr" ? `${CUP}-pbr` : CUP;
   const dir = out("public/models/.keep") && path.join(ROOT, "public", "models");
-  for (const old of readdirSync(dir).filter((name) => name.startsWith(`${CUP}.`) && name.endsWith(".glb"))) {
+  for (const old of readdirSync(dir).filter((name) => name.startsWith(`${stem}.`) && name.endsWith(".glb"))) {
     rmSync(path.join(dir, old));
   }
-  write(`public/models/${CUP}.${hash}.glb`, glb);
-  return `/models/${CUP}.${hash}.glb`;
+  write(`public/models/${stem}.${hash}.glb`, glb);
+  return `/models/${stem}.${hash}.glb`;
 }
 
 /**
@@ -335,9 +358,19 @@ async function cupModels() {
   const io = new NodeIO()
     .registerExtensions(ALL_EXTENSIONS)
     .registerDependencies({ "meshopt.encoder": MeshoptEncoder, "meshopt.decoder": MeshoptDecoder });
-  const urls = {};
-  for (const [key, cup] of Object.entries(CUPS)) urls[key] = await cupModel(cup, io);
+  const urls = { pbr: {} };
+  for (const [key, cup] of Object.entries(CUPS)) {
+    urls[key] = await cupModel(cup, io, "toon");
+    urls.pbr[key] = await cupModel(cup, io, "pbr");
+  }
   write("src/data/cup-model.json", JSON.stringify(urls, null, 2) + "\n");
+}
+
+// `--models`: the 3D cups only (both looks), leaving every other synced file as it is
+if (process.argv.includes("--models")) {
+  await cupModels();
+  console.log(`Đã đồng bộ mô hình ly từ ${KIT}`);
+  process.exit(0);
 }
 
 const hex = tokens();

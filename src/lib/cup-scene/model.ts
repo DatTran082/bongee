@@ -11,6 +11,15 @@ export const MODELS = {
   paper: { url: cupModels.paper as string, root: "boongee-paper-16oz" },
 } as const;
 
+/**
+ * The same cups with their metal-roughness and grain normal maps kept, for the WebGPU stage's "giấy thật, bạc thật"
+ * (src/lib/stage/; sync-brand writes them as `<name>-pbr.<hash>.glb`).
+ */
+export const PBR_MODELS = {
+  pp: { url: cupModels.pbr.pp, root: "boongee-pp-700ml" },
+  paper: { url: cupModels.pbr.paper, root: "boongee-paper-16oz" },
+} as const;
+
 /** Nodes the stage looks up by name (brandkit/3d/README.md, "Cấu trúc node"); sync-brand checks they exist. */
 export const NODES = {
   drink: "drink",

@@ -159,13 +159,13 @@ Tài sản thương hiệu được chép vào repo (dựng và deploy không c�
 | Từ `brandkit/print/`                                   | Sang                                                                                                                                          |
 | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | `color/tokens.json`                                    | `src/styles/brand-tokens.css`, `src/data/brand-tokens.json`                                                                                   |
-| `identity/01-logo/logo-ngang-khong-slogan_den.svg`    | `src/assets/brand/logo-ngang.svg`                                                                                                             |
-| `identity/01-logo/bieu-tuong-hoa_den.svg`             | `src/app/icon.svg`, `favicon.ico`, `apple-icon.png`                                                                                           |
-| `identity/03-pattern/monogram_hong.png`              | `src/assets/images/monogram-hong.png`                                                                                                         |
-| `identity/01-logo/bieu-tuong-hoa_den.svg`             | `src/assets/brand/hoa.svg` (hoa trôi sau ly 3D)                                                                                               |
-| `lookbook/cover/facebook.png`                        | `src/assets/images/hero.jpg` (ảnh hero dự phòng khi không có ly 3D)                                                                           |
+| `identity/01-logo/logo-ngang-khong-slogan_den.svg`     | `src/assets/brand/logo-ngang.svg`                                                                                                             |
+| `identity/01-logo/bieu-tuong-hoa_den.svg`              | `src/app/icon.svg`, `favicon.ico`, `apple-icon.png`                                                                                           |
+| `identity/03-pattern/monogram_hong.png`                | `src/assets/images/monogram-hong.png`                                                                                                         |
+| `identity/01-logo/bieu-tuong-hoa_den.svg`              | `src/assets/brand/hoa.svg` (hoa trôi sau ly 3D)                                                                                               |
+| `lookbook/cover/facebook.png`                          | `src/assets/images/hero.jpg` (ảnh hero dự phòng khi không có ly 3D)                                                                           |
 | `3d/boongee-pp-700ml.glb`, `3d/boongee-paper-16oz.glb` | `public/models/<tên>.<hash>.glb` (hai ly 3D, nén meshopt + WebP; tên theo nội dung, cache vĩnh viễn) và `src/data/cup-model.json` (đường dẫn) |
-| `identity/04-cover/facebook-slogan-den.png`         | `src/app/opengraph-image.jpg`, `twitter-image.jpg` (1200 × 628)                                                                               |
+| `identity/04-cover/facebook-slogan-den.png`            | `src/app/opengraph-image.jpg`, `twitter-image.jpg` (1200 × 628)                                                                               |
 
 ## Deploy
 

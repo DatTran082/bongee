@@ -15,7 +15,8 @@
     "sync-lookbook": "node scripts/sync-lookbook.mjs",
     "sync-menu": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/sync-menu.mjs",
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"src/**/*.test.ts\"",
-    "sync-design-system": "node scripts/sync-design-system.mjs"
+    "sync-design-system": "node scripts/sync-design-system.mjs",
+    "sync-models": "node scripts/sync-brand.mjs --models"
   },
   "dependencies": {
     "@tabler/icons-react": "^3.49.0",
@@ -23,7 +24,7 @@
     "next": "^16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "three": "^0.186.1"
+    "three": "0.187.0"
   },
   "devDependencies": {
     "@gltf-transform/core": "^4.5.1",
@@ -33,7 +34,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/three": "^0.186.0",
+    "@types/three": "0.187.0",
     "eslint": "^9",
     "eslint-config-next": "^16.4.6",
     "meshoptimizer": "^1.3.0",

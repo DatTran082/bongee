@@ -17,6 +17,7 @@ npm run sync-menu    # the menu (dishes, groups, counter prices) from the shop's
                      # (BOONGEE_MCP: the server command; default ../odoo/mcp-boongee/run.sh prod; the office blocks sslip.io)
 npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and its print kit ../brandkit/print, sizes/offers
                      # from ShanMay (BOONGEE_BRANDKIT, BOONGEE_SHANMAY)
+npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebGPU stage), nothing else
 ```
 
 ## Boongee specifics
@@ -64,17 +65,19 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   the slots and the `cup-grid` / `cup-row` wrappers collapse (without script too). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
 - **The home page is short and quiet (owner, 17/11/2026: "tinh tế, tối giản"; white and metallic silver since 18/11/2026):**
-  hero (slogan + two buttons, no intro line; a photograph of the two cups in tea-hill fog), Thực đơn · "Thức uống đặc trưng"
+  hero (slogan + two buttons, no intro line; a photograph of the two cups in tea-hill fog), Menu · "Thức uống đặc trưng"
   (3D PP cup beside the photos from `lg`), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper
   cup). The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
   counts (no "23 món, 32K – 65K", no per-group counts or starting prices). Section ids: `thuc-don`, `uu-dai`,
-  `cua-hang`. The 7-viewport flavour
+  `cua-hang`. The site says **"Menu", never "Thực đơn"** (owner, 18/11/2026): the nav, the hero's "Xem menu", the
+  section's eyebrow, "Xem toàn bộ menu", /menu's title and `<h1>` (all in `src/data/boongee.ts` but /menu's own
+  metadata; the anchor stays `#thuc-don`, the route `/menu`). The 7-viewport flavour
   carousel and the printed-menu-board picker (`menu-picker.tsx`) were removed; the full menu with a photo and prices
   per dish lives on `/menu`.
 - **The menu section** (`src/components/menu.tsx`, server): one card per drink group of the till (`lookbookGroups`
   from `src/data/lookbook.ts`, combos and toppings left to /menu): the first dish's lookbook photo (3:4) and the
   group's name, linking to `/menu#<group>`; a sideways snap strip on phones, five columns from `lg`, the PP cup's
-  slot beside them; "Xem toàn bộ thực đơn" beside the heading and "Ảnh minh hoạ" under. `hasMenu` points to `/menu`.
+  slot beside them; "Xem toàn bộ menu" beside the heading and "Ảnh minh hoạ" under. `hasMenu` points to `/menu`.
 - **The /menu page** (`src/app/menu/page.tsx`, `src/components/lookbook-gallery.tsx`; 16/11/2026, it replaced the
   old `/preview` and `/thuc-don`, which held invented copy and hard-coded prices): every dish on the till, combos
   included, group by group in the till's order, each with its lookbook studio photo (4:5) and its name, price and
@@ -87,7 +90,7 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   in `V3`, else the v2 one (`assets/<stem>.jpg`). The home page's menu links to it; it is in the sitemap.
   `next.config.ts` caches `/menu/:path+` immutable, not the page itself.
   Its header (17/11/2026): the group index as numbered hairline rows beside the Lottie, which plays straight on the
-  page's pale blue wash (no frame, no card); the page's name "Thực đơn" is an `sr-only` <h1> (owner: no visible title);
+  page's pale blue wash (no frame, no card); the page's name "Menu" is an `sr-only` <h1> (owner: no visible title);
   no dish count, only "Ảnh minh hoạ · Giá tại quầy, cập nhật <date>". Groups are numbered light headings on a hairline.
   The Lottie (`src/components/menu-hero-lottie.tsx`, lottie-web's light SVG player,
   loaded in the browser only; 6 s since 17/11/2026, "Hương thành hoa"): a teapot pours into a silver paper
@@ -123,6 +126,22 @@ npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and 
   re-render is a new URL and no cache shows the old one. The section shows the weekly post, the loyalty card and both vouchers in one row from `lg`; each card
   turns over (`.flip` in look.css; instant with reduced motion), each voucher can be downloaded to show at the
   counter. The pictures carry the words, so every `alt` says them in full and the terms are also set as text.
+- **Next: the interactive refactor** (`docs/interactive-landing-script.md`, the owner's go of 18/11/2026 for its
+  look): three.js r187 `WebGPURenderer` (WebGL 2 fallback), TSL, `RenderPipeline`; the light follows the pointer; the
+  3D becomes **"giấy thật, bạc thật"** (the GLBs' own PBR paper and metallic silver ink, lit by a softbox environment
+  built in code; no black outline, no white rim, no refraction). The toon look below stays until that ships. The owner
+  also chose the wordless story between the hero and the menu and the real gardenia in its "Hương" beat (18/11/2026).
+  Step 0 is in (branch `redesign/interactive-webgpu`):
+  - three and `@types/three` pinned at 0.187.0;
+  - the WebGPU stage in `src/lib/stage/` (renderer, pipeline, softbox room, test switches, frame budget). ESLint
+    forbids importing `three` there: only `three/webgpu`, `three/tsl`, `three/addons/…`, or the WebGL renderer
+    would be bundled too. The pure maths it shares (quality tiers, `approach`) stays in `src/lib/cup-scene/`;
+  - its bench `/lab` (`src/app/lab/`, `src/components/lab-bench.tsx`; noindex, not in the sitemap or the nav): the
+    paper cup's `-pbr` model, a readout of backend, tier and frame times; `?webgl`, `?tier=full|light|low`,
+    `?inspect`.
+  - **The pipeline (`pipeline.ts`):** the scene is drawn on transparent black, tone mapped (PBR Neutral), laid over
+    white (empty pixels stay #FFFFFF), and only then anti-aliased (TRAA keeps no alpha; FXAA below `full`).
+  - **Phones:** WebGPU needs HTTPS, so test them on a Vercel preview or `next dev --experimental-https`.
 - **The 3D look is a smooth stylized drink game asset** (owner's choice of 21/10/2026, over the earlier realistic
   scans, which are in `git stash` "snapshot: 3D tả thực…", and then over a faceted low-poly pass the owner found too
   coarse), after the Làng Mây edition's toon rules

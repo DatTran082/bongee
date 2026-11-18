@@ -66,18 +66,22 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   tests (`npm test`, part of `npm run check`).
 - **The home page is short and quiet (owner, 17/11/2026: "tinh tế, tối giản"; white and metallic silver since 18/11/2026):**
   hero (slogan + two buttons, no intro line; a photograph of the two cups in tea-hill fog), Menu · "Thức uống đặc trưng"
-  (3D PP cup beside the photos from `lg`), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper
+  (the printed menu board), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper
   cup). The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
   counts (no "23 món, 32K – 65K", no per-group counts or starting prices). Section ids: `thuc-don`, `uu-dai`,
   `cua-hang`. The site says **"Menu", never "Thực đơn"** (owner, 18/11/2026): the nav, the hero's "Xem menu", the
   section's eyebrow, "Xem toàn bộ menu", /menu's title and `<h1>` (all in `src/data/boongee.ts` but /menu's own
   metadata; the anchor stays `#thuc-don`, the route `/menu`). The 7-viewport flavour
-  carousel and the printed-menu-board picker (`menu-picker.tsx`) were removed; the full menu with a photo and prices
+  carousel and the interactive menu-board picker (`menu-picker.tsx`) were removed (the board came back static, 18/11/2026); the full menu with a photo and prices
   per dish lives on `/menu`.
-- **The menu section** (`src/components/menu.tsx`, server): one card per drink group of the till (`lookbookGroups`
-  from `src/data/lookbook.ts`, combos and toppings left to /menu): the first dish's lookbook photo (3:4) and the
-  group's name, linking to `/menu#<group>`; a sideways snap strip on phones, five columns from `lg`, the PP cup's
-  slot beside them; "Xem toàn bộ menu" beside the heading and "Ảnh minh hoạ" under. `hasMenu` points to `/menu`.
+- **The menu section** (`src/components/menu.tsx`, server; 18/11/2026, owner: the printed board back on the home
+  page, "giống file menu pdf"): the layout of `../brandkit/menu-board/thuc-don.pdf` in white and silver. The featured
+  cups (`src/data/menu-featured.json`, sync-brand; a cup whose drink left the till is dropped) in a column on a silver
+  hairline, each linking to `/menu#<group>`; the drink groups in three columns (two, two, then coffee over the
+  lookbook poster), each under its monogram mark drawn as a silver silhouette (CSS mask of the painted SVG), every
+  drink with its plain line and counter price from Odoo; the topping / sugar / ice strips at the foot (ink pill
+  labels). Static, nothing to pick. No 3D slot here since then: the `pp` actor has no slot on the home page (hidden).
+  "Xem toàn bộ menu" beside the heading, "Ảnh minh hoạ · Giá tại quầy" under. `hasMenu` points to `/menu`.
 - **The /menu page** (`src/app/menu/page.tsx`, `src/components/lookbook-gallery.tsx`; 16/11/2026, it replaced the
   old `/preview` and `/thuc-don`, which held invented copy and hard-coded prices): every dish on the till, combos
   included, group by group in the till's order, each with its lookbook studio photo (4:5) and its name, price and

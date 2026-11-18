@@ -6,9 +6,9 @@ import { lookbookAnimation, lookbookGroups, lookbookSyncedOn } from "@/data/look
 const [year, month, day] = lookbookSyncedOn.split("-");
 
 export const metadata: Metadata = {
-  title: "Thực đơn",
+  title: "Menu",
   description:
-    "Thực đơn Boongee: từng món trà sữa hương hoa, trà trái cây, kem cheese, cà phê và combo, kèm ảnh minh hoạ và giá tại quầy.",
+    "Menu Boongee: từng món trà sữa hương hoa, trà trái cây, kem cheese, cà phê và combo, kèm ảnh minh hoạ và giá tại quầy.",
   alternates: { canonical: "/menu" },
 };
 
@@ -24,7 +24,7 @@ export default function MenuPage() {
         <header className="mb-16 grid items-center gap-8 md:mb-24 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:gap-16">
           <MenuHeroLottie src={lookbookAnimation} className="mx-auto w-56 md:order-2 md:w-full" />
           <div className="md:order-1">
-            <h1 className="sr-only">Thực đơn</h1>
+            <h1 className="sr-only">Menu</h1>
             <p className="eyebrow">Boongee</p>
             <nav aria-label="Nhóm món" className="mt-8">
               <ol className="divide-y divide-silver-200 border-y border-silver-200">

@@ -151,6 +151,8 @@ export const changelog = [
       "Design DNA và Design System bản 2: tông chủ đạo là trắng và bạc ánh kim (70 · 20 · 8 · 2).",
       "Thêm dải bạc 50–800 và ánh kim; hồng phấn lùi thành bao bì cũ và điểm nhấn, xanh pastel chỉ còn trong ảnh.",
       "Web bỏ xanh pastel khỏi giao diện; 3D và Lottie chuyển sang bạc trung tính.",
+      "Website gọi thực đơn là “Menu”: thanh điều hướng, nút “Xem menu”, mục Menu, trang /menu.",
+      "Chốt hướng 3D cho bản landing tương tác: “giấy thật, bạc thật” (PBR mềm, mực nhũ là kim loại thật); cốc toon giữ tới khi bản đó lên.",
     ],
   },
   {

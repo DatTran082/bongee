@@ -8,6 +8,7 @@ import { MenuHeroLottie } from "@/components/menu-hero-lottie";
 import { SectionHeading } from "@/components/section-heading";
 import { Part, Rows } from "@/components/system-design/part";
 import { Pair, type Swatch, Swatches } from "@/components/system-design/swatches";
+import { actions, menuIntro } from "@/data/boongee";
 import tokens from "@/data/design-system.json";
 import { lookbookAnimation } from "@/data/lookbook";
 import {
@@ -230,7 +231,7 @@ export default function SystemDesignPage() {
             {
               name: "Eyebrow",
               spec: `${webType.eyebrow.size} · giãn ${webType.eyebrow.tracking} · ${webType.eyebrow.color}`,
-              sample: <p className="eyebrow">Thực đơn</p>,
+              sample: <p className="eyebrow">{menuIntro.tagline}</p>,
             },
             {
               name: "Thân",
@@ -299,13 +300,13 @@ export default function SystemDesignPage() {
             <p className="mb-6 text-xs tracking-[0.2em] text-silver-700 uppercase">Nút · .btn</p>
             <div className="flex flex-wrap gap-3">
               <a href="#thanh-phan" data-variant="primary" className="btn px-6 py-3">
-                Xem thực đơn
+                {actions.menu}
               </a>
               <a href="#thanh-phan" data-variant="outline" className="btn px-6 py-3">
-                Tìm cửa hàng
+                {actions.visit}
               </a>
               <a href="#thanh-phan" data-variant="outline" className="btn px-5 py-2.5">
-                Xem toàn bộ thực đơn
+                {menuIntro.more}
                 <IconArrowUpRight aria-hidden className="size-4" />
               </a>
             </div>

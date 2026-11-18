@@ -28,14 +28,14 @@ export const sections = {
 } as const;
 
 export const nav = [
-  { label: "Thực đơn", id: sections.menu },
+  { label: "Menu", id: sections.menu }, // "Menu", not "Thực đơn" (owner, 18/11/2026)
   { label: "Ưu đãi", id: sections.offers },
   { label: "Cửa hàng", id: sections.visit },
 ];
 
 /** The hero's two calls to action and the header's button. */
 export const actions = {
-  menu: "Xem thực đơn",
+  menu: "Xem menu",
   visit: "Tìm cửa hàng",
 };
 
@@ -67,9 +67,9 @@ export const cup = {
 };
 
 export const menuIntro = {
-  tagline: "Thực đơn",
+  tagline: "Menu",
   title: "Thức uống đặc trưng",
-  more: "Xem toàn bộ thực đơn",
+  more: "Xem toàn bộ menu",
 };
 
 export const offersIntro = {

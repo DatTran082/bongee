@@ -90,8 +90,9 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   cập nhật"; a photo whose dish is not on the till is not shown. The photos are AI-made, so the page says "Ảnh minh
   hoạ". `npm run sync-lookbook` (`scripts/sync-lookbook.mjs`; sync-brand runs it too, right after it wipes
   `public/menu`) writes `public/menu/lookbook/*.<hash>.webp` and `src/data/lookbook.json` from
-  `../brandkit/lookbook`: Odoo dish name → photo stem in `PHOTOS`, a v3 photo (`assets-v3/<stem>.png`) for the stems
-  in `V3`, else the v2 one (`assets/<stem>.jpg`). The home page's menu links to it; it is in the sitemap.
+  `../brandkit/lookbook`: Odoo dish name → photo stem in `PHOTOS`, its v5 photo (`assets-v5/<stem>.png`, the
+  "Tĩnh vật vải toan" set, 20/11/2026) when there is one, else a v3 photo (`assets-v3/<stem>.png`) for the stems in `V3`,
+  else the v2 one (`assets/<stem>.jpg`). The home page's menu links to it; it is in the sitemap.
   `next.config.ts` caches `/menu/:path+` immutable, not the page itself.
   Its header (17/11/2026): the group index as numbered hairline rows beside the Lottie, which plays straight on the
   page's pale blue wash (no frame, no card); the page's name "Menu" is an `sr-only` <h1> (owner: no visible title);

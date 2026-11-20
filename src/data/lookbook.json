@@ -3,214 +3,221 @@
   "animation": "/menu/lookbook/menu-hero.59019270.json",
   "photos": {
     "Bạch Lan Hoa": {
-      "full": "/menu/lookbook/bach-lan-hoa.44b76507.webp",
-      "thumb": "/menu/lookbook/bach-lan-hoa-thumb.397186e9.webp",
+      "full": "/menu/lookbook/bach-lan-hoa.4f2e7400.webp",
+      "thumb": "/menu/lookbook/bach-lan-hoa-thumb.24c18871.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Bạch Thiên Hương": {
-      "full": "/menu/lookbook/bach-thien-huong.76810f96.webp",
-      "thumb": "/menu/lookbook/bach-thien-huong-thumb.5a189306.webp",
+      "full": "/menu/lookbook/bach-thien-huong.8207f4e8.webp",
+      "thumb": "/menu/lookbook/bach-thien-huong-thumb.6975a8d8.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Bạch Đào Hoa": {
-      "full": "/menu/lookbook/bach-dao-hoa.9779d8be.webp",
-      "thumb": "/menu/lookbook/bach-dao-hoa-thumb.b902b60c.webp",
+      "full": "/menu/lookbook/bach-dao-hoa.568cdd13.webp",
+      "thumb": "/menu/lookbook/bach-dao-hoa-thumb.631ce3e8.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Thanh Nhài": {
-      "full": "/menu/lookbook/thanh-nhai.6b718c31.webp",
-      "thumb": "/menu/lookbook/thanh-nhai-thumb.b9bc8657.webp",
+      "full": "/menu/lookbook/thanh-nhai.3774ed49.webp",
+      "thumb": "/menu/lookbook/thanh-nhai-thumb.c3b7b1fb.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Thanh Trúc": {
-      "full": "/menu/lookbook/thanh-truc.9d3d0e4e.webp",
-      "thumb": "/menu/lookbook/thanh-truc-thumb.6e86c303.webp",
+      "full": "/menu/lookbook/thanh-truc.c1e28472.webp",
+      "thumb": "/menu/lookbook/thanh-truc-thumb.6c7192dd.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Bông Lan": {
-      "full": "/menu/lookbook/bong-lan.dabf0cca.webp",
-      "thumb": "/menu/lookbook/bong-lan-thumb.6926cf59.webp",
+      "full": "/menu/lookbook/bong-lan.5658325d.webp",
+      "thumb": "/menu/lookbook/bong-lan-thumb.43100c6c.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Bông Trúc": {
-      "full": "/menu/lookbook/bong-truc.17b9f165.webp",
-      "thumb": "/menu/lookbook/bong-truc-thumb.edc49eef.webp",
+      "full": "/menu/lookbook/bong-truc.1d046090.webp",
+      "thumb": "/menu/lookbook/bong-truc-thumb.7934f5c8.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Bông Đào": {
-      "full": "/menu/lookbook/bong-dao.846d9315.webp",
-      "thumb": "/menu/lookbook/bong-dao-thumb.943cbb14.webp",
+      "full": "/menu/lookbook/bong-dao.163ab0cc.webp",
+      "thumb": "/menu/lookbook/bong-dao-thumb.bd49b439.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v3"
+      "edition": "v5"
     },
     "Hồng Bì Cóc Xanh": {
-      "full": "/menu/lookbook/hong-bi-coc-xanh.9f85d89c.webp",
-      "thumb": "/menu/lookbook/hong-bi-coc-xanh-thumb.156dd0ab.webp",
+      "full": "/menu/lookbook/hong-bi-coc-xanh.25f6ce9a.webp",
+      "thumb": "/menu/lookbook/hong-bi-coc-xanh-thumb.5492a83f.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v3"
+      "edition": "v5"
     },
     "Thanh Nho Tươi": {
-      "full": "/menu/lookbook/thanh-nho-tuoi.6b07f43f.webp",
-      "thumb": "/menu/lookbook/thanh-nho-tuoi-thumb.fc71f560.webp",
+      "full": "/menu/lookbook/thanh-nho-tuoi.49b31855.webp",
+      "thumb": "/menu/lookbook/thanh-nho-tuoi-thumb.451c917d.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Thanh Nho Tằm": {
-      "full": "/menu/lookbook/thanh-nho-tam.8d266ad3.webp",
-      "thumb": "/menu/lookbook/thanh-nho-tam-thumb.bb193c92.webp",
+      "full": "/menu/lookbook/thanh-nho-tam.28c8f8b7.webp",
+      "thumb": "/menu/lookbook/thanh-nho-tam-thumb.d4889aa2.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
+    },
+    "Thanh Xoài Tươi": {
+      "full": "/menu/lookbook/thanh-xoai-tuoi.a3993483.webp",
+      "thumb": "/menu/lookbook/thanh-xoai-tuoi-thumb.964e2bf9.webp",
+      "width": 1200,
+      "height": 1500,
+      "edition": "v5"
     },
     "Xoài Hạ Tuyết": {
-      "full": "/menu/lookbook/xoai-ha-tuyet.3396b130.webp",
-      "thumb": "/menu/lookbook/xoai-ha-tuyet-thumb.6220fad8.webp",
+      "full": "/menu/lookbook/xoai-ha-tuyet.71581e34.webp",
+      "thumb": "/menu/lookbook/xoai-ha-tuyet-thumb.d1f32b45.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v3"
+      "edition": "v5"
     },
     "Dâu Cheese": {
-      "full": "/menu/lookbook/dau-cheese.ccccf6e5.webp",
-      "thumb": "/menu/lookbook/dau-cheese-thumb.10abbd81.webp",
+      "full": "/menu/lookbook/dau-cheese.46dab574.webp",
+      "thumb": "/menu/lookbook/dau-cheese-thumb.5def7738.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v3"
+      "edition": "v5"
     },
     "Lài Cheese": {
-      "full": "/menu/lookbook/lai-cheese.e195112a.webp",
-      "thumb": "/menu/lookbook/lai-cheese-thumb.4e52bbd1.webp",
+      "full": "/menu/lookbook/lai-cheese.45cf9688.webp",
+      "thumb": "/menu/lookbook/lai-cheese-thumb.f5724034.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v3"
+      "edition": "v5"
     },
     "Nho Cheese": {
-      "full": "/menu/lookbook/nho-cheese.14d7e16d.webp",
-      "thumb": "/menu/lookbook/nho-cheese-thumb.86e8e024.webp",
+      "full": "/menu/lookbook/nho-cheese.d6fe2f0e.webp",
+      "thumb": "/menu/lookbook/nho-cheese-thumb.b587cbd3.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v3"
+      "edition": "v5"
     },
     "Bạc Xỉu": {
-      "full": "/menu/lookbook/bac-xiu.84dbc7f1.webp",
-      "thumb": "/menu/lookbook/bac-xiu-thumb.019d5bdf.webp",
+      "full": "/menu/lookbook/bac-xiu.e57ae124.webp",
+      "thumb": "/menu/lookbook/bac-xiu-thumb.aedd397e.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Coldbrew Bưởi": {
-      "full": "/menu/lookbook/coldbrew-buoi.f5c2f332.webp",
-      "thumb": "/menu/lookbook/coldbrew-buoi-thumb.7a7f413f.webp",
+      "full": "/menu/lookbook/coldbrew-buoi.bdc0a1f6.webp",
+      "thumb": "/menu/lookbook/coldbrew-buoi-thumb.bc4625c2.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Coldbrew Chanh Vàng": {
-      "full": "/menu/lookbook/coldbrew-chanh-vang.4492552c.webp",
-      "thumb": "/menu/lookbook/coldbrew-chanh-vang-thumb.a3ad20db.webp",
+      "full": "/menu/lookbook/coldbrew-chanh-vang.cf357fdf.webp",
+      "thumb": "/menu/lookbook/coldbrew-chanh-vang-thumb.f61c673d.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Coldbrew Khế": {
-      "full": "/menu/lookbook/coldbrew-khe.9621cd84.webp",
-      "thumb": "/menu/lookbook/coldbrew-khe-thumb.3c515bd0.webp",
+      "full": "/menu/lookbook/coldbrew-khe.2375569a.webp",
+      "thumb": "/menu/lookbook/coldbrew-khe-thumb.5805880d.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Coldbrew Nguyên Bản": {
-      "full": "/menu/lookbook/coldbrew-nguyen-ban.81df4e35.webp",
-      "thumb": "/menu/lookbook/coldbrew-nguyen-ban-thumb.6475a347.webp",
+      "full": "/menu/lookbook/coldbrew-nguyen-ban.f6f7a7fa.webp",
+      "thumb": "/menu/lookbook/coldbrew-nguyen-ban-thumb.2395f1a3.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Cà Phê Muối": {
-      "full": "/menu/lookbook/ca-phe-muoi.1a54a060.webp",
-      "thumb": "/menu/lookbook/ca-phe-muoi-thumb.c345b7c7.webp",
+      "full": "/menu/lookbook/ca-phe-muoi.a4651209.webp",
+      "thumb": "/menu/lookbook/ca-phe-muoi-thumb.7fa924ae.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Cà Phê Đen Đá": {
-      "full": "/menu/lookbook/ca-phe-den-da.70732f36.webp",
-      "thumb": "/menu/lookbook/ca-phe-den-da-thumb.0b192ca5.webp",
+      "full": "/menu/lookbook/ca-phe-den-da.9dee2f4c.webp",
+      "thumb": "/menu/lookbook/ca-phe-den-da-thumb.281cc8c0.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Kem Bông": {
-      "full": "/menu/lookbook/kem-bong.2d0414a0.webp",
-      "thumb": "/menu/lookbook/kem-bong-thumb.498c5a9c.webp",
+      "full": "/menu/lookbook/kem-bong.d04cae2f.webp",
+      "thumb": "/menu/lookbook/kem-bong-thumb.a770e963.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Kem Cheese": {
-      "full": "/menu/lookbook/kem-cheese.7f9e38d2.webp",
-      "thumb": "/menu/lookbook/kem-cheese-thumb.1bba7514.webp",
+      "full": "/menu/lookbook/kem-cheese.37756349.webp",
+      "thumb": "/menu/lookbook/kem-cheese-thumb.9c1dcadb.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v3"
+      "edition": "v5"
     },
     "Combo Bộ Ba Làng Mây": {
-      "full": "/menu/lookbook/combo-bo-ba-lang-may.8df2084a.webp",
-      "thumb": "/menu/lookbook/combo-bo-ba-lang-may-thumb.1ac3942e.webp",
+      "full": "/menu/lookbook/combo-bo-ba-lang-may.a805b5ce.webp",
+      "thumb": "/menu/lookbook/combo-bo-ba-lang-may-thumb.3a93ae5f.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Combo Cặp Đôi Đối Lập": {
-      "full": "/menu/lookbook/combo-cap-doi-doi-lap.6ef5a4e8.webp",
-      "thumb": "/menu/lookbook/combo-cap-doi-doi-lap-thumb.cdb2ea46.webp",
+      "full": "/menu/lookbook/combo-cap-doi-doi-lap.2f366bc7.webp",
+      "thumb": "/menu/lookbook/combo-cap-doi-doi-lap-thumb.559cfada.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Combo Song Hoa Tinh Túy": {
-      "full": "/menu/lookbook/combo-song-hoa-tinh-tuy.7042f4d0.webp",
-      "thumb": "/menu/lookbook/combo-song-hoa-tinh-tuy-thumb.e29e17e0.webp",
+      "full": "/menu/lookbook/combo-song-hoa-tinh-tuy.cb208f4a.webp",
+      "thumb": "/menu/lookbook/combo-song-hoa-tinh-tuy-thumb.b0514392.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Combo Thanh Mát Làng Mây": {
-      "full": "/menu/lookbook/combo-thanh-mat-lang-may.69564a1f.webp",
-      "thumb": "/menu/lookbook/combo-thanh-mat-lang-may-thumb.a014c8b9.webp",
+      "full": "/menu/lookbook/combo-thanh-mat-lang-may.2a34fe48.webp",
+      "thumb": "/menu/lookbook/combo-thanh-mat-lang-may-thumb.12f04f60.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Combo Trái Cây & Kem Cheese": {
-      "full": "/menu/lookbook/combo-trai-cay-kem-cheese.5998f318.webp",
-      "thumb": "/menu/lookbook/combo-trai-cay-kem-cheese-thumb.45277498.webp",
+      "full": "/menu/lookbook/combo-trai-cay-kem-cheese.70f091b4.webp",
+      "thumb": "/menu/lookbook/combo-trai-cay-kem-cheese-thumb.b588e64f.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     },
     "Combo Tỉnh Táo & Thanh Lọc": {
-      "full": "/menu/lookbook/combo-tinh-tao-thanh-loc.d056bdfa.webp",
-      "thumb": "/menu/lookbook/combo-tinh-tao-thanh-loc-thumb.27e713af.webp",
+      "full": "/menu/lookbook/combo-tinh-tao-thanh-loc.91be7a41.webp",
+      "thumb": "/menu/lookbook/combo-tinh-tao-thanh-loc-thumb.ae63528c.webp",
       "width": 1200,
       "height": 1500,
-      "edition": "v2"
+      "edition": "v5"
     }
   }
 }

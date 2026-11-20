@@ -5,8 +5,9 @@
 //
 //   npm run sync-lookbook        (sync-brand runs it too, since it wipes public/menu)
 //
-// A dish uses its v3 photo (lookbook/assets-v3/<stem>.png) when it is listed in V3 and the file exists, else its v2
-// photo (lookbook/assets/<stem>.jpg). Keys are the dishes' names on the till (Odoo); a name missing from the till is
+// A dish uses its v5 photo (lookbook/assets-v5/<stem>.png, the "Tĩnh vật vải toan" set of 20/11/2026, see
+// lookbook/v5/PLAN.md) when the file exists, else its v3 photo (lookbook/assets-v3/<stem>.png) when it is listed in V3
+// and the file exists, else its v2 photo (lookbook/assets/<stem>.jpg). Keys are the dishes' names on the till (Odoo); a name missing from the till is
 // reported and skipped, a till dish missing here simply shows no photo. Never put names, prices or notes here.
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
@@ -36,6 +37,7 @@ const PHOTOS = {
   "Hồng Bì Cóc Xanh": "04-studio-tra-coc-hong-bi",
   "Thanh Nho Tươi": "03-studio-tra-hoa-qua-nho-thanh-truc",
   "Thanh Nho Tằm": "05-studio-tra-nho-tam",
+  "Thanh Xoài Tươi": "05-studio-thanh-xoai-tuoi",
   "Xoài Hạ Tuyết": "04-studio-xoai-ha-tuyet",
   "Dâu Cheese": "04-studio-dau-kem-cheese",
   "Lài Cheese": "05-studio-lai-cheese",
@@ -80,6 +82,8 @@ function slug(name) {
 }
 
 function source(stem) {
+  const v5 = path.join(LOOKBOOK, "assets-v5", `${stem}.png`);
+  if (existsSync(v5)) return { file: v5, edition: "v5" };
   const v3 = path.join(LOOKBOOK, "assets-v3", `${stem}.png`);
   if (V3.has(stem) && existsSync(v3)) return { file: v3, edition: "v3" };
   const v2 = path.join(LOOKBOOK, "assets", `${stem}.jpg`);

@@ -44,12 +44,14 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   `public/models/`, `src/app/{icon.svg,favicon.ico,apple-icon.png,opengraph-image.*,twitter-image.*}`): change the
   brand kit, rebuild it, then run `npm run sync-brand`.
 - **The 3D stage** (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`): a fixed three.js canvas at z-index −10
-  inside `main` (mounted by `page.tsx`, after the hero), transparent; the actors pass behind the white cards. Two
+  inside `main` (mounted by `page.tsx`, after the hero), transparent; the actors pass behind the white cards. Three
   actors (`ACTORS`, one `Actor` each, `actor.ts`; the hero's `set` actor, the cover photo rebuilt in 3D, was removed
   with its shadows when the hero became a photograph, 17/11/2026; no parallax anywhere on the page since 22/10/2026,
   the owner: it made phones lag): `pp`, the 700 ml PP cup,
-  clear plastic by alpha, holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
-  standing in it and drifting round it (`splash.ts`); `paper`, the lidded paper cup alone (the flavour carousel's
+  frosted milk-white plastic by alpha (21/11/2026; sky-tinted clear before), holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
+  standing in it and drifting round it (`splash.ts`); `paper`, the lidded paper cup, both in the cups section; `visit`,
+  a second paper cup in the visit section (one actor per slot: a cup flying between the two sections would drift for
+  screens behind the menu and the offers) (the flavour carousel's
   `flavor` actor, its toppings and the PET cup were removed with the carousel, 17/11/2026). Both GLBs (`brandkit/print/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
   meshopt + WebP to `public/models/<name>.<hash>.glb`, URLs in `src/data/cup-model.json`, cached immutable by
   `next.config.ts`. Sections lay out empty slots with `<CupAnchor name actor turn tilt lid fill>`; `track.ts`
@@ -57,18 +59,43 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   each end, smooth step between; with reduced motion it jumps halfway and nothing bobs, sways or drifts); an actor
   with one slot stays in it. Hidden slots are skipped, so a section can have one for phones and one for `lg`; a slot
   may be `sticky`; two slots side by side (`cup-row`) put two actors together (none does now: the offers show their
-  printed pieces instead). A hit element per actor
+  printed pieces instead). A slot's pose can be driven by the page's scroll timeline (`live-pose.ts`: one mutable
+  record per slot element that GSAP tweens: turn, tilt, lid, strap, fill and an offset; `measureAnchors` reads it
+  instead of the data attributes, and a version counter makes the stage measure again while a scrub settles); the
+  pose's `strap` (0 … 1) folds the strap open on top of a tap's flip. A hit element per actor
   takes the pointer while it rests on screen (drag turns, a tap on the lid flips the strap; arrows / Enter / Home on
   the keyboard). No flowers drift behind (removed 22/10/2026) and no sparkles twinkle anywhere on the page, 2D or
-  3D (removed, owner, 27/10/2026: no sparkle stars in any design); headings and cards hold still (the scroll-driven
-  parallax was removed, 22/10/2026). No WebGL 2, data saver or no model: `<html class="cup-failed">`,
+  3D (removed, owner, 27/10/2026: no sparkle stars in any design). No parallax (removed 22/10/2026); since
+  21/11/2026 (owner: "scroll motion gsap … mượt mà nhất, hiệu năng tốt nhất") headings and blocks rise in once as
+  they come into view (see the scroll motion below). No WebGL 2, data saver or no model: `<html class="cup-failed">`,
   the slots and the `cup-grid` / `cup-row` wrappers collapse (without script too). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
+- **The two 3D cups** (`src/components/cup-showcase.tsx`, id `ly`, 21/11/2026, owner: "đưa ly nhựa và ly giấy vào
+  landing", then the same day "bỏ hết mô tả ly …, ly 3D chỉ mang tính chất visual và gây ấn tượng thị giác"): a
+  band between the hero and the menu holding only the 3D paper cup and the frosted PP cup side by side, large
+  (slots 62 svh, 72 from `lg`); no heading, names, sizes or lines about the cups, `aria-hidden` (each cup's hit
+  element names it). With motion allowed it is 240 svh tall (280 from `lg`) and its frame sticks by CSS
+  (`motion-safe:sticky`, no GSAP pin, so no pin-spacer reflow); with reduced motion it is one screen of the two cups
+  standing still; without script (noscript style) or without the 3D (`.cup-failed`) it is not shown.
+- **Scroll motion** (`src/components/scroll-motion.tsx`, mounted last by the home page; GSAP 3.15.1 pinned, its
+  free standard licence, with ScrollTrigger): loaded by a dynamic import after hydration, run inside
+  `gsap.matchMedia("(prefers-reduced-motion: no-preference)")` so a change of the setting reverts it all. (1)
+  Reveals: `data-reveal` blocks and the children of `data-reveal-group` (every `SectionHeading`, the menu's featured
+  cups, columns and strips, the offers' row, the visit card) rise 28 px and fade in once, batched and staggered, and
+  only those still below the viewport when it starts (nothing on screen blinks out); props cleared after. (2) The two
+  cups, scrubbed (`scrub: true`; the actors' own lag is the smoothing): while the band comes up they rise into their
+  slots from below and from either side, leaning back (`dx`, `dy`, `tilt` only); while its frame sticks, the paper
+  cup comes forward and turns once round, then the PP cup turns the other way with its lid lifted off and set back,
+  then both stand side by side and fold their straps open. The two timelines never tween the same property (a refresh
+  renders each and they would fight). No smooth-scroll hijack, no pinning: only transform, opacity and numbers the
+  stage reads. Measured on an emulated phone (4× CPU, real GPU, production build, 21/11/2026): the whole page scrolls
+  at 59.8 fps, p99 16.8 ms, one frame over 50 ms.
 - **The home page is short and quiet (owner, 17/11/2026: "tinh tế, tối giản"; white and metallic silver since 18/11/2026):**
-  hero (slogan + two buttons, no intro line; a photograph of the two cups in tea-hill fog), Menu · "Thức uống đặc trưng"
+  hero (slogan + two buttons, no intro line; a photograph of the two cups in tea-hill fog), the two 3D cups (a
+  wordless band, 21/11/2026), Menu · "Thức uống đặc trưng"
   (the printed menu board), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper
   cup). The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
-  counts (no "23 món, 32K – 65K", no per-group counts or starting prices). Section ids: `thuc-don`, `uu-dai`,
+  counts (no "23 món, 32K – 65K", no per-group counts or starting prices). Section ids: `ly`, `thuc-don`, `uu-dai`,
   `cua-hang`. The site says **"Menu", never "Thực đơn"** (owner, 18/11/2026): the nav, the hero's "Xem menu", the
   section's eyebrow, "Xem toàn bộ menu", /menu's title and `<h1>` (all in `src/data/boongee.ts` but /menu's own
   metadata; the anchor stays `#thuc-don`, the route `/menu`). The 7-viewport flavour

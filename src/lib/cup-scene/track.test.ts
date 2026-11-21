@@ -66,9 +66,17 @@ describe("cupTarget", () => {
     assert.ok(target);
     assert.deepEqual([target.from, target.to, target.resting], ["story", "menu", false]);
     assert.deepEqual([target.x, target.y, target.turn, target.lid, target.tilt], [600, 400, 0.5, 0.5, 0.4]);
+    assert.equal(target.strap, 0); // neither slot opens the strap
     assert.equal(target.size, (240 + 150) / 2);
     assert.equal(target.room, (320 + 200) / 2);
     assert.ok(Math.abs(target.flight - 1) < 1e-9);
+  });
+
+  it("blends the strap between slots a scroll timeline opens it in", () => {
+    const target = cupTarget([slot("a", 0, { strap: 1 }), slot("b", 500, { left: 800 })], vh, false);
+    assert.ok(target);
+    assert.equal(target.strap, 0.5);
+    assert.equal(cupTarget([slot("a", 0, { strap: 0.25 })], vh, false)?.strap, 0.25);
   });
 
   it("skips anchors hidden by the layout and sorts the rest by position", () => {

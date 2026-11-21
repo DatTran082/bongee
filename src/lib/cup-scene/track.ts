@@ -23,6 +23,8 @@ export interface AnchorRect extends CupPose {
   readonly height: number;
   /** how much of the slot's height and width the actor may take */
   readonly fill: number;
+  /** 0 the strap closed … 1 folded open (a scroll timeline's pose; none: closed) */
+  readonly strap?: number;
 }
 
 export interface CupTarget extends CupPose {
@@ -32,6 +34,8 @@ export interface CupTarget extends CupPose {
   /** the height and the width it may take, px */
   readonly size: number;
   readonly room: number;
+  /** 0 the strap closed … 1 folded open */
+  readonly strap: number;
   /** 0 at rest in an anchor … 1 halfway through a flight */
   readonly flight: number;
   readonly from: string;
@@ -69,6 +73,7 @@ function at(anchor: AnchorRect): CupTarget {
     turn: anchor.turn,
     tilt: anchor.tilt,
     lid: anchor.lid,
+    strap: anchor.strap ?? 0,
     flight: 0,
     from: anchor.name,
     to: anchor.name,
@@ -100,6 +105,7 @@ export function cupTarget(
     turn: lerp(from.turn, to.turn, e),
     tilt: lerp(from.tilt, to.tilt, e),
     lid: lerp(from.lid, to.lid, e),
+    strap: lerp(from.strap ?? 0, to.strap ?? 0, e),
     flight: reducedMotion ? 0 : Math.sin(Math.PI * e),
     from: from.name,
     to: to.name,

@@ -1,6 +1,6 @@
 import { Box3, Group, type Object3D, type PerspectiveCamera, Raycaster, Vector2 } from "three";
 import { fitScale, isOnScreen, pxPerMetre, toWorld } from "./fit";
-import { approach } from "./motion";
+import { approach, clamp } from "./motion";
 import { Strap } from "./steppers";
 import type { CupPose, CupTarget } from "./track";
 import { Turntable } from "./turntable";
@@ -73,6 +73,7 @@ export interface CupPlacement {
 }
 
 interface Smooth extends CupPose {
+  readonly strap: number;
   readonly x: number;
   readonly y: number;
   readonly size: number;
@@ -81,8 +82,8 @@ interface Smooth extends CupPose {
 
 function follow(current: Smooth | null, target: CupTarget, dt: number, snap: boolean): Smooth {
   if (!current || snap) {
-    const { x, y, size, room, turn, tilt, lid } = target;
-    return { x, y, size, room, turn, tilt, lid };
+    const { x, y, size, room, turn, tilt, lid, strap } = target;
+    return { x, y, size, room, turn, tilt, lid, strap };
   }
   return {
     x: approach(current.x, target.x, dt, TAU.place),
@@ -92,6 +93,7 @@ function follow(current: Smooth | null, target: CupTarget, dt: number, snap: boo
     turn: approach(current.turn, target.turn, dt, TAU.pose),
     tilt: approach(current.tilt, target.tilt, dt, TAU.pose),
     lid: approach(current.lid, target.lid, dt, TAU.lid),
+    strap: approach(current.strap, target.strap, dt, TAU.pose),
   };
 }
 
@@ -202,7 +204,9 @@ export class Actor {
       spec.lid.position.set(liftM * LID.shift, this.lidRest + liftM, 0);
       spec.lid.rotation.z = liftM * LID.tip;
     }
-    if (spec.strap) spec.strap.rotation.x = this.strapRest + this.strap.angle;
+    // a tap flips the strap; a scroll timeline's pose may open it too: together never past fully open
+    if (spec.strap)
+      spec.strap.rotation.x = this.strapRest + clamp(this.strap.angle + current.strap * STRAP.open, STRAP.open, 0);
     const placement = {
       x: current.x,
       y: current.y - lift - bob,

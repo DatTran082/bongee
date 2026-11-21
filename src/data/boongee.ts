@@ -22,6 +22,7 @@ export const brand = {
 
 /** Section anchors, shared by the page and the navigation. */
 export const sections = {
+  cups: "ly",
   menu: "thuc-don",
   offers: "uu-dai",
   visit: "cua-hang",
@@ -51,12 +52,17 @@ export const cup = {
     pp: {
       short: "Ly nhựa",
       label:
-        "Ly Boongee 700 ml, mô hình 3D kiểu hoạt hình: ly nhựa trong in bốn dấu monogram và chữ Boongee, bên trong là trà nho xanh, đậy nắp bật nút trong; nho xanh và viên đá quanh ly.",
+        "Ly nhựa PP nhám Boongee 700 ml, mô hình 3D kiểu hoạt hình: in cột bốn hoa monogram và chữ Boongee màu trắng, bên trong là trà nho xanh, đậy nắp bật nút rời nhựa nhám; nho xanh và viên đá quanh ly.",
     },
     paper: {
       short: "Ly giấy",
       label:
-        "Ly giấy Boongee 16 oz, mô hình 3D kiểu hoạt hình: ly giấy hai lớp in bốn dấu monogram và chữ Boongee, đậy nắp bật nút trắng.",
+        "Ly giấy Boongee 16 oz, mô hình 3D kiểu hoạt hình: ly giấy hai lớp in bốn hoa monogram và chữ Boongee màu bạc, đậy nắp bật nút rời màu trắng.",
+    },
+    visit: {
+      short: "Ly giấy",
+      label:
+        "Ly giấy Boongee 16 oz, mô hình 3D kiểu hoạt hình: ly giấy hai lớp in bốn hoa monogram và chữ Boongee màu bạc, đậy nắp bật nút rời màu trắng.",
     },
   },
   /** read by assistive tech only (aria-describedby): the page itself shows no instructions */

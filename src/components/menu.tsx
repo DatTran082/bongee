@@ -100,6 +100,7 @@ export function Menu() {
 
         <div className="lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12 xl:grid-cols-[17rem_minmax(0,1fr)]">
           <ul
+            data-reveal
             aria-label="Món nổi bật"
             className="-mx-4 mb-12 flex snap-x gap-2 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:mb-0 lg:grid lg:grid-cols-2 lg:content-start lg:gap-x-2 lg:gap-y-4 lg:overflow-visible lg:border-r lg:border-silver-200 lg:px-0 lg:pr-8"
           >
@@ -126,7 +127,7 @@ export function Menu() {
             ))}
           </ul>
 
-          <div className="grid gap-x-12 md:grid-cols-2 xl:grid-cols-3">
+          <div data-reveal-group className="grid gap-x-12 md:grid-cols-2 xl:grid-cols-3">
             {columns.map((column, i) => (
               <div key={i} className="mb-12 md:last:col-span-2 xl:mb-0 xl:last:col-span-1">
                 {column.map((group) => (
@@ -149,7 +150,7 @@ export function Menu() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-silver-300">
+        <div data-reveal className="mt-12 border-t border-silver-300">
           {toppings.length > 0 && (
             <Strip label="Topping thêm">
               {toppings.map((t) => (

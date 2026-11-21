@@ -24,12 +24,12 @@ export function Visit() {
       <div className="cup-grid lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-center lg:gap-12">
         <CupAnchor
           name="visit"
-          actor="paper"
+          actor="visit"
           turn={-0.35}
           tilt={0.08}
           className="mb-8 h-[40vh] max-h-[24rem] lg:mb-0 lg:h-[60vh] lg:max-h-[40rem]"
         />
-        <div className="card-line bg-gradient-to-b from-silver-50 to-white px-6 py-10 md:px-14 md:py-14">
+        <div data-reveal className="card-line bg-gradient-to-b from-silver-50 to-white px-6 py-10 md:px-14 md:py-14">
           <address className="not-italic">
             <p className="flex items-center gap-2 text-xs tracking-[0.28em] text-silver-700 uppercase">
               <IconMapPin aria-hidden className="size-4" />

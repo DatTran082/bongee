@@ -19,7 +19,10 @@ export function Offers() {
   return (
     <section id={sections.offers} className="mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28">
       <SectionHeading tagline={offersIntro.tagline} title={offersIntro.title} />
-      <div className="grid items-start gap-6 md:grid-cols-2 lg:grid-cols-[minmax(0,4fr)_minmax(0,5fr)_minmax(0,4fr)] lg:gap-8">
+      <div
+        data-reveal-group
+        className="grid items-start gap-6 md:grid-cols-2 lg:grid-cols-[minmax(0,4fr)_minmax(0,5fr)_minmax(0,4fr)] lg:gap-8"
+      >
         <figure>
           <Image
             src={piece("bai-dang-uu-dai-tuan_vuong.png")}

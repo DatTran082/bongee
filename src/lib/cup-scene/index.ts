@@ -17,6 +17,7 @@ import { ACTORS, type ActorName } from "./actors";
 import { disposeScene } from "./dispose";
 import { DISTANCE, FOV } from "./fit";
 import { MODELS, NODES } from "./model";
+import { livePosesVersion } from "./live-pose";
 import { needsRedraw } from "./motion";
 import { qualityFor } from "./quality";
 import { seeded } from "./random";
@@ -26,10 +27,10 @@ import { setOutlineSize } from "./toon/outline";
 import { Lean } from "./steppers";
 import type { CupTarget } from "./track";
 
-// The 3D stage: a canvas behind the page with its actors on it, each flying between the sections' slots as the
-// page scrolls (track.ts, actor.ts): the cover photo's set (set/), which stands in the hero; the clear PP cup of grape
-// tea with grapes and ice in it and floating round it (splash.ts);
-// the lidded paper cup. Everything is drawn as a smooth stylized game asset (toon/: the Làng Mây edition's toon
+// The 3D stage: a canvas behind the page with its actors on it, each in its section's slot as the page scrolls
+// (track.ts, actor.ts), posed by the page's scroll timeline where it has one (live-pose.ts): the frosted PP cup of
+// grape tea with grapes and ice in it and floating round it (splash.ts) and the lidded paper cup, side by side in
+// the cups section; a second paper cup in the visit section. Everything is drawn as a smooth stylized game asset (toon/: the Làng Mây edition's toon
 // rules): soft cel bands, sticker outlines, flat white highlights. No flowers drift behind them (the owner took them
 // out, 22/10/2026), and no sparkles twinkle round them (the owner, 27/10/2026). The canvas is transparent, so the page's painted scenery (sky, clouds)
 // stays behind the actors. A drag turns an actor, a tap on a lid flips its strap,
@@ -134,6 +135,7 @@ const sameTarget = (a: CupTarget | null, b: CupTarget | null) =>
     a.turn === b.turn &&
     a.tilt === b.tilt &&
     a.lid === b.lid &&
+    a.strap === b.strap &&
     a.flight === b.flight);
 
 const sameTargets = (a: Record<string, CupTarget | null>, b: Record<string, CupTarget | null>) =>
@@ -195,6 +197,7 @@ export async function createCupScene(
     toonCup(pp, "grapeTea");
     toonCup(paper, "milkTea");
     const single = paper.clone(true);
+    const visitCup = paper.clone(true);
     const specs: Record<ActorName, ActorSpec> = {
       pp: {
         subject: pp,
@@ -212,6 +215,14 @@ export async function createCupScene(
         ...CUP_MOTION,
         phase: 3.9,
       },
+      visit: {
+        subject: visitCup,
+        lid: required(visitCup, NODES.lid, MODELS.paper.url),
+        strap: required(visitCup, NODES.strap, MODELS.paper.url),
+        lidLift: 0,
+        ...CUP_MOTION,
+        phase: 5.3,
+      },
     };
     const hire = (name: ActorName) => {
       const actor = new Actor(specs[name], hits[name], {
@@ -228,6 +239,7 @@ export async function createCupScene(
     const cast: Record<ActorName, Actor> = {
       pp: hire("pp"),
       paper: hire("paper"),
+      visit: hire("visit"),
     };
 
     /**
@@ -273,6 +285,7 @@ export async function createCupScene(
     let dirty = true; // an input, a resize or a layout change: measure and draw
     let targets: Record<string, CupTarget | null> = {};
     let lastScroll = NaN;
+    let lastPoses = -1; // the live poses' version (live-pose.ts) last measured
 
     /** While only the idle float moves, a frame at most this often (ms): 30 fps on a light device, a little slack. */
     const idleFrameMs = 1000 / quality.idleFps - 4;
@@ -301,8 +314,10 @@ export async function createCupScene(
       const reduced = options.reducedMotion();
       const scroll = options.scrollY();
       const scrolled = scroll !== lastScroll;
-      const remeasure = dirty || scrolled;
+      const poses = livePosesVersion();
+      const remeasure = dirty || scrolled || poses !== lastPoses; // a scrubbed timeline may settle after the scroll
       lastScroll = scroll;
+      lastPoses = poses;
       const next = remeasure ? options.measure() : targets;
       const targetChanged = !sameTargets(next, targets);
       targets = next;

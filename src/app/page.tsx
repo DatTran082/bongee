@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { CupShowcase } from "@/components/cup-showcase";
 import { CupStage } from "@/components/cup-stage";
 import { Hero } from "@/components/hero";
 import { Menu } from "@/components/menu";
 import { Offers } from "@/components/offers";
+import { ScrollMotion } from "@/components/scroll-motion";
 import { Visit } from "@/components/visit";
 import { brand, socials, visit } from "@/data/boongee";
 import { priceRange, pricesAreIllustrative } from "@/data/menu";
@@ -69,9 +71,11 @@ export default function Home() {
       <Hero />
       {/* the 3D cup: a fixed canvas behind the page (globals.css); after the hero, so its control follows the hero's buttons */}
       <CupStage />
+      <CupShowcase />
       <Menu />
       <Offers />
       <Visit />
+      <ScrollMotion />
     </>
   );
 }

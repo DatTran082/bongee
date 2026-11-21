@@ -18,8 +18,13 @@ const ORDER: Readonly<Record<string, number>> = {
   "lid-clear-plain": 4,
 };
 
-/** Opacity of the clear PP parts and of the tea. */
-export const CLEAR = { body: 0.28, lid: 0.34, tea: 0.88 };
+/**
+ * Opacity of the PP parts and of the tea. The PP cup and its lid are frosted, milky plastic (owner, 20/11/2026: "nhựa
+ * nhám"), not clear: more opaque than a clear wall and milk-white, the tea still showing through.
+ */
+export const CLEAR = { body: 0.4, lid: 0.58, tea: 0.88 };
+/** The frosted PP's milky white. */
+const FROST = tokens.cloud;
 
 export interface ToonCup {
   /** the drink's material: its colours can change with what the cup holds */
@@ -41,9 +46,12 @@ function clear<T extends Material>(material: T): T {
   return material;
 }
 
-/** Clear plastic (the PP and PET walls, their lids): sky-tinted, by alpha, its edge line drawn in the shader. */
-export function clearPlastic(name: string, opacity: number): Material {
-  return clear(toonMaterial({ name, color: tokens["sky-200"], opacity, doubleSided: true, edge: CLEAR_EDGE }));
+/**
+ * See-through plastic (the PP and PET walls, their lids): by alpha, its edge line drawn in the shader; sky-tinted
+ * for clear plastic, or another colour (the frosted PP's milk white).
+ */
+export function clearPlastic(name: string, opacity: number, color: string = tokens["sky-200"]): Material {
+  return clear(toonMaterial({ name, color, opacity, doubleSided: true, edge: CLEAR_EDGE }));
 }
 
 /** A cup's white print on clear plastic: cut out by its alpha, no hull (it would show through the wall as a band). */
@@ -85,10 +93,10 @@ function swap(material: Material, tea: DrinkName, drink: DrinkShape): Material {
     // clear plastic: no outline hull (it would show through the wall as a solid band); its edge line is drawn in
     // the shader instead
     case "pp-frosted":
-      return clearPlastic(name, CLEAR.body);
+      return clearPlastic(name, CLEAR.body, FROST);
     case "lid-clear":
     case "lid-clear-plain":
-      return clearPlastic(name, CLEAR.lid);
+      return clearPlastic(name, CLEAR.lid, FROST);
     case "ink-white":
       return clearPrint(name, source?.map ?? null);
     case "milk-tea":

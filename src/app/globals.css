@@ -75,3 +75,8 @@ footer {
 .cup-failed .cup-grid {
   display: block;
 }
+
+/* No cup: the band of the two 3D cups (src/components/cup-showcase.tsx) holds nothing else, so it goes. */
+.cup-failed [data-showcase] {
+  display: none;
+}

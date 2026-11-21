@@ -50,12 +50,12 @@ export const hero = {
 
 /**
  * The lookbook reel (src/components/lookbook-reel.tsx): the menu board's featured drinks, each as a plate of the v5
- * still lifes with its name, group, plain line and counter price from Odoo. The photos are AI-made: "Ảnh minh hoạ".
+ * still lifes with its name, group and short description (no prices since 21/11/2026, owner). Its title is
+ * "Signature" (owner, 21/11/2026, before "Thức uống đặc trưng"); no "Ảnh minh hoạ" caption on the site since that day.
  */
 export const reelIntro = {
   tagline: "Bộ sưu tập",
-  title: "Thức uống đặc trưng",
-  note: "Ảnh minh hoạ · Giá tại quầy",
+  title: "Signature",
   more: "Xem toàn bộ menu",
 };
 

@@ -3,16 +3,8 @@
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { formatPrice } from "@/data/menu";
+import { dishDescription } from "@/data/descriptions";
 import type { LookbookDish, LookbookGroup } from "@/lib/lookbook/join";
-
-const SIZE_LABELS = ["M", "L"];
-
-/** "40K", or "M 40K · L 50K" for a sized drink. */
-function priceLine(prices: number[]): string {
-  if (prices.length === 1) return formatPrice(prices[0]);
-  return prices.map((p, i) => `${SIZE_LABELS[i] ?? ""} ${formatPrice(p)}`.trim()).join(" · ");
-}
 
 function NoPhoto({ className = "" }: { className?: string }) {
   return (
@@ -39,7 +31,7 @@ function DishCard({ dish, onOpen }: DishCardProps) {
         {dish.photo ? (
           <Image
             src={dish.photo.thumb}
-            alt={`Ảnh minh hoạ ${dish.name}`}
+            alt={dish.name}
             width={600}
             height={750}
             sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw"
@@ -48,18 +40,20 @@ function DishCard({ dish, onOpen }: DishCardProps) {
         ) : (
           <NoPhoto className="aspect-[4/5] w-full rounded-2xl border border-silver-200" />
         )}
-        <span className="mt-4 flex items-baseline justify-between gap-3">
-          <span className="text-lg font-normal">{dish.name}</span>
-          <span className="shrink-0 text-sm text-silver-700 tabular-nums">{priceLine(dish.prices)}</span>
-        </span>
-        {dish.note && <span className="mt-1 block text-sm text-silver-700">{dish.note}</span>}
+        <span className="mt-4 block text-lg font-normal">{dish.name}</span>
+        {dishDescription(dish.name, dish.note) && (
+          <span className="mt-1 block text-sm leading-relaxed text-silver-700">
+            {dishDescription(dish.name, dish.note)}
+          </span>
+        )}
       </button>
     </li>
   );
 }
 
 /**
- * The /menu page's groups: each dish's photo, name, price and plain line in a grid; a photo opens enlarged in a
+ * The /menu page's groups: each dish's photo, name and short description (src/data/descriptions.ts; no prices since
+ * 21/11/2026, owner) in a grid; a photo opens enlarged in a
  * modal <dialog> (Esc or the backdrop closes it; arrows go through the dishes that have a photo, in menu order).
  */
 export function LookbookGallery({ groups }: { groups: LookbookGroup[] }) {
@@ -127,7 +121,7 @@ export function LookbookGallery({ groups }: { groups: LookbookGroup[] }) {
           <div className="grid max-h-[90dvh] md:grid-cols-[minmax(0,1fr)_18rem]">
             <Image
               src={current.dish.photo.full}
-              alt={`Ảnh minh hoạ ${current.dish.name}`}
+              alt={current.dish.name}
               width={current.dish.photo.width}
               height={current.dish.photo.height}
               sizes="(min-width: 768px) 38rem, 92vw"
@@ -138,8 +132,11 @@ export function LookbookGallery({ groups }: { groups: LookbookGroup[] }) {
               <h2 id="lookbook-dialog-title" className="text-2xl font-light">
                 {current.dish.name}
               </h2>
-              <p className="text-silver-700 tabular-nums">{priceLine(current.dish.prices)}</p>
-              {current.dish.note && <p className="text-sm text-silver-700">{current.dish.note}</p>}
+              {dishDescription(current.dish.name, current.dish.note) && (
+                <p className="text-sm leading-relaxed text-silver-700">
+                  {dishDescription(current.dish.name, current.dish.note)}
+                </p>
+              )}
               <div className="mt-auto flex items-center gap-2 pt-4">
                 <button
                   type="button"

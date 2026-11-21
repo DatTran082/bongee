@@ -16,7 +16,8 @@
     "sync-menu": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/sync-menu.mjs",
     "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test \"src/**/*.test.ts\"",
     "sync-design-system": "node scripts/sync-design-system.mjs",
-    "sync-models": "node scripts/sync-brand.mjs --models"
+    "sync-models": "node scripts/sync-brand.mjs --models",
+    "sync-collateral": "node scripts/sync-brand.mjs --collateral"
   },
   "dependencies": {
     "@tabler/icons-react": "^3.49.0",

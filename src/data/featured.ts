@@ -1,5 +1,6 @@
 // The home page's lookbook reel: the menu board's featured drinks (src/data/menu-featured.json, sync-brand), each
-// joined to its till entry (name, group, prices, plain line: Odoo only, src/data/menu.ts) and its lookbook photo
+// joined to its till entry (name, group, plain line: Odoo only, src/data/menu.ts; prices kept but not shown since
+// 21/11/2026) and its lookbook photo
 // (src/data/lookbook.json). A drink that left the till, or has no photo, is left out.
 import lookbook from "./lookbook.json";
 import { categories, type MenuItem } from "./menu";

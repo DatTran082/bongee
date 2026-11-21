@@ -6,18 +6,18 @@ import { GroupMark } from "@/components/group-mark";
 import { MenuSpotlight, type SpotlightDish } from "@/components/menu-spotlight";
 import { SectionHeading } from "@/components/section-heading";
 import { menuIntro, sections } from "@/data/boongee";
+import { dishDescription } from "@/data/descriptions";
 import { photoOf } from "@/data/featured";
-import { categories, customisation, formatPrice, type MenuCategory } from "@/data/menu";
+import { categories, customisation, type MenuCategory } from "@/data/menu";
 
-// The menu: every drink on the till by group (names, plain lines and counter prices from Odoo only), the topping /
-// sugar / ice strips at the foot. From lg a large still life of the drink in focus stands beside the list (the
+// The menu: every drink on the till by group, each with its short description (src/data/descriptions.ts; names from
+// Odoo; no prices since 21/11/2026, owner: "bỏ giá bán"), the topping / sugar / ice strips at the foot. From lg a large still life of the drink in focus stands beside the list (the
 // lookbook's v5 photos): the one under the pointer, or the one crossing the middle of the screen as the page scrolls
 // (src/components/menu-spotlight.tsx). On phones each drink carries a small picture instead. Nothing is ordered here;
 // the full menu with a photo per dish is /menu.
 
 const drinks = categories.filter((c) => c.id !== "topping");
 const toppings = categories.find((c) => c.id === "topping")?.items ?? [];
-const price = (prices: readonly number[]) => prices.map(formatPrice).join(" · ");
 
 /** "0 · 30 · 50 · 70 · 100%" → ["0%", "30%", "50%", "70%", "100%"] */
 const levels = (label: string) =>
@@ -34,12 +34,12 @@ const spotlight: SpotlightDish[] = drinks.flatMap((group) =>
     if (!photo) return [];
     const { props } = getImageProps({
       src: photo.src,
-      alt: `Ảnh minh hoạ ${item.name}`,
+      alt: item.name,
       width: photo.width,
       height: photo.height,
       sizes: "(min-width: 80rem) 32rem, 38vw",
     });
-    return [{ name: item.name, group: group.title, price: price(item.prices), image: props }];
+    return [{ name: item.name, group: group.title, description: dishDescription(item.name, item.note), image: props }];
   }),
 );
 
@@ -61,7 +61,7 @@ function Group({ group, index }: { group: MenuCategory; index: number }) {
             <li
               key={item.name}
               data-dish={photo ? item.name : undefined}
-              className="menu-row flex items-center gap-4 border-b border-silver-200 py-4 md:py-5"
+              className="menu-row flex items-start gap-4 border-b border-silver-200 py-4 md:py-5"
             >
               {photo && (
                 <Image
@@ -75,9 +75,12 @@ function Group({ group, index }: { group: MenuCategory; index: number }) {
               )}
               <span className="menu-row-name min-w-0 flex-1">
                 <span className="block text-xl leading-snug font-light md:text-2xl">{item.name}</span>
-                {item.note && <span className="mt-0.5 block text-xs leading-snug text-silver-700">{item.note}</span>}
+                {dishDescription(item.name, item.note) && (
+                  <span className="mt-1 block max-w-[40rem] text-sm leading-relaxed text-silver-700">
+                    {dishDescription(item.name, item.note)}
+                  </span>
+                )}
               </span>
-              <span className="shrink-0 text-lg tabular-nums md:text-xl">{price(item.prices)}</span>
             </li>
           );
         })}
@@ -127,10 +130,7 @@ export function Menu() {
           {toppings.length > 0 && (
             <Strip label="Topping thêm">
               {toppings.map((t) => (
-                <li key={t.name} className="flex items-baseline gap-3">
-                  {t.name}
-                  <span className="text-silver-700 tabular-nums">+{formatPrice(t.prices[0])}</span>
-                </li>
+                <li key={t.name}>{t.name}</li>
               ))}
             </Strip>
           )}
@@ -146,7 +146,6 @@ export function Menu() {
             ))}
           </div>
         </div>
-        <p className="mt-4 text-xs tracking-[0.12em] text-silver-700">Ảnh minh hoạ · Giá tại quầy</p>
       </div>
     </section>
   );

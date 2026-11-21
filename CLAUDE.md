@@ -18,6 +18,7 @@ npm run sync-menu    # the menu (dishes, groups, counter prices) from the shop's
 npm run sync-brand   # brand assets from ../brandkit (Làng Mây, official) and its print kit ../brandkit/print, sizes/offers
                      # from ShanMay (BOONGEE_BRANDKIT, BOONGEE_SHANMAY)
 npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebGPU stage), nothing else
+npm run sync-collateral  # only the offers' printed pieces (../brandkit/collateral → public/uu-dai), nothing else
 ```
 
 ## Boongee specifics
@@ -32,7 +33,7 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   instructions ("scroll to…", "drag to…"): the 3D controls are described to assistive tech only (`cup.hint`). Everything else is
   in `src/data/boongee.ts`. Facts ShanMay marks as
   assumptions or illustrative (prices, address, tea origin, 50% sweetness) carry `TODO(boongee)`. Unknown facts are
-  `null`; components render them as "Đang cập nhật" and drop unset links. A drink's only description is its plain line ("Trà sữa dành dành"), written by sync-menu from its Odoo recipe (`src/lib/menu/describe.ts`, tested); no recipe, no line. Never invent addresses, prices, phone numbers,
+  `null`; components render them as "Đang cập nhật" and drop unset links. **No prices on the site** (owner, 21/11/2026: "bỏ giá bán"; Odoo still holds them, sync-menu still copies them, nothing shows them, and the structured data has no price range). Each dish shows its **short description** (`src/data/descriptions.ts`, owner, 21/11/2026: "thêm mô tả ngắn gọn cho từng món", in the sensory way of the delivery-app examples they sent): one or two sentences, by Odoo dish name, written from the dish's Odoo recipe (only ingredients the recipe has, no tea origin, no health claims; Thanh Nho Tươi and its combos without kumquat, its grapes on top of the cup), `descriptions.test.ts` checking every dish on the till has one, at most two sentences, no price. Read a description again when its recipe changes in Odoo. A dish without one falls back to its plain line ("Trà sữa dành dành"), written by sync-menu from its Odoo recipe (`src/lib/menu/describe.ts`, tested); no recipe, no line. Never invent addresses, prices, phone numbers,
   social URLs or testimonials. The domain is not in it: `src/lib/site-url.ts` (server-only, may throw) reads
   `NEXT_PUBLIC_SITE_URL`, then Vercel's production domain, then localhost in dev; a production build with none fails.
 - **Brand assets come from the sibling brand kit** (`../brandkit`, Boongee · Làng Mây, the only official kit since
@@ -115,31 +116,32 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   `cua-hang`; the nav has "Bộ sưu tập" first. The site says **"Menu", never "Thực đơn"** (owner, 18/11/2026): the nav, the hero's "Xem menu", the
   section's eyebrow, "Xem toàn bộ menu", /menu's title and `<h1>` (all in `src/data/boongee.ts` but /menu's own
   metadata; the anchor stays `#thuc-don`, the route `/menu`). The 7-viewport flavour
-  carousel and the interactive menu-board picker (`menu-picker.tsx`) were removed (the board came back static, 18/11/2026); the full menu with a photo and prices
+  carousel and the interactive menu-board picker (`menu-picker.tsx`) were removed (the board came back static, 18/11/2026); the full menu with a photo and a description
   per dish lives on `/menu`.
 - **The lookbook reel** (`src/components/lookbook-reel.tsx`, `src/data/featured.ts`): the menu board's featured drinks
   (`menu-featured.json`, in its order) as plates of their v5 photos, hung in one row like a gallery wall: tall plates
-  with their words under, shorter ones with their words over, each numbered, with its group, name, plain line and
-  counter price (Odoo only); an intro card ("Ảnh minh hoạ · Giá tại quầy") and a closing link to /menu. As served it
+  with their words under, shorter ones with their words over, each numbered, with its group, name and short
+  description; an intro card ("Bộ sưu tập" · **"Signature"**, owner, 21/11/2026, before "Thức uống đặc trưng") and a
+  closing link to /menu. As served it
   is a native sideways row with snap (scroll padding keeps the margins), which is what reduced motion and no script
   get; the `reel` scene turns it into the sticky sideways walk.
 - **The menu section** (`src/components/menu.tsx`, server, with `menu-spotlight.tsx`, client; 21/11/2026, replacing
   the printed-board layout of 18/11/2026): every drink by till group (numbered, under its monogram mark, a
-  `GroupMark` CSS-mask silhouette) with its plain line and counter price from Odoo; the topping / sugar / ice strips
-  at the foot (ink pill labels); "Xem toàn bộ menu" beside the heading, "Ảnh minh hoạ · Giá tại quầy" under. From
+  `GroupMark`) with its short description; the topping / sugar / ice strips at the foot (ink pill labels, names
+  only); "Xem toàn bộ menu" beside the heading. From
   `lg` the spotlight stands sticky beside the list: the v5 still life of the drink in focus (the one under the mouse,
-  or the row crossing the middle of the screen: one IntersectionObserver line), its group, name and price under it;
+  or the row crossing the middle of the screen: one IntersectionObserver line), its group, name and description under it;
   pictures are put in only once their drink comes into focus (with the next one), as `getImageProps` props built on
   the server, and cross-fade once loaded; the focused row steps in (`data-active`, look.css). Decorative
   (`aria-hidden`): the list says everything. On phones each row carries a small 4:5 picture instead. `hasMenu`
   points to `/menu`.
 - **The /menu page** (`src/app/menu/page.tsx`, `src/components/lookbook-gallery.tsx`; 16/11/2026, it replaced the
   old `/preview` and `/thuc-don`, which held invented copy and hard-coded prices): every dish on the till, combos
-  included, group by group in the till's order, each with its lookbook studio photo (4:5) and its name, price and
-  plain line from Odoo only (`src/data/lookbook.ts` joins them, `src/lib/lookbook/join.ts`, tested). A photo opens in a
+  included, group by group in the till's order, each with its lookbook studio photo (4:5), its name (Odoo) and its
+  short description (`src/data/lookbook.ts` joins them, `src/lib/lookbook/join.ts`, tested). A photo opens in a
   modal `<dialog>` (arrows go through the dishes; Esc or the backdrop closes). A dish with no photo shows "Ảnh đang
-  cập nhật"; a photo whose dish is not on the till is not shown. The photos are AI-made, so the page says "Ảnh minh
-  hoạ". `npm run sync-lookbook` (`scripts/sync-lookbook.mjs`; sync-brand runs it too, right after it wipes
+  cập nhật"; a photo whose dish is not on the till is not shown. The photos are AI-made; since 21/11/2026 the site does
+  not label them "Ảnh minh hoạ" (owner), and their alt is the dish's name. `npm run sync-lookbook` (`scripts/sync-lookbook.mjs`; sync-brand runs it too, right after it wipes
   `public/menu`) writes `public/menu/lookbook/*.<hash>.webp` and `src/data/lookbook.json` from
   `../brandkit/lookbook`: Odoo dish name → photo stem in `PHOTOS`, its v5 photo (`assets-v5/<stem>.png`, the
   "Tĩnh vật vải toan" set, 20/11/2026) when there is one, else a v3 photo (`assets-v3/<stem>.png`) for the stems in `V3`,
@@ -149,7 +151,7 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   `next.config.ts` caches `/menu/:path+` immutable, not the page itself.
   Its header (17/11/2026): the group index as numbered hairline rows beside the Lottie, which plays straight on the
   page's pale blue wash (no frame, no card); the page's name "Menu" is an `sr-only` <h1> (owner: no visible title);
-  no dish count, only "Ảnh minh hoạ · Giá tại quầy, cập nhật <date>". Groups are numbered light headings on a hairline.
+  no dish count, only "Cập nhật <date>". Groups are numbered light headings on a hairline.
   The Lottie (`src/components/menu-hero-lottie.tsx`, lottie-web's light SVG player,
   loaded in the browser only; 6 s since 17/11/2026, "Hương thành hoa"): a teapot pours into a silver paper
   cup while the four monogram marks grow up its face (a sprout at its foot, each mark budding from the one below
@@ -176,9 +178,11 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   real mark redrawn by hand, owner's request: GrabFood's green disc with the take-away box and crossed spoon and fork,
   ShopeeFood's orange bag-box with a fork and a spoon; no words in them, their names are text). The shop's page in each app is `href` (`TODO(boongee)`); while it is `null` the card asks to search
   "Boongee" in the app instead of linking.
-- **The offers are their printed pieces** (`src/components/offers.tsx`, `flip-card.tsx`): the Làng Mây collateral
-  built by `../brandkit/scripts/build_an_pham.py` from the same `collateral.json` (vouchers front and back, the
-  loyalty card front and back, the weekly-offer post, an A4 poster, a story, a cup sticker), copied by sync-brand to
+- **The offers are their printed pieces** (`src/components/offers.tsx`, `flip-card.tsx`): the brand kit's collateral,
+  edition "Tĩnh vật · bạc trên trắng" since 21/11/2026 (silver and ink on white, large light numerals, the v5 still
+  life on the posts; the Làng Mây edition before it is archived), built by `../brandkit/scripts/build_an_pham.py`
+  from the same `collateral.json` (vouchers front and back, the loyalty card front and back, the weekly-offer post,
+  an A4 poster, a story, a cup sticker), copied by sync-brand (or `npm run sync-collateral` alone) to
   `public/uu-dai/*.<hash>.png` (resized; URLs in `src/data/uu-dai.json`). Like the models, every picture sync-brand
   writes to `public/menu` and `public/uu-dai` is named after its content and cached immutable (next.config.ts), so a
   re-render is a new URL and no cache shows the old one. The section shows the weekly post, the loyalty card and both vouchers in one row from `lg`; each card
@@ -232,7 +236,11 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   ink, secondary lines `text-silver-700`; headings light, set left (`<SectionHeading tagline title aside>`); the sheen
   only on rules and dividers, never on text, never animated. No pink and no blue in the UI (pastel blue lives only in
   photographs). The still lifes' canvas greige (#BDAFA3) is the pictures' stand-in and the phones' hero ground, never a
-  UI colour elsewhere. Large type may be drawn as a silver outline (`.text-outline`, the marquee). Light only.
+  UI colour elsewhere. Large type may be drawn as a silver outline (`.text-outline`, the marquee). The four monogram
+  marks are crisp vectors in flat silver (owner, 21/11/2026: "làm nét 4 hoạ tiết hoa monogram"; `<MonogramMark>`,
+  `<GroupMark>`: the cup print's own flat paths in `src/data/monogram.json`, written by `npm run sync-design-system`,
+  filled with the current colour, `text-silver-*`; before, the menu board's painted marks as CSS masks, whose soft
+  painted edge blurred). A glossy "chrome" silver tried the same day was reverted (owner: "không ổn"). Light only.
 - **The hero** (`src/components/hero.tsx`, 21/11/2026, the redesign): the v5 cover with two paper cups
   (`../brandkit/lookbook/v5/bia/`: 16:9 for wide screens, its 3:2 twin cut to 4:5 round the cups for phones;
   written with a blurred stand-in by sync-lookbook as `covers.hero` in `src/data/lookbook.json`), alt in
@@ -242,7 +250,7 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   own greige (#BDAFA3) and the picture follows, its top melting into it. On load (CSS) the slogan's lines rise out
   of their masks, the rest fades up, the picture settles from a slow zoom. With motion allowed the section is
   150 svh (175 from `lg`) and its frame sticks while the `hero` scene draws the picture back into a framed canvas.
-  No "Ảnh minh hoạ" caption (a mood picture, owner, 17/11/2026). The earlier hero (direction B "Sương sớm trên núi",
+  No caption (a mood picture). The earlier hero (direction B "Sương sớm trên núi",
   the tea-hill fog photo, 17/11/2026) is no longer used; its JPEGs stay in `src/assets/images/`. The hero has no 3D
   (the `set` actor was removed 17/11/2026; CC0 models in `../brandkit/3d-nature/`, `toonMaterial({ tint })` stays).
 - **Performance (phones first, 22/10/2026).** The 3D stage starts only after `load` and an idle moment

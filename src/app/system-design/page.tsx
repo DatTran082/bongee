@@ -241,7 +241,7 @@ export default function SystemDesignPage() {
             {
               name: "Chú thích",
               spec: `${webType.caption.size} · ${webType.caption.color}`,
-              sample: <p className="text-xs tracking-[0.12em] text-silver-700">Ảnh minh hoạ</p>,
+              sample: <p className="text-xs tracking-[0.12em] text-silver-700">Giá tại quầy</p>,
             },
           ].map((row) => (
             <div key={row.name} className="grid gap-4 py-8 md:grid-cols-[14rem_1fr] md:items-center">

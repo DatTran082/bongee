@@ -9,7 +9,7 @@ function Run() {
     <ul className="flex shrink-0 items-center">
       {groups.map((group, i) => (
         <li key={group.id} className="flex items-center gap-[4vw] pr-[4vw] whitespace-nowrap">
-          <GroupMark title={group.title} className="size-[clamp(1.75rem,4vw,3.5rem)] bg-silver-500" />
+          <GroupMark title={group.title} className="size-[clamp(1.75rem,4vw,3.5rem)] text-silver-500" />
           <span className={i % 2 ? "text-outline" : undefined}>{group.title}</span>
         </li>
       ))}

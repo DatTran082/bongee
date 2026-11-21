@@ -373,6 +373,13 @@ if (process.argv.includes("--models")) {
   process.exit(0);
 }
 
+// `--collateral`: the offers' printed pieces only (brandkit/collateral), leaving every other synced file as it is
+if (process.argv.includes("--collateral")) {
+  await collateralSet();
+  console.log(`Đã đồng bộ ấn phẩm ưu đãi từ ${KIT}`);
+  process.exit(0);
+}
+
 const hex = tokens();
 copy("identity/03-pattern/monogram_hong.png", "src/assets/images/monogram-hong.png");
 for (const [from, to] of [

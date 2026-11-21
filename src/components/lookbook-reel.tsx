@@ -2,8 +2,8 @@ import { IconArrowUpRight } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { reelIntro, sections } from "@/data/boongee";
+import { dishDescription } from "@/data/descriptions";
 import { type FeaturedDish, featured } from "@/data/featured";
-import { formatPrice } from "@/data/menu";
 
 /** Plates alternate: a tall picture with its words under it, then a shorter one with its words over it. */
 const TALL = "h-[50svh] lg:h-[64svh]";
@@ -20,7 +20,7 @@ function Plate({ dish, index }: { dish: FeaturedDish; index: number }) {
         <Image
           data-reel-image
           src={dish.photo.src}
-          alt={`Ảnh minh hoạ ${dish.name}`}
+          alt={dish.name}
           width={dish.photo.width}
           height={dish.photo.height}
           sizes="(min-width: 64rem) 52svh, 42svh"
@@ -32,8 +32,9 @@ function Plate({ dish, index }: { dish: FeaturedDish; index: number }) {
         <span>
           <span className="block text-[0.7rem] tracking-[0.28em] text-silver-700 uppercase">{dish.group}</span>
           <span className="mt-2 block text-3xl leading-tight font-light md:text-4xl">{dish.name}</span>
-          {dish.note && <span className="mt-2 block text-sm text-silver-700">{dish.note}</span>}
-          <span className="mt-3 block tabular-nums">{dish.prices.map(formatPrice).join(" · ")}</span>
+          <span className="mt-3 block text-sm leading-relaxed text-silver-700">
+            {dishDescription(dish.name, dish.note)}
+          </span>
         </span>
       </figcaption>
     </figure>
@@ -42,7 +43,8 @@ function Plate({ dish, index }: { dish: FeaturedDish; index: number }) {
 
 /**
  * The lookbook (21/11/2026): the menu board's featured drinks as plates of the v5 still lifes, hung in one long row
- * like a gallery wall, each with its number, group, name, plain line and counter price (Odoo). As served it is a
+ * like a gallery wall, each with its number, group, name and short description (src/data/descriptions.ts; no prices
+ * since 21/11/2026, owner). As served it is a
  * row that scrolls sideways (snap): so it reads with reduced motion, without script, or before the script loads. With
  * motion allowed the page's scroll timeline (src/components/scroll-motion.tsx) takes it over: the section grows as
  * tall as the row is long, its frame sticks, and the page's own scroll walks the row past (a silver line fills as it
@@ -69,7 +71,6 @@ export function LookbookReel() {
               >
                 {reelIntro.title}
               </h2>
-              <p className="mt-6 text-xs tracking-[0.12em] text-silver-700">{reelIntro.note}</p>
             </header>
             {featured.map((dish, i) => (
               <Plate key={dish.name} dish={dish} index={i} />

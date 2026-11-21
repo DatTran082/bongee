@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from "react";
 export interface SpotlightDish {
   readonly name: string;
   readonly group: string;
-  readonly price: string;
+  /** its short description (src/data/descriptions.ts), if any */
+  readonly description?: string;
   /** the photo's optimised <img> props (next/image's getImageProps, on the server) */
   readonly image: ReturnType<typeof getImageProps>["props"];
 }
@@ -19,7 +20,8 @@ const WIDE = "(min-width: 64rem)";
  * its group, name and price under it. In focus is the drink under the mouse, or else the one crossing the middle of
  * the screen as the page scrolls (one IntersectionObserver line, no scroll handler); its row is marked
  * (`data-active`, look.css). Pictures are put in the page only once their drink has come into focus (with the next
- * one, so it is ready), and each fades in over the last once it has loaded. Decorative: the list says everything.
+ * one, so it is ready), and each fades in over the last once it has loaded. Under it: the drink's group, name and
+ * short description (no price since 21/11/2026). Decorative: the list says everything.
  */
 export function MenuSpotlight({ dishes }: { dishes: readonly SpotlightDish[] }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -88,12 +90,12 @@ export function MenuSpotlight({ dishes }: { dishes: readonly SpotlightDish[] }) 
             />
           ))}
       </div>
-      <div className="mt-5 flex items-end justify-between gap-6 border-t border-silver-300 pt-4">
-        <p className="min-w-0">
-          <span className="block text-[0.7rem] tracking-[0.28em] text-silver-700 uppercase">{dish.group}</span>
-          <span className="mt-1 block truncate text-3xl leading-tight font-light">{dish.name}</span>
-        </p>
-        <span className="shrink-0 text-xl tabular-nums">{dish.price}</span>
+      <div className="mt-5 border-t border-silver-300 pt-4">
+        <span className="block text-[0.7rem] tracking-[0.28em] text-silver-700 uppercase">{dish.group}</span>
+        <span className="mt-1 block truncate text-3xl leading-tight font-light">{dish.name}</span>
+        {dish.description && (
+          <span className="mt-2 block min-h-[3lh] text-sm leading-relaxed text-silver-700">{dish.description}</span>
+        )}
       </div>
     </div>
   );

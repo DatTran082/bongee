@@ -10,7 +10,6 @@ import { Offers } from "@/components/offers";
 import { ScrollMotion } from "@/components/scroll-motion";
 import { Visit } from "@/components/visit";
 import { brand, socials, visit } from "@/data/boongee";
-import { priceRange, pricesAreIllustrative } from "@/data/menu";
 import { openGraphBase } from "@/lib/metadata";
 import { SITE_URL } from "@/lib/site-url";
 
@@ -21,10 +20,9 @@ export const metadata: Metadata = {
 };
 
 // Structured data, built only from the facts the page shows (src/data/). Unconfirmed facts stay out of it, so
-// search engines never index them: the address until visit.address.confirmed, the prices while menu-data.json marks
-// them illustrative. Social pages appear once they are set; add openingHours / telephone once they are known.
+// search engines never index them: the address until visit.address.confirmed; no price range, since the site shows no
+// prices (owner, 21/11/2026). Social pages appear once they are set; add openingHours / telephone once they are known.
 const sameAs = socials.flatMap((s) => (s.href ? [s.href] : []));
-const vnd = (thousands: number) => `${(thousands * 1000).toLocaleString("vi-VN")} ₫`;
 const structuredData = [
   {
     "@context": "https://schema.org",
@@ -57,7 +55,6 @@ const structuredData = [
         }
       : {}),
     servesCuisine: ["Trà sữa", "Trà trái cây", "Cà phê"],
-    ...(pricesAreIllustrative ? {} : { priceRange: `${vnd(priceRange.min)} – ${vnd(priceRange.max)}` }),
     hasMenu: `${SITE_URL}/menu`,
     ...(sameAs.length ? { sameAs } : {}),
   },

@@ -8,7 +8,7 @@ const [year, month, day] = lookbookSyncedOn.split("-");
 export const metadata: Metadata = {
   title: "Menu",
   description:
-    "Menu Boongee: từng món trà sữa hương hoa, trà trái cây, kem cheese, cà phê và combo, kèm ảnh minh hoạ và giá tại quầy.",
+    "Menu Boongee: từng món trà sữa hương hoa, trà trái cây, kem cheese, cà phê và combo, kèm ảnh và mô tả từng món.",
   alternates: { canonical: "/menu" },
 };
 
@@ -44,7 +44,7 @@ export default function MenuPage() {
               </ol>
             </nav>
             <p className="mt-6 text-xs tracking-[0.12em] text-silver-700">
-              Ảnh minh hoạ · Giá tại quầy, cập nhật {day}/{month}/{year}
+              Cập nhật {day}/{month}/{year}
             </p>
           </div>
         </header>

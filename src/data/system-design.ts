@@ -22,7 +22,7 @@ export const essence = {
   pillars: [
     { word: "Hương", line: "Mùi hoa là thứ khách nhớ trước tiên. Hoa là chữ ký của mọi thiết kế, in bạc." },
     { word: "Thanh", line: "Vị nhẹ, uống dễ. Thiết kế cũng nhẹ: nền trắng, nhiều khoảng thở, ít chi tiết." },
-    { word: "Vị", line: "Đồ uống thật, giá thật, ảnh món ghi rõ là minh hoạ. Màu đậm đến từ chính ly nước." },
+    { word: "Vị", line: "Đồ uống thật, giá thật. Màu đậm đến từ chính ly nước." },
   ],
   personality: [
     ["Thanh nhã, tinh tế", "Sang chảnh, phô trương, dát kim loại"],
@@ -53,7 +53,7 @@ export const principles = [
   },
   {
     title: "Thật trước đẹp",
-    line: "Không bịa địa chỉ, giá, số điện thoại, lời khen. Ảnh món làm bằng AI ghi “Ảnh minh hoạ”, thông tin chưa có ghi “Đang cập nhật”.",
+    line: "Không bịa địa chỉ, giá, số điện thoại, lời khen. Thông tin chưa có ghi “Đang cập nhật”.",
   },
   {
     title: "Ánh kim, không lấp lánh",
@@ -118,7 +118,7 @@ export const photoRules = [
   "Mỗi món một màu nền tông-trên-tông, một đĩa sứ, một bệ thạch cao, một cành ngang phía trên.",
   "Chữ “Boongee” chỉ nằm trên ly, không bao giờ đè lên ảnh.",
   "Tạo mới kèm tờ in mẫu ref-04, không sửa ảnh bằng prompt.",
-  "Nho Thanh Trúc dùng nho Shine Muscat xanh; Nho Cheese màu tím. Ảnh món trên web ghi “Ảnh minh hoạ”; ảnh hero là ảnh không khí, không cần ghi.",
+  "Nho Thanh Trúc dùng nho Shine Muscat xanh; Nho Cheese màu tím. Ảnh món trên web không ghi “Ảnh minh hoạ” (chủ quán, 21/11/2026).",
 ];
 
 export const motion = [
@@ -137,7 +137,7 @@ export const checklist = [
   "Bạc không dùng cho chữ đọc.",
   "Đúng bề mặt, không trộn.",
   "Không lấp lánh, không chữ đè lên ảnh món.",
-  "Không thông tin bịa; ảnh AI ghi “Ảnh minh hoạ”.",
+  "Không thông tin bịa.",
   "Chữ chính ≥ 4,5 : 1.",
   "Văn bản ngắn, không từ thổi phồng.",
   "Đổi quy cách in: cập nhật brandkit/print/README.md.",
@@ -152,6 +152,10 @@ export const changelog = [
       "Tiêu đề mục cỡ trưng bày (tới 7rem), chữ trồi lên khỏi mặt nạ khi cuộn tới; tên nhóm món chạy ngang, xen chữ viền bạc.",
       "Chuyển động cuộn bằng GSAP: hero thu về thành tranh có khung, dãy ảnh món đi ngang, cảnh xoài mở từ một khe, chữ Boongee cuối trang; tắt hết khi máy giảm chuyển động.",
       "Màu vải toan (#BDAFA3) chỉ làm nền chờ ảnh và nền hero trên điện thoại, không thành màu giao diện.",
+      "Bộ ấn phẩm làm lại theo bản “Tĩnh vật · bạc trên trắng”: voucher, thẻ tích điểm, tem dán ly in 1 màu bạc 877 C + đen K100 đúng khổ mm; bài đăng, story, poster đặt ảnh tĩnh vật v5 cạnh chữ; thêm ảnh đại diện và ảnh bìa Facebook.",
+      "Bốn dấu hoa monogram trên web vẽ lại bằng nét vector sắc, đúng nét in trên ly, giữ màu bạc phẳng.",
+      "Bộ sưu tập trên trang chủ đổi tiêu đề thành “Signature” (thay “Thức uống đặc trưng”); web bỏ chú thích “Ảnh minh hoạ”.",
+      "Web bỏ giá bán; mỗi món có mô tả ngắn một, hai câu, viết từ công thức thật trên Odoo (chỉ nguyên liệu có trong công thức, không nói nguồn gốc trà, không nói công dụng).",
     ],
   },
   {

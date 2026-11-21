@@ -4,7 +4,7 @@ import { covers } from "@/data/lookbook";
 /**
  * A pause between the menu and the offers (21/11/2026): the v5 cover of the paper cup beside Xoài Hạ Tuyết, as large
  * as the screen (on phones a 4:5 band, so the picture is never stretched past its pixels). A mood picture, like the
- * hero's: no words and no "Ảnh minh hoạ". With motion allowed its frame sticks and the page's scroll timeline
+ * hero's: no words. With motion allowed its frame sticks and the page's scroll timeline
  * (src/components/scroll-motion.tsx) opens it from a narrow slit to the full frame, the picture inside held at its
  * own size (the window grows, not the picture) and settling from a slight zoom. Otherwise it simply stands there.
  */

@@ -31,3 +31,20 @@ export const lookbookAnimation: string | null = lookbook.animation;
 
 /** The day the menu was last copied from Odoo (YYYY-MM-DD). */
 export const lookbookSyncedOn: string = odoo.syncedOn;
+
+/** A cover's picture (public/menu/lookbook/cover-*.webp): its URL, size and a blurred 16 px stand-in (data URL). */
+export interface CoverPicture {
+  readonly src: string;
+  readonly width: number;
+  readonly height: number;
+  readonly blur: string;
+}
+
+/** A v5 cover in its wide cut (from lg) and its 4:5 cut round the cups (phones). */
+export interface Cover {
+  readonly wide: CoverPicture;
+  readonly tall: CoverPicture;
+}
+
+/** The home page's covers (sync-lookbook, from brandkit/lookbook/v5/bia/): `hero` and `interlude`; a missing one is not shown. */
+export const covers: Partial<Record<"hero" | "interlude", Cover>> = lookbook.covers;

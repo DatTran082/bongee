@@ -22,6 +22,7 @@ export const brand = {
 
 /** Section anchors, shared by the page and the navigation. */
 export const sections = {
+  lookbook: "bo-suu-tap",
   cups: "ly",
   menu: "thuc-don",
   offers: "uu-dai",
@@ -29,6 +30,7 @@ export const sections = {
 } as const;
 
 export const nav = [
+  { label: "Bộ sưu tập", id: sections.lookbook },
   { label: "Menu", id: sections.menu }, // "Menu", not "Thực đơn" (owner, 18/11/2026)
   { label: "Ưu đãi", id: sections.offers },
   { label: "Cửa hàng", id: sections.visit },
@@ -41,9 +43,20 @@ export const actions = {
 };
 
 export const hero = {
-  /** the hero's photograph (src/assets/images/hero-suong-som-*.jpg, brandkit/lookbook/hero-web/) */
+  /** the hero's still life (brandkit/lookbook/v5/bia/, the v5 cover with two paper cups; covers in lookbook.json) */
   imageAlt:
-    "Hai ly Boongee trên đế sứ giữa đồi chè trong sương sớm: ly giấy kem bông rắc cánh hồng khô in hoa monogram màu bạc, ly nhựa Nho Cheese tím phủ cheese tràn miệng ly, in cột hoa trắng.",
+    "Hai ly giấy Boongee in hoa monogram màu bạc trên khúc gỗ và đế sứ trước nền vải toan: một ly phủ kem bông rắc cánh hồng khô, một ly đậy nắp bật nút; một cành hoa trắng, gói trà buộc dây, muỗng trà bằng thiếc.",
+};
+
+/**
+ * The lookbook reel (src/components/lookbook-reel.tsx): the menu board's featured drinks, each as a plate of the v5
+ * still lifes with its name, group, plain line and counter price from Odoo. The photos are AI-made: "Ảnh minh hoạ".
+ */
+export const reelIntro = {
+  tagline: "Bộ sưu tập",
+  title: "Thức uống đặc trưng",
+  note: "Ảnh minh hoạ · Giá tại quầy",
+  more: "Xem toàn bộ menu",
 };
 
 /** The 3D stage's actors, floating through the page (src/components/cup-stage.tsx). */
@@ -74,7 +87,7 @@ export const cup = {
 
 export const menuIntro = {
   tagline: "Menu",
-  title: "Thức uống đặc trưng",
+  title: "Chọn một ly",
   more: "Xem toàn bộ menu",
 };
 

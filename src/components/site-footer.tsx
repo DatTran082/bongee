@@ -3,7 +3,10 @@ import { Logo } from "@/components/logo";
 import { SocialIcon } from "@/components/social-icon";
 import { brand, nav, socials } from "@/data/boongee";
 
-/** Footer on pale silver: the logo and slogan, the section links, the social pages that are set. */
+/**
+ * Footer on pale silver: the logo and slogan, the section links, the social pages that are set; at its foot the name
+ * "Boongee" set very large in pale silver (21/11/2026), decorative.
+ */
 export function SiteFooter() {
   const links = socials.flatMap((s) => (s.href ? [{ ...s, href: s.href }] : []));
 
@@ -53,6 +56,17 @@ export function SiteFooter() {
       <p className="border-t border-silver-200 px-4 py-6 text-center text-xs tracking-[0.12em] text-silver-700">
         © {brand.name} · {brand.slogan}
       </p>
+      {/* the name set as large as the page is wide, its foot cut by the page's edge; on the home page its letters
+          rise in one by one as the footer comes up (src/components/scroll-motion.tsx) */}
+      <div aria-hidden className="overflow-hidden">
+        <p className="-mb-[0.2em] text-center text-[25vw] leading-[0.9] font-light tracking-[-0.05em] text-silver-200 select-none">
+          {Array.from(brand.name, (letter, i) => (
+            <span key={i} data-wordmark-letter className="inline-block">
+              {letter}
+            </span>
+          ))}
+        </p>
+      </div>
     </footer>
   );
 }

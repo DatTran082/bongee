@@ -116,3 +116,106 @@
     transition: none;
   }
 }
+
+/*
+ * The redesign's motion that needs no script (21/11/2026; home page): the hero's load (its slogan's lines rise out of
+ * their masks, the rest fades up, the picture settles from a slow zoom) and the marquee of drink groups. Transform and
+ * opacity only, on elements no scroll timeline touches (GSAP's inline transforms would lose to a running animation).
+ * With reduced motion none of it runs.
+ */
+@keyframes hero-line {
+  from {
+    transform: translateY(108%);
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+
+@keyframes hero-settle {
+  from {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-line {
+    animation: hero-line 1200ms cubic-bezier(0.16, 0.8, 0.2, 1) both;
+  }
+
+  .hero-rise {
+    animation: hero-rise 900ms 620ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .hero-settle {
+    animation: hero-settle 2200ms cubic-bezier(0.2, 0.6, 0.1, 1) both;
+  }
+
+  .marquee {
+    animation: marquee 56s linear infinite;
+  }
+}
+
+/* Large type drawn as a silver outline (the marquee's every other name). */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--color-silver-500);
+}
+
+/* The menu's spotlight pictures cross-fade, each settling from a slight zoom; the row in focus steps in. */
+.spotlight-image {
+  opacity: 0;
+  transform: scale(1.04);
+  transition:
+    opacity 600ms ease,
+    transform 1400ms cubic-bezier(0.2, 0.6, 0.1, 1);
+}
+
+.spotlight-image[data-on="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.menu-row-name {
+  transition: transform 400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.menu-row[data-active] .menu-row-name {
+  transform: translateX(0.75rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-image,
+  .menu-row-name {
+    transition: none;
+  }
+
+  .menu-row[data-active] .menu-row-name {
+    transform: none;
+  }
+}
+
+/*
+ * The lookbook reel once the scroll timeline drives it (src/components/scroll-motion.tsx sets data-driven and the
+ * section's height): its frame sticks under the header and the row no longer scrolls by itself.
+ */
+[data-reel][data-driven] [data-reel-frame] {
+  position: sticky;
+  height: 100svh;
+  padding-block: 4rem 0;
+}
+
+[data-reel][data-driven] [data-reel-viewport] {
+  overflow: hidden;
+  scroll-snap-type: none;
+}

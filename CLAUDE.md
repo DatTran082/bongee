@@ -72,43 +72,67 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   tests (`npm test`, part of `npm run check`).
 - **The two 3D cups** (`src/components/cup-showcase.tsx`, id `ly`, 21/11/2026, owner: "đưa ly nhựa và ly giấy vào
   landing", then the same day "bỏ hết mô tả ly …, ly 3D chỉ mang tính chất visual và gây ấn tượng thị giác"): a
-  band between the hero and the menu holding only the 3D paper cup and the frosted PP cup side by side, large
+  band between the lookbook reel and the menu holding only the 3D paper cup and the frosted PP cup side by side, large
   (slots 62 svh, 72 from `lg`); no heading, names, sizes or lines about the cups, `aria-hidden` (each cup's hit
   element names it). With motion allowed it is 240 svh tall (280 from `lg`) and its frame sticks by CSS
   (`motion-safe:sticky`, no GSAP pin, so no pin-spacer reflow); with reduced motion it is one screen of the two cups
   standing still; without script (noscript style) or without the 3D (`.cup-failed`) it is not shown.
-- **Scroll motion** (`src/components/scroll-motion.tsx`, mounted last by the home page; GSAP 3.15.1 pinned, its
-  free standard licence, with ScrollTrigger): loaded by a dynamic import after hydration, run inside
-  `gsap.matchMedia("(prefers-reduced-motion: no-preference)")` so a change of the setting reverts it all. (1)
-  Reveals: `data-reveal` blocks and the children of `data-reveal-group` (every `SectionHeading`, the menu's featured
-  cups, columns and strips, the offers' row, the visit card) rise 28 px and fade in once, batched and staggered, and
-  only those still below the viewport when it starts (nothing on screen blinks out); props cleared after. (2) The two
-  cups, scrubbed (`scrub: true`; the actors' own lag is the smoothing): while the band comes up they rise into their
-  slots from below and from either side, leaning back (`dx`, `dy`, `tilt` only); while its frame sticks, the paper
-  cup comes forward and turns once round, then the PP cup turns the other way with its lid lifted off and set back,
-  then both stand side by side and fold their straps open. The two timelines never tween the same property (a refresh
-  renders each and they would fight). No smooth-scroll hijack, no pinning: only transform, opacity and numbers the
-  stage reads. Measured on an emulated phone (4× CPU, real GPU, production build, 21/11/2026): the whole page scrolls
-  at 59.8 fps, p99 16.8 ms, one frame over 50 ms.
-- **The home page is short and quiet (owner, 17/11/2026: "tinh tế, tối giản"; white and metallic silver since 18/11/2026):**
-  hero (slogan + two buttons, no intro line; a photograph of the two cups in tea-hill fog), the two 3D cups (a
-  wordless band, 21/11/2026), Menu · "Thức uống đặc trưng"
-  (the printed menu board), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper
-  cup). The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
-  counts (no "23 món, 32K – 65K", no per-group counts or starting prices). Section ids: `ly`, `thuc-don`, `uu-dai`,
-  `cua-hang`. The site says **"Menu", never "Thực đơn"** (owner, 18/11/2026): the nav, the hero's "Xem menu", the
+- **Scroll motion** (`src/components/scroll-motion.tsx`, mounted last by the home page; one module per scene in
+  `src/lib/scroll/`; GSAP 3.15.1 pinned, its free standard licence, with ScrollTrigger): loaded by a dynamic import
+  after hydration, run inside `gsap.matchMedia("(prefers-reduced-motion: no-preference)")` so a change of the setting
+  reverts it all (a scene returns what GSAP's context cannot undo: heights, attributes, live poses). Scenes, top down
+  (`SCENES`; the reel before the ones below it, since it sets its section's height; one `ScrollTrigger.refresh()`
+  after all): `hero` (the words and, on phones, their canvas ground fade and rise away; the picture is drawn back
+  to 72 % (86 % on phones) and moved to the middle, a framed canvas on the white page, the still life zooming
+  gently out); `reel` (sets `data-driven` and the section's height to the row's length beyond the screen on every
+  `refreshInit`, the frame sticks by CSS, the row moves by transform with `scrub: 0.6`, a silver line fills, each
+  picture settles from a 1.18 zoom through `containerAnimation`; its clipped pictures are switched to eager loading
+  as the reel nears); `showcase` (the two 3D cups: while the band comes up they rise from below and either side,
+  leaning back (`dx`, `dy`, `tilt` only); while its frame sticks the paper cup comes forward and turns once round,
+  then the PP cup the other way with its lid lifted off and set back, then both fold their straps open; the two
+  timelines never tween the same property, a refresh renders each and they would fight); `interlude` (the window
+  opens from a slit along its top edge, 64 % × 14 %, to the whole frame, the picture inside counter-scaled so it
+  keeps its size while it settles from a 1.12 zoom); `wordmark` (the footer name's letters rise one by one);
+  `reveal` (`data-reveal` blocks and `data-reveal-group` children rise 28 px and fade in, `data-reveal-line`
+  headings rise out of their masks, batched, once, only those still below the viewport; props cleared after). No
+  smooth-scroll hijack and no GSAP pinning: frames stick by CSS, and every tween is a transform, an opacity or a
+  number the 3D stage reads. The hero's load motion and the marquee are CSS (`look.css`), on elements no scene
+  touches (a running CSS animation would override GSAP's inline transform). Measured on an emulated phone (4× CPU,
+  real GPU, production build, 21/11/2026, after the redesign): the whole page scrolls at 60 fps, p99 16.8 ms, no
+  frame over 50 ms; CLS 0; at load 1.1 MB including the 3D models and the six reel pictures.
+- **The home page: a still-life gallery (owner, 21/11/2026: "design và refactor lại landing mới và sử dụng bộ lookbook
+  mới, tự do sáng tạo, yêu cầu gây ấn tượng thị giác mạnh"; before, 17/11/2026, "tinh tế, tối giản"; white and
+  metallic silver since 18/11/2026).** Built round the v5 lookbook ("Tĩnh vật vải toan"): very large Fraunces type,
+  the still lifes as big framed canvases on the white page, scroll-driven scenes. Top down: the hero (the v5 cover
+  of two paper cups, the slogan set huge), a marquee of the drink groups (`marquee.tsx`), the lookbook reel
+  (`lookbook-reel.tsx`, id `bo-suu-tap`, "Bộ sưu tập · Thức uống đặc trưng"), the two 3D cups (a wordless band),
+  Menu · "Chọn một ly" (with its spotlight), the interlude (`interlude.tsx`, the v5 cover of the paper cup and
+  Xoài Hạ Tuyết, a mood picture), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper cup), and the
+  footer's name set as wide as the page. Section headings (`SectionHeading`) are display size (up to 7rem) and rise
+  out of a mask that leaves room for Vietnamese marks. The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
+  counts (no "23 món, 32K – 65K", no per-group counts or starting prices; numbers in the reel and the menu only
+  order the plates and groups). Section ids: `bo-suu-tap`, `ly`, `thuc-don`, `uu-dai`,
+  `cua-hang`; the nav has "Bộ sưu tập" first. The site says **"Menu", never "Thực đơn"** (owner, 18/11/2026): the nav, the hero's "Xem menu", the
   section's eyebrow, "Xem toàn bộ menu", /menu's title and `<h1>` (all in `src/data/boongee.ts` but /menu's own
   metadata; the anchor stays `#thuc-don`, the route `/menu`). The 7-viewport flavour
   carousel and the interactive menu-board picker (`menu-picker.tsx`) were removed (the board came back static, 18/11/2026); the full menu with a photo and prices
   per dish lives on `/menu`.
-- **The menu section** (`src/components/menu.tsx`, server; 18/11/2026, owner: the printed board back on the home
-  page, "giống file menu pdf"): the layout of `../brandkit/menu-board/thuc-don.pdf` in white and silver. The featured
-  cups (`src/data/menu-featured.json`, sync-brand; a cup whose drink left the till is dropped) in a column on a silver
-  hairline, each linking to `/menu#<group>`; the drink groups in three columns (two, two, then coffee over the
-  lookbook poster), each under its monogram mark drawn as a silver silhouette (CSS mask of the painted SVG), every
-  drink with its plain line and counter price from Odoo; the topping / sugar / ice strips at the foot (ink pill
-  labels). Static, nothing to pick. No 3D slot here since then: the `pp` actor has no slot on the home page (hidden).
-  "Xem toàn bộ menu" beside the heading, "Ảnh minh hoạ · Giá tại quầy" under. `hasMenu` points to `/menu`.
+- **The lookbook reel** (`src/components/lookbook-reel.tsx`, `src/data/featured.ts`): the menu board's featured drinks
+  (`menu-featured.json`, in its order) as plates of their v5 photos, hung in one row like a gallery wall: tall plates
+  with their words under, shorter ones with their words over, each numbered, with its group, name, plain line and
+  counter price (Odoo only); an intro card ("Ảnh minh hoạ · Giá tại quầy") and a closing link to /menu. As served it
+  is a native sideways row with snap (scroll padding keeps the margins), which is what reduced motion and no script
+  get; the `reel` scene turns it into the sticky sideways walk.
+- **The menu section** (`src/components/menu.tsx`, server, with `menu-spotlight.tsx`, client; 21/11/2026, replacing
+  the printed-board layout of 18/11/2026): every drink by till group (numbered, under its monogram mark, a
+  `GroupMark` CSS-mask silhouette) with its plain line and counter price from Odoo; the topping / sugar / ice strips
+  at the foot (ink pill labels); "Xem toàn bộ menu" beside the heading, "Ảnh minh hoạ · Giá tại quầy" under. From
+  `lg` the spotlight stands sticky beside the list: the v5 still life of the drink in focus (the one under the mouse,
+  or the row crossing the middle of the screen: one IntersectionObserver line), its group, name and price under it;
+  pictures are put in only once their drink comes into focus (with the next one), as `getImageProps` props built on
+  the server, and cross-fade once loaded; the focused row steps in (`data-active`, look.css). Decorative
+  (`aria-hidden`): the list says everything. On phones each row carries a small 4:5 picture instead. `hasMenu`
+  points to `/menu`.
 - **The /menu page** (`src/app/menu/page.tsx`, `src/components/lookbook-gallery.tsx`; 16/11/2026, it replaced the
   old `/preview` and `/thuc-don`, which held invented copy and hard-coded prices): every dish on the till, combos
   included, group by group in the till's order, each with its lookbook studio photo (4:5) and its name, price and
@@ -119,7 +143,9 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   `public/menu`) writes `public/menu/lookbook/*.<hash>.webp` and `src/data/lookbook.json` from
   `../brandkit/lookbook`: Odoo dish name → photo stem in `PHOTOS`, its v5 photo (`assets-v5/<stem>.png`, the
   "Tĩnh vật vải toan" set, 20/11/2026) when there is one, else a v3 photo (`assets-v3/<stem>.png`) for the stems in `V3`,
-  else the v2 one (`assets/<stem>.jpg`). The home page's menu links to it; it is in the sitemap.
+  else the v2 one (`assets/<stem>.jpg`); and the home page's covers (`COVERS`: `hero`, `interlude` from
+  `v5/bia/`, each a wide WebP and a 4:5 cut round the cups at `centre`, with a 16 px blurred data URL; `covers` in
+  lookbook.json, typed in `src/data/lookbook.ts`). The home page's menu links to it; it is in the sitemap.
   `next.config.ts` caches `/menu/:path+` immutable, not the page itself.
   Its header (17/11/2026): the group index as numbered hairline rows beside the Lottie, which plays straight on the
   page's pale blue wash (no frame, no card); the page's name "Menu" is an `sr-only` <h1> (owner: no visible title);
@@ -205,21 +231,20 @@ npm run sync-models  # only its 3D cups (both looks: toon, and -pbr for the WebG
   hover `silver-800`; or ink on a silver hairline, hover the metallic silver), `.flip`. The page stands on white; text is
   ink, secondary lines `text-silver-700`; headings light, set left (`<SectionHeading tagline title aside>`); the sheen
   only on rules and dividers, never on text, never animated. No pink and no blue in the UI (pastel blue lives only in
-  the hero's photograph). Light only.
-- **The hero** (`src/components/hero.tsx`, 17/11/2026, owner's direction B "Sương sớm trên núi"): a photograph,
-  AI-made from `../brandkit/lookbook/prompts-hero-web.md` (refs `ref-01…05`; files in
-  `../brandkit/lookbook/hero-web/`, copied as JPEG to `src/assets/images/hero-suong-som-{16x9,4x5}.jpg`): the two
-  cups in tea-hill fog, prints checked against ref-04; since 17/11/2026 evening the GPT Image version (owner's
-  prompt `../brandkit/lookbook/hero-web/ref-gptimage/PROMPT.md`): porcelain pebble stands, the PP cup a purple Nho
-  Cheese with its cheese cap spilling over the rim; re-rendered at 2K with agy (2560 × 1440,
-  `hero-web/b4-hero-2k_16x9.png`), the 4:5 (1152 × 1440) is a crop of it. From `lg` the 16:9 picture fills the
-  section behind the slogan (on its empty left); below `lg` the slogan comes first on the picture's own sky colour
-  and the 4:5 picture follows (over its top the text would touch the cups). Each loads only where it shows, at high
-  priority; no preload. No "Ảnh minh hoạ" caption on it (owner, 17/11/2026: it is a mood picture, not a
-  product photo; the menu's photos keep theirs). The hero has no 3D since then: the stage's `set` actor
-  (cups on boulder and logs) and its shadows were removed; before the photo, a 2.5D mountain world and a cel-shaded
-  floating garden were tried and removed the same day (CC0 models kept in `../brandkit/3d-nature/`;
-  `toonMaterial({ tint })` stays for such assets).
+  photographs). The still lifes' canvas greige (#BDAFA3) is the pictures' stand-in and the phones' hero ground, never a
+  UI colour elsewhere. Large type may be drawn as a silver outline (`.text-outline`, the marquee). Light only.
+- **The hero** (`src/components/hero.tsx`, 21/11/2026, the redesign): the v5 cover with two paper cups
+  (`../brandkit/lookbook/v5/bia/`: 16:9 for wide screens, its 3:2 twin cut to 4:5 round the cups for phones;
+  written with a blurred stand-in by sync-lookbook as `covers.hero` in `src/data/lookbook.json`), alt in
+  `hero.imageAlt`. One `<picture>` (art direction with `getImageProps`): only the cut that shows is fetched, eager, at
+  high priority. From `lg` the picture fills the screen and the slogan ("Trà hương / thanh vị", up to 9vw: clear of
+  the cups down to 1024 px) stands on the canvas left of the cups; below, the slogan comes first on the canvas's
+  own greige (#BDAFA3) and the picture follows, its top melting into it. On load (CSS) the slogan's lines rise out
+  of their masks, the rest fades up, the picture settles from a slow zoom. With motion allowed the section is
+  150 svh (175 from `lg`) and its frame sticks while the `hero` scene draws the picture back into a framed canvas.
+  No "Ảnh minh hoạ" caption (a mood picture, owner, 17/11/2026). The earlier hero (direction B "Sương sớm trên núi",
+  the tea-hill fog photo, 17/11/2026) is no longer used; its JPEGs stay in `src/assets/images/`. The hero has no 3D
+  (the `set` actor was removed 17/11/2026; CC0 models in `../brandkit/3d-nature/`, `toonMaterial({ tint })` stays).
 - **Performance (phones first, 22/10/2026).** The 3D stage starts only after `load` and an idle moment
   (`whenSettled` in cup-stage.tsx, ≤ 1.5 s), so three.js and the models never compete with first paint; WebGL 2 is
   checked by API, not by a throwaway context. Each device gets a quality (`quality.ts`, tested): phones and weak

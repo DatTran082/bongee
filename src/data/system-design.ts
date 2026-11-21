@@ -146,6 +146,15 @@ export const checklist = [
 /** What changed in the system, newest first. Add a line with every change of rule. */
 export const changelog = [
   {
+    date: "21/11/2026",
+    lines: [
+      "Trang chủ làm lại quanh bộ lookbook v5 “Tĩnh vật vải toan”: ảnh bìa hai ly giấy làm hero, chữ Fraunces cỡ rất lớn, ảnh món như tranh treo trên tường trắng.",
+      "Tiêu đề mục cỡ trưng bày (tới 7rem), chữ trồi lên khỏi mặt nạ khi cuộn tới; tên nhóm món chạy ngang, xen chữ viền bạc.",
+      "Chuyển động cuộn bằng GSAP: hero thu về thành tranh có khung, dãy ảnh món đi ngang, cảnh xoài mở từ một khe, chữ Boongee cuối trang; tắt hết khi máy giảm chuyển động.",
+      "Màu vải toan (#BDAFA3) chỉ làm nền chờ ảnh và nền hero trên điện thoại, không thành màu giao diện.",
+    ],
+  },
+  {
     date: "18/11/2026",
     lines: [
       "Design DNA và Design System bản 2: tông chủ đạo là trắng và bạc ánh kim (70 · 20 · 8 · 2).",

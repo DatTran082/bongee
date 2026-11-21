@@ -168,6 +168,11 @@ export class Actor {
     this.table.reset();
   }
 
+  /** Whether the actor has a strap to flip (the open PP cup has none). */
+  get hasStrap(): boolean {
+    return !!this.spec.strap;
+  }
+
   /** Flips the strap; returns whether it is now open (false, unchanged, for an actor without one). */
   toggleStrap(instant: boolean): boolean {
     if (!this.spec.strap) return false;

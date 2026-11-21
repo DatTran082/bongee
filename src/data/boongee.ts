@@ -65,14 +65,9 @@ export const cup = {
     pp: {
       short: "Ly nhựa",
       label:
-        "Ly nhựa PP nhám Boongee 700 ml, mô hình 3D kiểu hoạt hình: in cột bốn hoa monogram và chữ Boongee màu trắng, bên trong là trà nho xanh, đậy nắp bật nút rời nhựa nhám; nho xanh và viên đá quanh ly.",
+        "Ly nhựa PP nhám Boongee 700 ml, mô hình 3D kiểu hoạt hình: in cột bốn hoa monogram và chữ Boongee màu trắng, mở nắp, bên trong là trà nho xanh; nho xanh và viên đá quanh ly.",
     },
     paper: {
-      short: "Ly giấy",
-      label:
-        "Ly giấy Boongee 16 oz, mô hình 3D kiểu hoạt hình: ly giấy hai lớp in bốn hoa monogram và chữ Boongee màu bạc, đậy nắp bật nút rời màu trắng.",
-    },
-    visit: {
       short: "Ly giấy",
       label:
         "Ly giấy Boongee 16 oz, mô hình 3D kiểu hoạt hình: ly giấy hai lớp in bốn hoa monogram và chữ Boongee màu bạc, đậy nắp bật nút rời màu trắng.",

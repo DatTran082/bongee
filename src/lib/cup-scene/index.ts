@@ -17,7 +17,6 @@ import { ACTORS, type ActorName } from "./actors";
 import { disposeScene } from "./dispose";
 import { DISTANCE, FOV } from "./fit";
 import { MODELS, NODES } from "./model";
-import { livePosesVersion } from "./live-pose";
 import { needsRedraw } from "./motion";
 import { qualityFor } from "./quality";
 import { seeded } from "./random";
@@ -28,9 +27,8 @@ import { Lean } from "./steppers";
 import type { CupTarget } from "./track";
 
 // The 3D stage: a canvas behind the page with its actors on it, each in its section's slot as the page scrolls
-// (track.ts, actor.ts), posed by the page's scroll timeline where it has one (live-pose.ts): the frosted PP cup of
-// grape tea with grapes and ice in it and floating round it (splash.ts) and the lidded paper cup, side by side in
-// the cups section; a second paper cup in the visit section. Everything is drawn as a smooth stylized game asset (toon/: the Làng Mây edition's toon
+// (track.ts, actor.ts): the lidded paper cup alone in the cups band, and the frosted PP cup of grape tea, open (its lid
+// taken off the model), with grapes and ice in it and floating round it (splash.ts), in the visit section. Everything is drawn as a smooth stylized game asset (toon/: the Làng Mây edition's toon
 // rules): soft cel bands, sticker outlines, flat white highlights. No flowers drift behind them (the owner took them
 // out, 22/10/2026), and no sparkles twinkle round them (the owner, 27/10/2026). The canvas is transparent, so the page's painted scenery (sky, clouds)
 // stays behind the actors. A drag turns an actor, a tap on a lid flips its strap,
@@ -47,8 +45,6 @@ const SPLASH_SEED = 19;
 const CLEAR = new Color(tokens["bg"]); // the page's cream ground
 /** Idle motion and flight of the cups: they float, and a drag turns them. */
 const CUP_MOTION = { bob: 0.016, sway: 0.08, roll: 0.02, hz: 0.24, spin: 1.1, turnable: true };
-/** The PP cup's lid rises this far (metres) in a slot that asks for it. */
-const PP_LID_LIFT = 0.055;
 /** The key light's direction: from the upper left, toward the viewer. */
 const KEY = new Vector3(-0.9, 1.3, 1.1);
 /** Light levels (no tone mapping): the key's lit band shows a surface at about its own colour, the shade ~ 70 %. */
@@ -196,32 +192,25 @@ export async function createCupScene(
     // the actors, toon from the start (the clones below share the toon geometry and materials)
     toonCup(pp, "grapeTea");
     toonCup(paper, "milkTea");
-    const single = paper.clone(true);
-    const visitCup = paper.clone(true);
+    // the PP cup stands open: its lid (and the strap on it) leaves the model before the actor measures its box, so the
+    // open cup is sized to its slot (owner, 21/11/2026: "mô hình ly nhựa không đóng nắp")
+    required(pp, NODES.lid, MODELS.pp.url).removeFromParent();
     const specs: Record<ActorName, ActorSpec> = {
-      pp: {
-        subject: pp,
-        lid: required(pp, NODES.lid, MODELS.pp.url),
-        strap: required(pp, NODES.strap, MODELS.pp.url),
-        lidLift: PP_LID_LIFT,
-        ...CUP_MOTION,
-        phase: 1.7,
-      },
       paper: {
-        subject: single,
-        lid: required(single, NODES.lid, MODELS.paper.url),
-        strap: required(single, NODES.strap, MODELS.paper.url),
+        subject: paper,
+        lid: required(paper, NODES.lid, MODELS.paper.url),
+        strap: required(paper, NODES.strap, MODELS.paper.url),
         lidLift: 0,
         ...CUP_MOTION,
         phase: 3.9,
       },
-      visit: {
-        subject: visitCup,
-        lid: required(visitCup, NODES.lid, MODELS.paper.url),
-        strap: required(visitCup, NODES.strap, MODELS.paper.url),
+      pp: {
+        subject: pp,
+        lid: null,
+        strap: null,
         lidLift: 0,
         ...CUP_MOTION,
-        phase: 5.3,
+        phase: 1.7,
       },
     };
     const hire = (name: ActorName) => {
@@ -237,9 +226,8 @@ export async function createCupScene(
       return actor;
     };
     const cast: Record<ActorName, Actor> = {
-      pp: hire("pp"),
       paper: hire("paper"),
-      visit: hire("visit"),
+      pp: hire("pp"),
     };
 
     /**
@@ -285,7 +273,6 @@ export async function createCupScene(
     let dirty = true; // an input, a resize or a layout change: measure and draw
     let targets: Record<string, CupTarget | null> = {};
     let lastScroll = NaN;
-    let lastPoses = -1; // the live poses' version (live-pose.ts) last measured
 
     /** While only the idle float moves, a frame at most this often (ms): 30 fps on a light device, a little slack. */
     const idleFrameMs = 1000 / quality.idleFps - 4;
@@ -302,6 +289,7 @@ export async function createCupScene(
 
     function toggleStrap(name: ActorName): void {
       const actor = cast[name];
+      if (!actor.hasStrap) return; // the open PP cup has no lid to flip
       options.onStrapChange(name, actor.toggleStrap(options.reducedMotion()));
       invalidate();
     }
@@ -314,10 +302,8 @@ export async function createCupScene(
       const reduced = options.reducedMotion();
       const scroll = options.scrollY();
       const scrolled = scroll !== lastScroll;
-      const poses = livePosesVersion();
-      const remeasure = dirty || scrolled || poses !== lastPoses; // a scrubbed timeline may settle after the scroll
+      const remeasure = dirty || scrolled;
       lastScroll = scroll;
-      lastPoses = poses;
       const next = remeasure ? options.measure() : targets;
       const targetChanged = !sameTargets(next, targets);
       targets = next;

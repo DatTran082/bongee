@@ -45,14 +45,15 @@ npm run sync-collateral  # only the offers' printed pieces (../brandkit/collater
   `public/models/`, `src/app/{icon.svg,favicon.ico,apple-icon.png,opengraph-image.*,twitter-image.*}`): change the
   brand kit, rebuild it, then run `npm run sync-brand`.
 - **The 3D stage** (`src/components/cup-stage.tsx`, `src/lib/cup-scene/`): a fixed three.js canvas at z-index −10
-  inside `main` (mounted by `page.tsx`, after the hero), transparent; the actors pass behind the white cards. Three
+  inside `main` (mounted by `page.tsx`, after the hero), transparent; the actors pass behind the white cards. Two
   actors (`ACTORS`, one `Actor` each, `actor.ts`; the hero's `set` actor, the cover photo rebuilt in 3D, was removed
   with its shadows when the hero became a photograph, 17/11/2026; no parallax anywhere on the page since 22/10/2026,
-  the owner: it made phones lag): `pp`, the 700 ml PP cup,
-  frosted milk-white plastic by alpha (21/11/2026; sky-tinted clear before), holding grape tea poured in three greens with waving borders, round grapes, ice and bubbles
-  standing in it and drifting round it (`splash.ts`); `paper`, the lidded paper cup, both in the cups section; `visit`,
-  a second paper cup in the visit section (one actor per slot: a cup flying between the two sections would drift for
-  screens behind the menu and the offers) (the flavour carousel's
+  the owner: it made phones lag): `paper`, the lidded paper cup, alone in the cups band; `pp`, the 700 ml PP cup,
+  frosted milk-white plastic by alpha (21/11/2026; sky-tinted clear before), **open** (owner, 21/11/2026: "mô hình ly
+  nhựa không đóng nắp": its `lid` node, strap included, is taken off the model before the actor measures its box, so
+  it has no strap to flip), holding grape tea poured in three greens with waving borders, round grapes, ice and
+  bubbles standing in it and drifting round it (`splash.ts`), in the visit section (the two cups never side by side,
+  the same day; a second paper cup stood there before) (the flavour carousel's
   `flavor` actor, its toppings and the PET cup were removed with the carousel, 17/11/2026). Both GLBs (`brandkit/print/3d/boongee-{pp-700ml,paper-16oz}.glb`) are compressed by sync-brand with
   meshopt + WebP to `public/models/<name>.<hash>.glb`, URLs in `src/data/cup-model.json`, cached immutable by
   `next.config.ts`. Sections lay out empty slots with `<CupAnchor name actor turn tilt lid fill>`; `track.ts`
@@ -60,10 +61,8 @@ npm run sync-collateral  # only the offers' printed pieces (../brandkit/collater
   each end, smooth step between; with reduced motion it jumps halfway and nothing bobs, sways or drifts); an actor
   with one slot stays in it. Hidden slots are skipped, so a section can have one for phones and one for `lg`; a slot
   may be `sticky`; two slots side by side (`cup-row`) put two actors together (none does now: the offers show their
-  printed pieces instead). A slot's pose can be driven by the page's scroll timeline (`live-pose.ts`: one mutable
-  record per slot element that GSAP tweens: turn, tilt, lid, strap, fill and an offset; `measureAnchors` reads it
-  instead of the data attributes, and a version counter makes the stage measure again while a scrub settles); the
-  pose's `strap` (0 … 1) folds the strap open on top of a tap's flip. A hit element per actor
+  printed pieces instead). No scroll timeline poses the cups (owner, 21/11/2026: "bỏ logic scroll"; the GSAP
+  choreography and its live poses were removed the same day). A hit element per actor
   takes the pointer while it rests on screen (drag turns, a tap on the lid flips the strap; arrows / Enter / Home on
   the keyboard). No flowers drift behind (removed 22/10/2026) and no sparkles twinkle anywhere on the page, 2D or
   3D (removed, owner, 27/10/2026: no sparkle stars in any design). No parallax (removed 22/10/2026); since
@@ -71,33 +70,28 @@ npm run sync-collateral  # only the offers' printed pieces (../brandkit/collater
   they come into view (see the scroll motion below). No WebGL 2, data saver or no model: `<html class="cup-failed">`,
   the slots and the `cup-grid` / `cup-row` wrappers collapse (without script too). The pure maths (`track`, `fit`, `motion`) has `node --test`
   tests (`npm test`, part of `npm run check`).
-- **The two 3D cups** (`src/components/cup-showcase.tsx`, id `ly`, 21/11/2026, owner: "đưa ly nhựa và ly giấy vào
-  landing", then the same day "bỏ hết mô tả ly …, ly 3D chỉ mang tính chất visual và gây ấn tượng thị giác"): a
-  band between the lookbook reel and the menu holding only the 3D paper cup and the frosted PP cup side by side, large
-  (slots 62 svh, 72 from `lg`); no heading, names, sizes or lines about the cups, `aria-hidden` (each cup's hit
-  element names it). With motion allowed it is 240 svh tall (280 from `lg`) and its frame sticks by CSS
-  (`motion-safe:sticky`, no GSAP pin, so no pin-spacer reflow); with reduced motion it is one screen of the two cups
-  standing still; without script (noscript style) or without the 3D (`.cup-failed`) it is not shown.
+- **The cups band** (`src/components/cup-showcase.tsx`, id `ly`, 21/11/2026, owner: "đưa ly nhựa và ly giấy vào
+  landing", "ly 3D chỉ mang tính chất visual và gây ấn tượng thị giác", then "không xếp 2 mô hình cạnh nhau, bỏ logic
+  scroll"): a band between the lookbook reel and the menu holding only the 3D paper cup, large (slot 60 svh, 72 from
+  `lg`), floating in its slot like every actor, no scroll timeline; no words, `aria-hidden` (the cup's hit element
+  names it); without script (noscript style) or without the 3D (`.cup-failed`) it is not shown. The open PP cup is in
+  the visit section.
 - **Scroll motion** (`src/components/scroll-motion.tsx`, mounted last by the home page; one module per scene in
   `src/lib/scroll/`; GSAP 3.15.1 pinned, its free standard licence, with ScrollTrigger): loaded by a dynamic import
   after hydration, run inside `gsap.matchMedia("(prefers-reduced-motion: no-preference)")` so a change of the setting
-  reverts it all (a scene returns what GSAP's context cannot undo: heights, attributes, live poses). Scenes, top down
+  reverts it all (a scene returns what GSAP's context cannot undo: heights, attributes). Scenes, top down
   (`SCENES`; the reel before the ones below it, since it sets its section's height; one `ScrollTrigger.refresh()`
   after all): `hero` (the words and, on phones, their canvas ground fade and rise away; the picture is drawn back
   to 72 % (86 % on phones) and moved to the middle, a framed canvas on the white page, the still life zooming
   gently out); `reel` (sets `data-driven` and the section's height to the row's length beyond the screen on every
   `refreshInit`, the frame sticks by CSS, the row moves by transform with `scrub: 0.6`, a silver line fills, each
   picture settles from a 1.18 zoom through `containerAnimation`; its clipped pictures are switched to eager loading
-  as the reel nears); `showcase` (the two 3D cups: while the band comes up they rise from below and either side,
-  leaning back (`dx`, `dy`, `tilt` only); while its frame sticks the paper cup comes forward and turns once round,
-  then the PP cup the other way with its lid lifted off and set back, then both fold their straps open; the two
-  timelines never tween the same property, a refresh renders each and they would fight); `interlude` (the window
+  as the reel nears); `interlude` (the window
   opens from a slit along its top edge, 64 % × 14 %, to the whole frame, the picture inside counter-scaled so it
   keeps its size while it settles from a 1.12 zoom); `wordmark` (the footer name's letters rise one by one);
   `reveal` (`data-reveal` blocks and `data-reveal-group` children rise 28 px and fade in, `data-reveal-line`
   headings rise out of their masks, batched, once, only those still below the viewport; props cleared after). No
-  smooth-scroll hijack and no GSAP pinning: frames stick by CSS, and every tween is a transform, an opacity or a
-  number the 3D stage reads. The hero's load motion and the marquee are CSS (`look.css`), on elements no scene
+  smooth-scroll hijack and no GSAP pinning: frames stick by CSS, and every tween is a transform or an opacity. The hero's load motion and the marquee are CSS (`look.css`), on elements no scene
   touches (a running CSS animation would override GSAP's inline transform). Measured on an emulated phone (4× CPU,
   real GPU, production build, 21/11/2026, after the redesign): the whole page scrolls at 60 fps, p99 16.8 ms, no
   frame over 50 ms; CLS 0; at load 1.1 MB including the 3D models and the six reel pictures.
@@ -106,9 +100,9 @@ npm run sync-collateral  # only the offers' printed pieces (../brandkit/collater
   metallic silver since 18/11/2026).** Built round the v5 lookbook ("Tĩnh vật vải toan"): very large Fraunces type,
   the still lifes as big framed canvases on the white page, scroll-driven scenes. Top down: the hero (the v5 cover
   of two paper cups, the slogan set huge), a marquee of the drink groups (`marquee.tsx`), the lookbook reel
-  (`lookbook-reel.tsx`, id `bo-suu-tap`, "Bộ sưu tập · Thức uống đặc trưng"), the two 3D cups (a wordless band),
+  (`lookbook-reel.tsx`, id `bo-suu-tap`, "Bộ sưu tập · Signature"), the 3D paper cup (a wordless band),
   Menu · "Chọn một ly" (with its spotlight), the interlude (`interlude.tsx`, the v5 cover of the paper cup and
-  Xoài Hạ Tuyết, a mood picture), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (3D paper cup), and the
+  Xoài Hạ Tuyết, a mood picture), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (the open 3D PP cup), and the
   footer's name set as wide as the page. Section headings (`SectionHeading`) are display size (up to 7rem) and rise
   out of a mask that leaves room for Vietnamese marks. The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
   counts (no "23 món, 32K – 65K", no per-group counts or starting prices; numbers in the reel and the menu only

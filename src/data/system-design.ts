@@ -156,6 +156,7 @@ export const changelog = [
       "Bốn dấu hoa monogram trên web vẽ lại bằng nét vector sắc, đúng nét in trên ly, giữ màu bạc phẳng.",
       "Bộ sưu tập trên trang chủ đổi tiêu đề thành “Signature” (thay “Thức uống đặc trưng”); web bỏ chú thích “Ảnh minh hoạ”.",
       "Web bỏ giá bán; mỗi món có mô tả ngắn một, hai câu, viết từ công thức thật trên Odoo (chỉ nguyên liệu có trong công thức, không nói nguồn gốc trà, không nói công dụng).",
+      "Cốc 3D không còn đứng cạnh nhau và không chạy theo cuộn: ly giấy một mình ở dải ly, ly nhựa PP mở nắp (bỏ nắp khỏi mô hình) ở mục Cửa hàng.",
     ],
   },
   {

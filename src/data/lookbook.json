@@ -15,20 +15,6 @@
         "height": 1024,
         "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADQAwCdASoQABQAPu1iqU2ppaQiMAgBMB2JYwCdMoACW1xS8GWZiAAA/c4v3ymh8sunpKIPfgmIrw78VHf7FdxLiuNovgck/s1ZtA/nbDOH/r74NVmNoaaLmOZjY5r6NpxP9Oj1fnYy7zdTgAA="
       }
-    },
-    "interlude": {
-      "wide": {
-        "src": "/menu/lookbook/cover-interlude-wide.155bb61a.webp",
-        "width": 1536,
-        "height": 1024,
-        "blur": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoQAAsAA4BaJYgCdADB4+9IAP7TlkjtyZK+gytgGxRjV8srywS5dHydWvzjPUd1EyXw4+6egAA="
-      },
-      "tall": {
-        "src": "/menu/lookbook/cover-interlude-tall.84c3b013.webp",
-        "width": 819,
-        "height": 1024,
-        "blur": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAwCdASoQABQAPu1kqU2ppaOiMAgBMB2JbACdMoACXMhr1kqbtlxwAP5T9DzD2FCNQSPzrg4fEultvDAjkdM3i0lvlNxcRET+BlX2yjjwnPpva5J4geY6p3oOn3rWvxTrtxCRAAA="
-      }
     }
   },
   "photos": {
@@ -75,15 +61,15 @@
       "edition": "v5"
     },
     "Bông Trúc": {
-      "full": "/menu/lookbook/bong-truc.1d046090.webp",
-      "thumb": "/menu/lookbook/bong-truc-thumb.7934f5c8.webp",
+      "full": "/menu/lookbook/bong-truc.9672bf9e.webp",
+      "thumb": "/menu/lookbook/bong-truc-thumb.e81260f5.webp",
       "width": 1200,
       "height": 1500,
       "edition": "v5"
     },
     "Bông Đào": {
-      "full": "/menu/lookbook/bong-dao.163ab0cc.webp",
-      "thumb": "/menu/lookbook/bong-dao-thumb.bd49b439.webp",
+      "full": "/menu/lookbook/bong-dao.97a01180.webp",
+      "thumb": "/menu/lookbook/bong-dao-thumb.aa2d4a1b.webp",
       "width": 1200,
       "height": 1500,
       "edition": "v5"
@@ -96,8 +82,8 @@
       "edition": "v5"
     },
     "Thanh Nho Tươi": {
-      "full": "/menu/lookbook/thanh-nho-tuoi.60ad11c3.webp",
-      "thumb": "/menu/lookbook/thanh-nho-tuoi-thumb.6b3e2bbe.webp",
+      "full": "/menu/lookbook/thanh-nho-tuoi.f1dab79a.webp",
+      "thumb": "/menu/lookbook/thanh-nho-tuoi-thumb.e2035e56.webp",
       "width": 1200,
       "height": 1500,
       "edition": "v5"
@@ -138,8 +124,8 @@
       "edition": "v5"
     },
     "Nho Cheese": {
-      "full": "/menu/lookbook/nho-cheese.d6fe2f0e.webp",
-      "thumb": "/menu/lookbook/nho-cheese-thumb.b587cbd3.webp",
+      "full": "/menu/lookbook/nho-cheese.9d30e5b3.webp",
+      "thumb": "/menu/lookbook/nho-cheese-thumb.db8e756a.webp",
       "width": 1200,
       "height": 1500,
       "edition": "v5"
@@ -152,8 +138,8 @@
       "edition": "v5"
     },
     "Coldbrew Bưởi": {
-      "full": "/menu/lookbook/coldbrew-buoi.bdc0a1f6.webp",
-      "thumb": "/menu/lookbook/coldbrew-buoi-thumb.bc4625c2.webp",
+      "full": "/menu/lookbook/coldbrew-buoi.e385ad44.webp",
+      "thumb": "/menu/lookbook/coldbrew-buoi-thumb.c12618bd.webp",
       "width": 1200,
       "height": 1500,
       "edition": "v5"

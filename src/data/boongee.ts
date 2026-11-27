@@ -83,13 +83,13 @@ export const cup = {
 
 export const menuIntro = {
   tagline: "Menu",
-  title: "Chọn một ly",
+  title: "Mỗi ly một hương", // brand review, 27/11/2026 (before "Chọn một ly")
   more: "Xem toàn bộ menu",
 };
 
 export const offersIntro = {
   tagline: "Ưu đãi",
-  title: "Ưu đãi tại quầy", // every offer is used at the counter; there is no membership scheme (27/11/2026)
+  title: "Quà nhỏ tại quầy", // every offer is used at the counter; no membership scheme (brand review, 27/11/2026)
 };
 
 // The shop's address, confirmed by the owner on 26/11/2026 (the GrabFood store profile, business/grab-profile.md):
@@ -103,12 +103,13 @@ const ADDRESS = {
 
 export const visit = {
   tagline: "Cửa hàng",
-  title: "Ghé thăm Boongee",
+  title: "Quầy nhỏ ở Hoa Bằng", // takeaway only, no seats (brand review, 27/11/2026)
   address: ADDRESS,
   addressLine: `${ADDRESS.street}, ${ADDRESS.district}, ${ADDRESS.city}`,
-  mapUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${ADDRESS.street}, ${ADDRESS.district}, ${ADDRESS.city}`,
-  )}`,
+  /** the shop's own pin on Google Maps (owner, 27/11/2026), so "Xem bản đồ" opens its place page and reviews */
+  mapUrl: "https://maps.app.goo.gl/jF44AfVNLiJNk9Mt9",
+  /** the pin's coordinates, read from where that link leads (place "Boongee"); for search engines only */
+  geo: { latitude: 21.0264842, longitude: 105.7951905 },
   hours: null as string | null, // TODO(boongee): giờ mở cửa, ví dụ "7:00 – 22:00 mỗi ngày"
   phone: null as string | null, // TODO(boongee): số điện thoại / Zalo đặt món
   services: "Mang đi tại quầy, hoặc đặt giao qua GrabFood, ShopeeFood.", // takeaway only, no seats (owner, 27/11/2026); the apps: owner, 22/10/2026

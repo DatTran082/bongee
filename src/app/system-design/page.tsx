@@ -319,7 +319,7 @@ export default function SystemDesignPage() {
             <p className="mb-6 text-xs tracking-[0.2em] text-silver-700 uppercase">Tiêu đề mục · SectionHeading</p>
             <SectionHeading
               tagline="Ưu đãi"
-              title="Ưu đãi tại quầy"
+              title="Quà nhỏ tại quầy"
               aside={
                 <a href="#thanh-phan" data-variant="outline" className="btn px-5 py-2.5">
                   Hành động phụ

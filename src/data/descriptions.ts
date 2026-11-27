@@ -5,17 +5,21 @@
 // as their recipes make them. When a recipe changes in Odoo, read its description again; a dish missing here shows
 // its plain line (src/lib/menu/describe.ts) instead (descriptions.test.ts checks every dish on the till has one).
 // Brand review of 27/11/2026: at most two adjectives a clause, no "mê", no slang ("càng uống càng cuốn").
+// The fruit teas and kem cheese follow the owner's own list of 27/11/2026, not Odoo: Thanh Nho Tươi = jasmine tea,
+// fresh green grapes; Thanh Nho Tằm = jasmine tea, fresh grapes, mulberry jam; Thanh Xoài Tươi = bạch lan tea, xoài cát
+// chu, mango jam; Xoài Hạ Tuyết = bạch lan tea, xoài cát chu, coconut cream (cốt dừa); Dâu Cheese, Lài Cheese and
+// Nho Cheese = jasmine tea (Nho Cheese: green and purple grapes) under kem cheese.
+// No description names condensed milk (sữa đặc) (owner, 27/11/2026).
 
 export const DESCRIPTIONS: Readonly<Record<string, string>> = {
   // Trà sữa hương hoa
-  "Bạch Lan Hoa":
-    "Cốt trà bạch lan hoa thơm thanh, hoà cùng sữa và chút sữa đặc. Hương hoa dịu nơi đầu lưỡi, hậu ngọt nhẹ.",
+  "Bạch Lan Hoa": "Cốt trà bạch lan hoa thơm thanh, hoà cùng sữa. Hương hoa dịu nơi đầu lưỡi, hậu ngọt nhẹ.",
   "Bạch Thiên Hương":
-    "Cốt trà hoa dành dành hương ngát, quyện cùng sữa béo nhẹ và chút sữa đặc. Vị trà thanh, hương hoa lưu lại lâu sau từng ngụm.",
+    "Cốt trà hoa dành dành hương ngát, quyện cùng sữa béo nhẹ. Vị trà thanh, hương hoa lưu lại lâu sau từng ngụm.",
   "Bạch Đào Hoa": "Trà ô long bạch đào phảng phất hương đào chín, hoà cùng sữa mềm mượt. Vị trà sâu mà vẫn thanh.",
   "Thanh Nhài":
     "Cốt trà hoa nhài trong trẻo hoà cùng sữa béo nhẹ. Hương nhài thanh mát, uống đến ngụm cuối vẫn không ngấy.",
-  "Thanh Trúc": "Trà ô long trúc thơm sâu, quyện cùng sữa mượt và chút sữa đặc. Vị trà đậm, hậu ngọt dịu.",
+  "Thanh Trúc": "Trà ô long trúc thơm sâu, quyện cùng sữa mượt. Vị trà đậm, hậu ngọt dịu.",
   // Trà sữa kem bông
   "Bông Lan": "Trà sữa bạch lan hoa phủ lớp kem bông nhẹ như mây, rắc vụn hoa. Hương hoa thanh, kem béo dịu.",
   "Bông Trúc": "Trà sữa ô long trúc dưới lớp kem bông mềm mịn, điểm vụn hoa. Vị trà đậm hương gặp kem béo nhẹ.",
@@ -23,22 +27,19 @@ export const DESCRIPTIONS: Readonly<Record<string, string>> = {
   // Trà trái cây
   "Hồng Bì Cóc Xanh":
     "Trà hoa nhài thanh mát gặp quất hồng bì chua ngọt và nước cóc xanh. Vị chua dịu, thơm hương nhài.",
-  "Thanh Nho Tươi":
-    "Trà hoa nhài thanh mát cùng mứt nho xanh ngọt dịu, điểm nho tươi trên miệng ly. Hương nhài nhẹ, vị nho trong trẻo.",
-  "Thanh Nho Tằm": "Trà hoa nhài hoà cùng mứt nho tím và dâu tằm. Vị chua ngọt hài hoà, thoảng hương nhài.",
-  "Thanh Xoài Tươi":
-    "Trà bạch lan hoa thơm thanh cùng mứt xoài và những miếng xoài tươi. Vị xoài ngọt đậm, hương hoa nhẹ.",
+  "Thanh Nho Tươi": "Trà hoa nhài thanh mát cùng nho xanh tươi. Hương nhài nhẹ, vị nho trong trẻo.",
+  "Thanh Nho Tằm": "Trà hoa nhài hoà cùng nho tươi và mứt dâu tằm. Vị chua ngọt hài hoà, thoảng hương nhài.",
+  "Thanh Xoài Tươi": "Trà bạch lan hoa thơm thanh cùng xoài cát chu và mứt xoài. Vị xoài ngọt đậm, hương hoa nhẹ.",
   "Xoài Hạ Tuyết":
-    "Xoài tươi xay mịn cùng đá, sữa dừa béo nhẹ và chút trà bạch lan hoa. Mát lạnh như tuyết đầu hạ, ngọt thơm vị xoài chín.",
+    "Trà bạch lan hoa cùng xoài cát chu và cốt dừa béo nhẹ. Mát lạnh như tuyết đầu hạ, ngọt thơm vị xoài chín.",
   // Kem cheese
   "Dâu Cheese":
-    "Trà ô long bạch đào cùng mứt dâu tằm chua ngọt, phủ lớp kem cheese béo mịn. Chua, ngọt và béo đan xen, hậu vị thơm hương trà.",
+    "Trà hoa nhài cùng dâu tằm chua ngọt, phủ lớp kem cheese béo mịn. Chua, ngọt và béo đan xen, hậu vị thơm hương nhài.",
   "Lài Cheese": "Trà hoa nhài thanh mát dưới lớp kem cheese béo mịn. Vị trà trong trẻo, kem béo đậm.",
-  "Nho Cheese": "Trà ô long trúc cùng nho tím dầm và nho xanh, phủ kem cheese béo mịn. Sắc tím đậm, vị nho chua ngọt.",
+  "Nho Cheese": "Trà hoa nhài cùng nho xanh và nho tím, phủ kem cheese béo mịn. Sắc tím đậm, vị nho chua ngọt.",
   // Cà phê phin · Coldbrew
-  "Bạc Xỉu": "Cà phê phin hoà cùng sữa và sữa đặc, nhiều sữa ít cà phê. Ngọt béo, thơm nhẹ mùi cà phê.",
-  "Cà Phê Muối":
-    "Cà phê phin đậm vị cùng sữa đặc, phủ lớp kem muối béo, mằn mặn. Đắng, ngọt và mặn quyện vào nhau trong từng ngụm.",
+  "Bạc Xỉu": "Cà phê phin hoà cùng sữa, nhiều sữa ít cà phê. Ngọt béo, thơm nhẹ mùi cà phê.",
+  "Cà Phê Muối": "Cà phê phin đậm vị, phủ lớp kem muối béo, mằn mặn. Đắng, ngọt và mặn quyện vào nhau trong từng ngụm.",
   "Cà Phê Đen Đá": "Cà phê phin pha đậm, thêm chút đường, uống cùng đá. Đắng thơm, hậu vị sâu và tròn.",
   "Coldbrew Nguyên Bản": "Cà phê ủ lạnh nhiều giờ, vị êm, ít đắng. Uống cùng đá, giữ trọn nét mộc của cà phê.",
   "Coldbrew Chanh Vàng": "Coldbrew ủ lạnh gặp siro chanh vàng thơm mát. Vị cà phê êm, chua nhẹ, dễ uống.",

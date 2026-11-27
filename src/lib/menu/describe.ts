@@ -12,10 +12,13 @@ const COMMON = /^(đường|đá(\s|$)|nước( lọc| sôi| nóng)?$|rich(\s|$)
  * would read "Trà sữa hoa nhài, ống hút, túi đơn mang đi". Nothing a visitor drinks is in this list.
  */
 const PACKAGING = /^(ly|cốc|nắp|ống hút|túi|băng keo|giấy chống tràn|tem|màng seal)(\s|$)/i;
-/** Milk: it is what makes "trà" "trà sữa" (or adds "sữa" after a coffee). */
-const MILK = /^sữa(\s|$)/i;
-/** Words that say how a part is made, not what it is: "mứt nho xanh" → "nho xanh". */
-const FORM = /^(cốt|mứt|sốt|syrup|siro|puree|nước ép|tép)\s+/i;
+/**
+ * Milk: it is what makes "trà" "trà sữa" (or adds "sữa" after a coffee). Not condensed milk: a spoon of it sweetens
+ * Xoài Hạ Tuyết, which is no milk tea, and the menu never names it (owner, 27/11/2026).
+ */
+const MILK = /^sữa(?!\s+đặc)(\s|$)/i;
+/** Words that say how a part is made, not what it is: "mứt nho xanh" → "nho xanh" ("cốt dừa" is itself a part). */
+const FORM = /^(cốt(?!\s+dừa)|mứt|sốt|syrup|siro|puree|nước ép|tép)\s+/i;
 /** Stock words after the name: how it is packed, or its maker ("tép bưởi lon", "bưởi Boduo"). */
 const STOCK = /\s+(lon|hộp|chai|túi|gói|boduo)$/i;
 /** At most this many parts in all. */
@@ -46,8 +49,13 @@ export function describeDish(components: readonly string[]): string | null {
     if (COMMON.test(name) || MILK.test(name) || /^cốt trà|^cà phê/i.test(name)) continue;
     add(lower(name.replace(FORM, "").replace(STOCK, "")));
   }
-  // "bưởi" says less than "bưởi hồng", "hồng bì" less than "quất hồng bì": keep the fuller one
-  const within = (part: string, other: string) => other.startsWith(`${part} `) || other.endsWith(` ${part}`);
+  // "bưởi" says less than "bưởi hồng", "hồng bì" less than "quất hồng bì", "nho tươi" less than "nho xanh": keep the
+  // fuller one
+  const fresh = (part: string) => part.replace(/\s+tươi$/, "");
+  const within = (part: string, other: string) =>
+    other.startsWith(`${part} `) ||
+    other.endsWith(` ${part}`) ||
+    (part.endsWith(" tươi") && other !== part && other.startsWith(`${fresh(part)} `));
   const kept = parts.filter((part, i) => !parts.some((other, j) => j !== i && within(part, other)));
   if (!kept.length) return null;
   return upper(kept.slice(0, MAX_PARTS).join(", "));

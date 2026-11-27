@@ -20,7 +20,7 @@ describe("describeDish", () => {
   it("names a fruit tea by its tea and its fruit, jam and syrup words dropped", () => {
     assert.equal(
       describeDish(["Cốt trà trúc", "Nho tươi", "Mứt nho xanh", "Đường nước", "Đường hoa quả", "Tắc"]),
-      "Trà trúc, nho tươi, nho xanh, tắc",
+      "Trà trúc, nho xanh, tắc",
     );
     assert.equal(
       describeDish(["Cốt trà olong bạch đào", "Mứt đào hồng", "Đường nước", "Sốt đào hồng", "Đá", "Kem cheese"]),
@@ -49,6 +49,23 @@ describe("describeDish", () => {
 describe("describeDish edge cases", () => {
   it("keeps coconut milk (nước cốt dừa) and jelly, which are part of the drink", () => {
     assert.equal(describeDish(["Cốt trà nhài", "Nước cốt dừa", "Thạch trà"]), "Trà nhài, nước cốt dừa, thạch trà");
+  });
+
+  it("keeps cốt dừa whole, and a fresh fruit only when no named kind of it is there", () => {
+    assert.equal(
+      describeDish(["Cốt dừa", "Xoài cát chu", "Mứt xoài", "Cốt trà bạch lan hoa"]),
+      "Trà bạch lan hoa, cốt dừa, xoài cát chu",
+    );
+    assert.equal(
+      describeDish(["Cốt dừa", "Xoài cát chu", "Sữa đặc", "Cốt trà bạch lan hoa"]),
+      "Trà bạch lan hoa, cốt dừa, xoài cát chu",
+    );
+    assert.equal(describeDish(["Cà phê phin", "Sữa đặc", "Kem muối"]), "Cà phê phin, kem muối");
+    assert.equal(
+      describeDish(["Cốt trà hoa nhài", "Mứt nho tím", "Mứt nho xanh", "Nho tươi", "Kem cheese"]),
+      "Trà hoa nhài, nho tím, nho xanh, kem cheese",
+    );
+    assert.equal(describeDish(["Cốt trà hoa nhài", "Nho tươi", "Mứt dâu tằm"]), "Trà hoa nhài, nho tươi, dâu tằm");
   });
 });
 

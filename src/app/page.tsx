@@ -51,6 +51,7 @@ const structuredData = [
             addressRegion: visit.address.city,
             addressCountry: "VN",
           },
+          geo: { "@type": "GeoCoordinates", ...visit.geo },
           hasMap: visit.mapUrl,
         }
       : {}),

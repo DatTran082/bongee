@@ -101,8 +101,8 @@ npm run sync-collateral  # only the offers' printed pieces (../brandkit/collater
   the still lifes as big framed canvases on the white page, scroll-driven scenes. Top down: the hero (the v5 cover
   of two paper cups, the slogan set huge), a marquee of the drink groups (`marquee.tsx`), the lookbook reel
   (`lookbook-reel.tsx`, id `bo-suu-tap`, "Bộ sưu tập · Signature"), the 3D paper cup (a wordless band),
-  Menu · "Chọn một ly" (with its spotlight), the interlude (`interlude.tsx`, the v5 cover of the paper cup and
-  Xoài Hạ Tuyết, a mood picture), Ưu đãi · "Ưu đãi thành viên", Cửa hàng · "Ghé thăm Boongee" (the open 3D PP cup), and the
+  Menu · "Mỗi ly một hương" (with its spotlight), the interlude (`interlude.tsx`, the v5 cover of the paper cup and
+  Xoài Hạ Tuyết, a mood picture), Ưu đãi · "Quà nhỏ tại quầy", Cửa hàng · "Quầy nhỏ ở Hoa Bằng" (the open 3D PP cup), and the
   footer's name set as wide as the page. Section headings (`SectionHeading`) are display size (up to 7rem) and rise
   out of a mask that leaves room for Vietnamese marks. The story and FAQ sections are gone (FAQ and its structured data removed 17/11/2026), and the page shows no
   counts (no "23 món, 32K – 65K", no per-group counts or starting prices; numbers in the reel and the menu only

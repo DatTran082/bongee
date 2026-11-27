@@ -236,7 +236,7 @@ export default function SystemDesignPage() {
             {
               name: "Thân",
               spec: `${webType.body.size} · dòng ${webType.body.leading}`,
-              sample: <p className="max-w-xl text-lg">Trà ướp hoa dành dành, bạch lan, hoa trúc.</p>,
+              sample: <p className="max-w-xl text-lg">Trà sữa hương hoa dành dành, bạch lan, hoa nhài.</p>,
             },
             {
               name: "Chú thích",
@@ -319,7 +319,7 @@ export default function SystemDesignPage() {
             <p className="mb-6 text-xs tracking-[0.2em] text-silver-700 uppercase">Tiêu đề mục · SectionHeading</p>
             <SectionHeading
               tagline="Ưu đãi"
-              title="Ưu đãi thành viên"
+              title="Ưu đãi tại quầy"
               aside={
                 <a href="#thanh-phan" data-variant="outline" className="btn px-5 py-2.5">
                   Hành động phụ

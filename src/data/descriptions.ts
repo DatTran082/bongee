@@ -54,6 +54,10 @@ export const DESCRIPTIONS: Readonly<Record<string, string>> = {
   // Topping
   "Kem Bông": "Lớp kem bông mềm nhẹ như mây, thêm vào ly trà sữa cho vị béo thanh.",
   "Kem Cheese": "Lớp kem cheese béo mịn, đậm vị, thêm vào ly trà cho một tầng béo ngậy.",
+  "Thạch Trà Làng Mây": "Thạch trà mềm và mát, thêm vào ly cho từng ngụm có vị trà.",
+  "Hạt Nổ Củ Năng": "Hạt nổ củ năng tròn mọng, thêm vào ly trà cho từng ngụm vui miệng.",
+  "Hạt Nổ Phô Mai": "Hạt nổ vị phô mai, vỡ nhẹ khi cắn, thêm một chút béo cho ly trà.",
+  "Phô Mai Viên Tươi": "Phô mai lăn bột năng, mềm dẻo, béo mặn nhẹ, hợp với ly trà sữa.",
   // Combo
   "Combo Bộ Ba Làng Mây":
     "Ba ly cho nhóm bạn: Bạch Lan Hoa, Bông Đào và Thanh Nho Tươi. Đủ cả hương hoa, kem bông và trái cây trong một lần đặt.",
